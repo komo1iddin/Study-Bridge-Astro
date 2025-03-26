@@ -37,6 +37,14 @@
   function resetFilters() {
     filters = DEFAULT_FILTERS;
   }
+  
+  function handleMobileFiltersOpenChange(event: CustomEvent<boolean>) {
+    mobileFiltersOpen = event.detail;
+  }
+  
+  function toggleMobileFilters() {
+    mobileFiltersOpen = !mobileFiltersOpen;
+  }
 </script>
 
 {#if !mounted}
@@ -70,9 +78,10 @@
           <MobileFilters
             filters={filters}
             cities={cities}
-            sheetOpen={mobileFiltersOpen}
+            isOpen={mobileFiltersOpen}
             on:change={handleFilterChange}
             on:reset={resetFilters}
+            on:openStateChange={handleMobileFiltersOpenChange}
           />
         </div>
         

@@ -40,9 +40,5 @@ export type Filters = {
   featured: string
 }
 
-export const RANKING_RANGES = {
-  '1-5': { min: 1, max: 5 },
-  '6-10': { min: 6, max: 10 },
-  '11-20': { min: 11, max: 20 },
-  '21+': { min: 21, max: Infinity }
-} as const 
+
+

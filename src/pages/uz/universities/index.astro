@@ -2,7 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import { getLangFromUrl } from '@/i18n/langUtils'; 
 import { useTranslations } from '@/i18n/utils';
-import UniversityPage from '@/components/features/university/UniversityPage/UniversityPage.tsx';
+import UniversityPage from '@/components/features/university/UniversityPage/UniversityPage.astro';
 import fs from 'node:fs';
 import path from 'node:path';
 import yaml from 'js-yaml';
@@ -88,7 +88,7 @@ try {
         </div>
       </div>
     ) : (
-      <UniversityPage universities={universitiesData} lang={lang} client:load />
+      <UniversityPage universities={universitiesData} />
     )}
   </div>
 </Layout>

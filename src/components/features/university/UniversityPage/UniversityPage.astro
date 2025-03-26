@@ -1,7 +1,6 @@
 ---
-import UniversityPageReact from "./UniversityPage.tsx";
+import UniversityPageComponent from "./UniversityPage.svelte";
 import { getLangFromUrl } from '@/i18n/langUtils';
-import { ThemeProvider } from './styles/ThemeProvider';
 import { getAllUniversities, getAllCities } from '@/lib/fileSystemReader';
 
 const lang = getLangFromUrl(Astro.url);
@@ -9,6 +8,9 @@ const universities = await getAllUniversities(lang);
 const cities = await getAllCities(lang);
 ---
 
-<ThemeProvider client:load>
-  <UniversityPageReact universities={universities} cities={cities} client:load />
-</ThemeProvider>
+<UniversityPageComponent 
+  universities={universities} 
+  cities={cities} 
+  lang={lang}
+  client:load
+/> 

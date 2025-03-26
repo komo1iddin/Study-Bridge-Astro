@@ -7,3 +7,5 @@ export const DEFAULT_FILTERS: Filters = {
   ranking: "all",
   featured: "all",
 }
+
+export const ITEMS_PER_PAGE = 4; 
