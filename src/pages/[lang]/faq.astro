@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/langUtils';
 import { Search, ChevronDown, ArrowRight, Clock, Star } from 'lucide-astro';
 import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
- 
+import { getTranslation } from '@/i18n/translationUtils';
 
 import Contact from '@/components/shared/contact/Contact.astro';
 import ContactModal from '@/components/features/contact/ContactModal.astro';
@@ -17,6 +17,10 @@ const { lang } = Astro.params;
 if (!lang || !languages.includes(lang as Lang)) {
   return Astro.redirect('/uz/'); // Redirect to default language if invalid
 }
+
+// Use the language parameter to get translations
+const t = (key: string) => getTranslation(lang as Lang, key);
+
 const breadcrumbItems = [
   { label: t('nav.home'), href: `/${lang}` },
   { label: t('nav.faq'), href: `/${lang}/faq` }
@@ -50,12 +54,9 @@ const guides = faqItems.filter(item =>
 
 // Server-side render this page
 export const prerender = false;
-// Use the language parameter to get translations
-import { getTranslation } from '@/i18n/translationUtils';
-const t = (key: string) => getTranslation(lang as Lang, key);
 ---
 
-<Layout meta={{ title: "Page Title", description: "Page Description" }}>
+<Layout meta={{ title: t('faq.meta.title'), description: t('faq.meta.description') }}>
   <div class="min-h-screen bg-gradient-to-b from-primary-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <Breadcrumbs items={breadcrumbItems} />
