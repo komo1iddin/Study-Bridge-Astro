@@ -549,7 +549,7 @@ export const uzTranslations: TranslationSchema = {
   about: {
     title: "Bizning kompaniya haqida",
     subtitle: "Biz talabalarga Xitoyning eng yaxshi universitetlarida o'qish orzusini amalga oshirishga yordam beramiz",
-    cta: "Biz bilan bog'laning",
+    callToAction: "Biz bilan bog'laning",
     
     stats: {
       students: {
