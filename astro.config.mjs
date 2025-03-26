@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
-import react from '@astrojs/react';
 import svelte from '@astrojs/svelte';
 import netlify from '@astrojs/netlify/static';
 
@@ -8,12 +7,7 @@ export default defineConfig({
   output: 'static',
   integrations: [
     tailwind(),
-    svelte(),
-    react({
-      include: ['**/react/*', '**/features/**/*.tsx'],
-      experimentalReactChildren: true,
-      ssr: true
-    })
+    svelte()
   ],
   i18n: {
     defaultLocale: 'uz',
@@ -56,7 +50,7 @@ export default defineConfig({
       },
     },
     ssr: {
-      noExternal: ['react-icons']
+      noExternal: []
     }
   },
   adapter: netlify(),
