@@ -1,246 +1,129 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import ReactButtonExample from '@/components/tests/react/ButtonExample';
-import ReactFormExample from '@/components/tests/react/FormExample';
 import SvelteButtonExample from '@/components/tests/svelte/ButtonExample.svelte';
-import ReactAlertExample from '@/components/tests/react/AlertExample';
 import SvelteAlertExample from '@/components/tests/svelte/AlertExample.svelte';
-import ReactCardExample from '@/components/tests/react/CardExample';
 import SvelteCardExample from '@/components/tests/svelte/CardExample.svelte';
 import SvelteFormExample from '@/components/tests/svelte/FormExample.svelte';
-import ReactAccordionExample from '@/components/tests/react/AccordionExample';
 import SvelteAccordionSimpleExample from '@/components/tests/svelte/AccordionSimpleExample.svelte';
-import ReactRadioGroupExample from '@/components/tests/react/RadioGroupExample';
 import SvelteRadioGroupTest from '@/components/ui/svelte/RadioGroupTest.svelte';
 import SvelteSwitchExample from '@/components/tests/svelte/SwitchExample.svelte';
 import SveltePaginationExample from '@/components/tests/svelte/PaginationExample.svelte';
-import ReactSwitchExample from '@/components/tests/react/SwitchExample';
-import ReactPaginationExample from '@/components/tests/react/PaginationExample';
-
-// We'll use this to toggle between components
-const framework = Astro.url.searchParams.get('framework') || 'both';
 
 const meta = {
   title: "Component Test Page",
-  description: "Test page for UI components",
-  keywords: ['components', 'test', 'ui']
+  description: "Test page for Svelte UI components",
+  keywords: ['components', 'test', 'ui', 'svelte']
 };
 ---
 
 <Layout meta={meta}>
   <div class="container mx-auto py-8 px-4">
-    <h1 class="text-3xl font-bold mb-8">Component Test Page</h1>
+    <h1 class="text-3xl font-bold mb-8">Svelte Component Test Page</h1>
     
-    <div class="mb-6 flex space-x-4">
-      <a href="?framework=both" class={`px-4 py-2 rounded-md ${framework === 'both' ? 'bg-primary text-white' : 'bg-gray-200'}`}>
-        Both
-      </a>
-      <a href="?framework=react" class={`px-4 py-2 rounded-md ${framework === 'react' ? 'bg-primary text-white' : 'bg-gray-200'}`}>
-        React Only
-      </a>
-      <a href="?framework=svelte" class={`px-4 py-2 rounded-md ${framework === 'svelte' ? 'bg-primary text-white' : 'bg-gray-200'}`}>
-        Svelte Only
-      </a>
-    </div>
-
     <div class="grid gap-8">
       <!-- Button Components Test -->
       <section id="buttons" class="border rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Buttons</h2>
-        <div class={`grid ${framework === 'both' ? 'grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {(framework === 'both' || framework === 'react') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">React Buttons</h3>
-              <div class="flex flex-wrap gap-4 p-4 border rounded-md bg-gray-50">
-                <ReactButtonExample client:load />
-              </div>
+        <div class="grid grid-cols-1 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Buttons</h3>
+            <div class="flex flex-wrap gap-4 p-4 border rounded-md bg-gray-50">
+              <SvelteButtonExample client:load />
             </div>
-          )}
-          
-          {(framework === 'both' || framework === 'svelte') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">Svelte Buttons</h3>
-              <div class="flex flex-wrap gap-4 p-4 border rounded-md bg-gray-50">
-                <SvelteButtonExample client:load />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
       <!-- Alert Components Test -->
       <section id="alerts" class="border rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Alerts</h2>
-        <div class={`grid ${framework === 'both' ? 'grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {(framework === 'both' || framework === 'react') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">React Alerts</h3>
-              <div class="flex flex-col gap-4 p-4 border rounded-md bg-gray-50">
-                <ReactAlertExample client:load />
-              </div>
+        <div class="grid grid-cols-1 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Alerts</h3>
+            <div class="flex flex-col gap-4 p-4 border rounded-md bg-gray-50">
+              <SvelteAlertExample client:load />
             </div>
-          )}
-          
-          {(framework === 'both' || framework === 'svelte') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">Svelte Alerts</h3>
-              <div class="flex flex-col gap-4 p-4 border rounded-md bg-gray-50">
-                <SvelteAlertExample client:load />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
       <!-- Accordion Components Test -->
       <section id="accordions" class="border rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Accordions</h2>
-        <div class={`grid ${framework === 'both' ? 'grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {(framework === 'both' || framework === 'react') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">React Accordions</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <ReactAccordionExample client:load />
-              </div>
+        <div class="grid grid-cols-1 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Accordions</h3>
+            <div class="p-4 border rounded-md bg-gray-50">
+              <SvelteAccordionSimpleExample client:load />
             </div>
-          )}
-          
-          {(framework === 'both' || framework === 'svelte') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">Svelte Accordions</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <SvelteAccordionSimpleExample client:load />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
       <!-- RadioGroup Components Test -->
       <section id="radiogroup" class="border rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Radio Groups</h2>
-        <div class={`grid ${framework === 'both' ? 'grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {(framework === 'both' || framework === 'react') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">React Radio Group</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <ReactRadioGroupExample client:load />
-              </div>
+        <div class="grid grid-cols-1 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Radio Group</h3>
+            <div class="p-4 border rounded-md bg-gray-50">
+              <SvelteRadioGroupTest client:load />
             </div>
-          )}
-          
-          {(framework === 'both' || framework === 'svelte') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">Svelte Radio Group</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <SvelteRadioGroupTest client:load />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
       <!-- Form Components Test -->
       <section id="forms" class="border rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Form Elements</h2>
-        <div class={`grid ${framework === 'both' ? 'grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {(framework === 'both' || framework === 'react') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">React Form Elements</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <ReactFormExample client:load />
-              </div>
+        <div class="grid grid-cols-1 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Form Elements</h3>
+            <div class="p-4 border rounded-md bg-gray-50">
+              <SvelteFormExample client:load />
             </div>
-          )}
-          
-          {(framework === 'both' || framework === 'svelte') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">Svelte Form Elements</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <SvelteFormExample client:load />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
       <!-- Card Components Test -->
       <section id="cards" class="border rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Cards</h2>
-        <div class={`grid ${framework === 'both' ? 'grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {(framework === 'both' || framework === 'react') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">React Cards</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <ReactCardExample client:load />
-              </div>
+        <div class="grid grid-cols-1 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Cards</h3>
+            <div class="p-4 border rounded-md bg-gray-50">
+              <SvelteCardExample client:load />
             </div>
-          )}
-          
-          {(framework === 'both' || framework === 'svelte') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">Svelte Cards</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <SvelteCardExample client:load />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
       <!-- Switch Components Test -->
       <section id="switches" class="border rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Switches</h2>
-        <div class={`grid ${framework === 'both' ? 'grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {(framework === 'both' || framework === 'react') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">React Switches</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <ReactSwitchExample client:load />
-              </div>
+        <div class="grid grid-cols-1 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Switches</h3>
+            <div class="p-4 border rounded-md bg-gray-50">
+              <SvelteSwitchExample client:load />
             </div>
-          )}
-          
-          {(framework === 'both' || framework === 'svelte') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">Svelte Switches</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <SvelteSwitchExample client:load />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
       <!-- Pagination Components Test -->
       <section id="pagination" class="border rounded-lg p-6">
         <h2 class="text-2xl font-bold mb-4">Pagination</h2>
-        <div class={`grid ${framework === 'both' ? 'grid-cols-2' : 'grid-cols-1'} gap-8`}>
-          {(framework === 'both' || framework === 'react') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">React Pagination</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <ReactPaginationExample client:load />
-              </div>
+        <div class="grid grid-cols-1 gap-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4">Pagination</h3>
+            <div class="p-4 border rounded-md bg-gray-50">
+              <SveltePaginationExample client:load />
             </div>
-          )}
-          
-          {(framework === 'both' || framework === 'svelte') && (
-            <div>
-              <h3 class="text-xl font-semibold mb-4">Svelte Pagination</h3>
-              <div class="p-4 border rounded-md bg-gray-50">
-                <SveltePaginationExample client:load />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
-    </div>
-
-    <div class="mt-8 flex justify-center">
-      <a href="/" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors">
-        Back to Home
-      </a>
     </div>
   </div>
 </Layout> 

@@ -1,43 +1,32 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import ReactRadioGroupExample from '@/components/tests/react/RadioGroupExample';
 import SvelteRadioGroupTest from '@/components/ui/svelte/RadioGroupTest.svelte';
 
 const meta = {
   title: "RadioGroup Test Page",
-  description: "Test page for RadioGroup component",
-  keywords: ['radio', 'component', 'test']
+  description: "Test page for Svelte RadioGroup component",
+  keywords: ['radio', 'component', 'test', 'svelte']
 };
 ---
 
 <Layout meta={meta}>
   <div class="container mx-auto py-8 px-4">
-    <h1 class="text-3xl font-bold mb-8">RadioGroup Component Test</h1>
+    <h1 class="text-3xl font-bold mb-8">Svelte RadioGroup Component Test</h1>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div>
-        <h2 class="text-xl font-semibold mb-4">React RadioGroup</h2>
-        <div class="p-4 border rounded-md bg-slate-50">
-          <ReactRadioGroupExample client:load />
-        </div>
-      </div>
-      
-      <div>
-        <h2 class="text-xl font-semibold mb-4">Svelte RadioGroup</h2>
-        <div class="p-4 border rounded-md bg-slate-50">
-          <SvelteRadioGroupTest client:load />
-        </div>
+    <div>
+      <div class="p-4 border rounded-md bg-slate-50">
+        <SvelteRadioGroupTest client:load />
       </div>
     </div>
     
     <div class="mt-8">
       <h2 class="text-xl font-semibold mb-4">Component Details</h2>
       <div class="prose prose-slate max-w-none">
-        <p>This page tests the RadioGroup component implementation in both React and Svelte frameworks. The component should:</p>
+        <p>This page tests the RadioGroup component implementation in Svelte. The component should:</p>
         <ul class="list-disc pl-5">
           <li>Display radio options with proper styling and focus states</li>
           <li>Update selection when clicked</li>
-          <li>Update when external value changes (via the buttons below each group)</li>
+          <li>Update when external value changes (via the buttons below the group)</li>
           <li>Properly show the selected value</li>
         </ul>
       </div>
