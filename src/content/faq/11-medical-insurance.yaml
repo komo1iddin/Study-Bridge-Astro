@@ -1,0 +1,39 @@
+id: "how-med-insurance-work"
+categoryId: "life"
+order: 3
+question:
+  uz: "Tibbiy sug'urta qanday ishlaydi?"
+  ru: "Как работает медицинская страховка?"
+  en: "How does medical insurance work?"
+answer:
+  uz: |
+    Xitoyda talabalar tibbiy sug'urtasi:
+
+    1. Asosiy ma'lumotlar:
+       - Majburiy sug'urta
+       - Yillik narxi: 800 yuan
+       - Barcha davlat shifoxonalarida amal qiladi
+       
+    2. Qoplanadigan xizmatlar:
+       - Shoshilinch yordam
+       - Kasalxonaga yotqizish
+       - Oddiy kasalliklar
+       - Stomatologik xizmatlar (qisman)
+       
+    3. Sug'urta olish tartibi:
+       - Universitetda ro'yxatdan o'tish paytida
+       - Sug'urta kompaniyasi ofisida
+       - Online platforma orqali
+       
+    4. Foydalanish tartibi:
+       - Sug'urta kartasini ko'rsatish
+       - Dastlabki to'lovni amalga oshirish
+       - Keyin xarajatlar qoplanadi
+       
+    5. Qo'shimcha sug'urta:
+       - Xususiy sug'urta kompaniyalari
+       - Kengaytirilgan qamrov
+       - Yuqori summalar
+
+    Eslatma: Sug'urtasiz tibbiy xizmat juda qimmat!
+lastUpdated: "2024-03-15"

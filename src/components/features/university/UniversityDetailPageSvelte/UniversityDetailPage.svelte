@@ -1,0 +1,108 @@
+<script lang="ts">
+  import { onMount } from "svelte";
+  import { Home } from "lucide-svelte";
+  import type { University } from "@/types/university";
+  import type { Lang } from "@/i18n/langUtils";
+
+  // Import section components
+  import HeaderCard from "./components/HeaderCard.svelte";
+  import OverviewSection from "./components/OverviewSection.svelte";
+  import ProgramsSection from "./components/ProgramsSection.svelte";
+  import AdmissionSection from "./components/AdmissionSection.svelte";
+  import FacilitiesSection from "./components/FacilitiesSection.svelte";
+  import ImagesSection from "./components/ImagesSection.svelte";
+  import DormsSection from "./components/DormsSection.svelte";
+  import FAQSection from "./components/FAQSection.svelte";
+  import BackgroundDecoration from "./components/BackgroundDecoration.svelte";
+
+  // Import sidebar components
+  import ApplicationCard from "./components/sidebar/ApplicationCard.svelte";
+  import StatsCard from "./components/sidebar/StatsCard.svelte";
+  import ContactCard from "./components/sidebar/ContactCard.svelte";
+
+  // Props
+  export let university: University;
+  export let lang: Lang = "en";
+
+  // State
+  let mounted = false;
+  let activeTab = "overview";
+  let isLoading = true;
+
+  onMount(() => {
+    mounted = true;
+    isLoading = false;
+  });
+
+  // Direct tab change handler - simpler and more reliable
+  function changeTab(value) {
+    if (!mounted) return;
+    console.log("Changing tab to:", value);
+    activeTab = value;
+  }
+</script>
+
+{#if !mounted || isLoading}
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative">
+    <div class="container mx-auto py-8 px-4 md:px-6 relative z-10">
+      <div class="flex items-center justify-center h-64">
+        <div class="animate-pulse flex flex-col items-center gap-4">
+          <div class="h-12 w-12 rounded-full bg-blue-200"></div>
+          <div class="h-4 w-48 bg-blue-200 rounded"></div>
+          <div class="h-3 w-32 bg-blue-100 rounded"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+{:else}
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative">
+    <BackgroundDecoration />
+
+    <div class="container mx-auto py-4 sm:py-6 md:py-8 px-3 sm:px-4 md:px-6 relative z-10">
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 text-sm text-slate-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap pb-2">
+        <Home class="h-3.5 w-3.5 flex-shrink-0" />
+        <span>/</span>
+        <span>Universities</span>
+        <span>/</span>
+        <span class="text-slate-900 font-medium">{university.name}</span>
+      </div>
+
+      <main class="grid gap-4 sm:gap-6 md:gap-8 md:grid-cols-3">
+        <!-- Main Content -->
+        <div class="md:col-span-2 space-y-4 sm:space-y-6 md:space-y-8">
+          <HeaderCard 
+            {university}
+            activeTab={activeTab}
+            onTabChange={changeTab}
+            {lang}
+          />
+
+          <!-- Render active section content -->
+          {#if activeTab === "overview"}
+            <OverviewSection {university} {lang} />
+          {:else if activeTab === "programs"}
+            <ProgramsSection {university} {lang} />
+          {:else if activeTab === "admission"}
+            <AdmissionSection {university} {lang} />
+          {:else if activeTab === "facilities"}
+            <FacilitiesSection {university} {lang} />
+          {:else if activeTab === "images"}
+            <ImagesSection {university} {lang} />
+          {:else if activeTab === "dorms"}
+            <DormsSection {university} {lang} />
+          {:else if activeTab === "faq"}
+            <FAQSection {university} {lang} />
+          {/if}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-4 sm:space-y-6">
+          <ApplicationCard {university} {lang} />
+          <StatsCard {university} {lang} />
+          <ContactCard {university} {lang} />
+        </div>
+      </main>
+    </div>
+  </div>
+{/if} 

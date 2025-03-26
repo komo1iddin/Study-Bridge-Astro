@@ -1,0 +1,43 @@
+---
+interface Stat {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<div class="stats mt-auto">
+  {stats.map((stat) => (
+    <div class="stat">
+      <div class="stat-value">{stat.value}</div>
+      <div class="stat-label">{stat.label}</div>
+    </div>
+  ))}
+</div>
+
+<style>
+.stats {
+  @apply grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8 pt-8 relative;
+}
+
+.stats::before {
+  @apply absolute -top-px left-1/2 -translate-x-1/2 w-60 h-1 bg-gradient-to-r from-transparent via-blue-200/30 to-transparent rounded-full;
+}
+
+.stat {
+  @apply text-center transition-all duration-300 hover:bg-white/95;
+}
+
+.stat-value {
+  @apply text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent counter;
+}
+
+.stat-label {
+  @apply text-sm text-gray-600 mt-1 font-medium;
+}
+</style>

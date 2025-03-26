@@ -1,0 +1,452 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { useTranslations } from '@/i18n/utils';
+import { getCollection } from 'astro:content';
+import { Clock, Users, GraduationCap, BookOpen, CheckCircle, ArrowRight, Phone, MessageSquare, Calendar, Star } from 'lucide-astro';
+import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
+import ContactModal from '@/components/features/contact/ContactModal.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+export async function getStaticPaths() {
+  const programsEntries = await getCollection('programs');
+  return programsEntries.map(entry => {
+    const slug = entry.id.replace('.md', '');
+    return {
+      params: { 
+        type: entry.data.type,
+        id: slug 
+      },
+      props: { program: entry.data, slug }
+    };
+  });
+}
+
+const { program, slug } = Astro.props;
+
+const breadcrumbItems = [
+  { label: t('nav.home'), href: `/${lang}` },
+  { label: t('nav.programs'), href: `/${lang}/programs` },
+  { name: program.title[lang], href: `/${lang}/programs/${program.type}/${slug}` }
+];
+
+const programDetails = [
+  {
+    icon: Clock,
+    label: 'Davomiyligi',
+    value: program.duration
+  },
+  {
+    icon: Users,
+    label: 'Guruh hajmi',
+    value: '15-20 talaba'
+  },
+  {
+    icon: GraduationCap,
+    label: "O'qitish tili",
+    value: program.language
+  },
+  {
+    icon: BookOpen,
+    label: 'Darslar formati',
+    value: 'Offline + Online'
+  }
+];
+
+// Use requirements from content collection if available, otherwise use defaults
+const requirements = program.requirements?.uz || [
+  "O'rta ma'lumot haqidagi hujjat",
+  "Xorijiy pasport",
+  "Sog'liq haqida ma'lumotnoma",
+  "4 dona rasm 3x4",
+  "Ingliz yoki xitoy tilini bilish"
+];
+
+// Use documents from content or default to these
+const documents = [
+  "Pasport nusxasi",
+  "Diplom va ilovasi",
+  "Tarjimai hol",
+  "Motivatsion xat",
+  "Til sertifikati (agar mavjud bo'lsa)"
+];
+
+// Define application stages
+const stages = [
+  {
+    title: "Ariza topshirish",
+    description: "Online ariza to'ldirish va hujjatlarni yuborish",
+    deadline: "2024-yil 30-mart"
+  },
+  {
+    title: "Hujjatlarni ko'rib chiqish",
+    description: "Universitetda hujjatlarni ko'rib chiqish (2-3 hafta)",
+    deadline: "2024-yil 15-aprel"
+  },
+  {
+    title: "Qabul xati",
+    description: "Universitetdan qabul xatini olish",
+    deadline: "2024-yil 30-aprel"
+  },
+  {
+    title: "Viza olish",
+    description: "Xitoy vizasini rasmiylashtirish (2-3 hafta)",
+    deadline: "2024-yil 15-may"
+  }
+];
+
+// Study process sections
+const studyProcess = [
+  {
+    title: "Nazariy darslar",
+    description: "Professional o'qituvchilar tomonidan o'tiladigan nazariy mashg'ulotlar",
+    hours: "Haftasiga 20 soat"
+  },
+  {
+    title: "Amaliy mashg'ulotlar",
+    description: "Laboratoriya va amaliy mashg'ulotlar",
+    hours: "Haftasiga 10 soat"
+  },
+  {
+    title: "Mustaqil ta'lim",
+    description: "Individual loyihalar va tadqiqotlar",
+    hours: "Haftasiga 15 soat"
+  }
+];
+
+// Career opportunities
+const careerOpportunities = [
+  {
+    position: "Xalqaro kompaniyalarda mutaxassis",
+    salary: "$2,000 - $4,000",
+    companies: ["Huawei", "Alibaba", "Tencent"]
+  },
+  {
+    position: "O'qituvchi va tarjimon",
+    salary: "$1,500 - $3,000",
+    companies: ["Ta'lim markazlari", "Universitetlar"]
+  },
+  {
+    position: "Tadbirkor",
+    salary: "Cheklanmagan",
+    companies: ["Start-uplar", "Xalqaro savdo"]
+  }
+];
+
+// Student testimonials
+const testimonials = [
+  {
+    name: "Aziza Karimova",
+    program: "Bakalavr - 2022",
+    quote: "Bu dastur menga nafaqat bilim, balki ajoyib karyera imkoniyatlarini ham berdi.",
+    image: "/images/testimonials/placeholder.jpeg"
+  },
+  {
+    name: "Bobur Aliyev",
+    program: "Magistratura - 2023",
+    quote: "Professional o'qituvchilar va zamonaviy o'quv dasturi tufayli yuqori natijalarga erishdim.",
+    image: "/images/testimonials/placeholder.jpeg"
+  }
+];
+---
+
+<Layout title={`${program.title[lang]} | Study in China`}>
+  <div class="min-h-screen bg-gradient-to-b from-primary-50/50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumbs items={breadcrumbItems} class="mb-8" />
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Program Header -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <div class="flex items-center gap-4 mb-6">
+              <div class={`p-3 rounded-lg ${program.bgColor}`}>
+                <GraduationCap class="w-8 h-8 text-primary-600" />
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold text-gray-900">{program.title[lang]}</h1>
+                <p class="text-gray-600">{program.description[lang]}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {programDetails.map(detail => (
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="flex items-center gap-2 text-gray-600 mb-2">
+                    <detail.icon class="w-5 h-5 text-primary-600" />
+                    <span class="text-sm">{detail.label}</span>
+                  </div>
+                  <div class="font-semibold text-gray-900">{detail.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Study Process -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">O'quv jarayoni</h2>
+            <div class="space-y-6">
+              {studyProcess.map((process, index) => (
+                <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div class="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                    <span class="text-primary-600 font-bold">{index + 1}</span>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">{process.title}</h3>
+                    <p class="text-gray-600 mt-1">{process.description}</p>
+                    <p class="text-sm text-primary-600 mt-2">{process.hours}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Requirements -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Qabul talablari</h2>
+            <div class="grid gap-4">
+              {requirements.map(req => (
+                <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                  <CheckCircle class="w-5 h-5 text-primary-600 mt-0.5" />
+                  <span class="text-gray-700">{req}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Required Documents -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Kerakli hujjatlar</h2>
+            <div class="grid gap-4">
+              {documents.map(doc => (
+                <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                  <CheckCircle class="w-5 h-5 text-primary-600 mt-0.5" />
+                  <span class="text-gray-700">{doc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Application Process -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Qabul jarayoni</h2>
+            <div class="space-y-8">
+              {stages.map((stage, index) => (
+                <div class="relative flex gap-6">
+                  <div class="flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold">
+                      {index + 1}
+                    </div>
+                    {index < stages.length - 1 && (
+                      <div class="flex-1 w-px bg-primary-200 my-2"></div>
+                    )}
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">{stage.title}</h3>
+                    <p class="text-gray-600 mt-1">{stage.description}</p>
+                    <div class="flex items-center gap-2 mt-2 text-sm text-primary-600">
+                      <Calendar class="w-4 h-4" />
+                      <span>Muddat: {stage.deadline}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Career Opportunities -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Karyera imkoniyatlari</h2>
+            <div class="grid gap-6">
+              {careerOpportunities.map(career => (
+                <div class="p-4 bg-gray-50 rounded-lg">
+                  <h3 class="font-semibold text-gray-900 mb-2">{career.position}</h3>
+                  <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                    <Star class="w-4 h-4 text-yellow-500" />
+                    <span>O'rtacha oylik maosh: {career.salary}</span>
+                  </div>
+                  <div class="flex flex-wrap gap-2">
+                    {career.companies.map(company => (
+                      <span class="px-2 py-1 bg-primary-100 text-primary-700 rounded-full text-sm">
+                        {company}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Student Testimonials -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Bitiruvchilar fikrlari</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+              {testimonials.map(testimonial => (
+                <div class="p-4 bg-gray-50 rounded-lg">
+                  <div class="flex items-center gap-4 mb-4">
+                    <img 
+                      src={testimonial.image} 
+                      alt={testimonial.name}
+                      class="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <h3 class="font-semibold text-gray-900">{testimonial.name}</h3>
+                      <p class="text-sm text-primary-600">{testimonial.program}</p>
+                    </div>
+                  </div>
+                  <p class="text-gray-600 italic">"{testimonial.quote}"</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-8 space-y-6">
+            <!-- Price Card -->
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <div class="text-center mb-6">
+                <div class="text-sm text-gray-600 mb-1">O'qish narxi</div>
+                <div class="text-3xl font-bold text-primary-600">$3,000</div>
+                <div class="text-sm text-gray-600">bir semestr uchun</div>
+              </div>
+              
+              <button
+                onclick="window.uiStore.toggleContactModal(true)"
+                class="w-full bg-primary-600 text-white py-3 px-4 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 mb-4"
+              >
+                Ariza topshirish
+                <ArrowRight class="w-5 h-5" />
+              </button>
+              
+              <a 
+                href="tel:+998901234567"
+                class="w-full border border-primary-600 text-primary-600 py-3 px-4 rounded-lg hover:bg-primary-50 transition-colors flex items-center justify-center gap-2"
+              >
+                <Phone class="w-5 h-5" />
+                Qo'ng'iroq qilish
+              </a>
+            </div>
+
+            <!-- Important Dates -->
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <h3 class="font-semibold text-gray-900 mb-4">Muhim sanalar</h3>
+              <div class="space-y-4">
+                {stages.map(stage => (
+                  <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                    <Calendar class="w-5 h-5 text-primary-600" />
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">{stage.title}</p>
+                      <p class="text-xs text-gray-600">{stage.deadline}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <!-- Quick Contact -->
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <h3 class="font-semibold text-gray-900 mb-4">Tez aloqa</h3>
+              <div class="space-y-4">
+                <a 
+                  href="https://t.me/studybridge"
+                  class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <MessageSquare class="w-5 h-5 text-primary-600" />
+                  <span class="text-gray-700">Telegram orqali yozish</span>
+                </a>
+                <a 
+                  href="tel:+998901234567"
+                  class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <Phone class="w-5 h-5 text-primary-600" />
+                  <span class="text-gray-700">+998 90 123 45 67</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Program Levels -->
+            {program.levels && program.levels.length > 0 && (
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                <h3 class="font-semibold text-gray-900 mb-4">O'qish darajalari</h3>
+                <div class="space-y-2">
+                  {program.levels.map(level => (
+                    <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                      <CheckCircle class="w-5 h-5 text-primary-600" />
+                      <span class="text-gray-700">{level}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Fields of Study -->
+            {program.fields && program.fields.length > 0 && (
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                <h3 class="font-semibold text-gray-900 mb-4">Mutaxassisliklar</h3>
+                <div class="space-y-2">
+                  {program.fields.map(field => (
+                    <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                      <CheckCircle class="w-5 h-5 text-primary-600" />
+                      <span class="text-gray-700">{field}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ContactModal />
+</Layout>
+
+<style>
+  /* Smooth transitions */
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  /* Hover effects */
+  .hover\:shadow-xl:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Sticky sidebar */
+  @media (min-width: 1024px) {
+    .sticky {
+      position: sticky;
+      top: 2rem;
+    }
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .grid {
+      gap: 1rem;
+    }
+    
+    .text-2xl {
+      font-size: 1.5rem;
+    }
+    
+    .p-6 {
+      padding: 1rem;
+    }
+  }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    .transition-all {
+      transition: none;
+    }
+  }
+</style>

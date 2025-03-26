@@ -1,0 +1,62 @@
+---
+export interface Option {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface Props {
+  label?: string;
+  name: string;
+  options: Option[];
+  required?: boolean;
+  error?: string;
+  class?: string;
+  value?: string;
+}
+
+const {
+  label,
+  name,
+  options,
+  required = false,
+  error,
+  class: className,
+  value
+} = Astro.props;
+
+const selectClasses = [
+  'block w-full rounded-lg border-gray-300 shadow-sm',
+  'focus:border-primary-500 focus:ring-primary-500',
+  error && 'border-red-300 text-red-900',
+  'sm:text-sm',
+  className
+].join(' ');
+---
+
+<div class="w-full">
+  {label && (
+    <label for={name} class="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+      {required && <span class="text-red-500">*</span>}
+    </label>
+  )}
+
+  <select
+    id={name}
+    name={name}
+    class={selectClasses}
+    required={required}
+    value={value}
+  >
+    {options.map(({ value, label, disabled }) => (
+      <option value={value} disabled={disabled}>
+        {label}
+      </option>
+    ))}
+  </select>
+
+  {error && (
+    <p class="mt-1 text-sm text-red-600">{error}</p>
+  )}
+</div>

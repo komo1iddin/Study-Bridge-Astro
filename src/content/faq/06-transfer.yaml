@@ -1,0 +1,33 @@
+id: "can-transfer-current-study"
+categoryId: "transfer"
+order: 1
+question:
+  uz: "O'qishni Xitoyga ko'chirish mumkinmi?"
+  ru: "Можно ли перевестись в китайский университет?"
+  en: "Is it possible to transfer to a Chinese university?"
+answer:
+  uz: |
+    O'qishni Xitoy universitetiga ko'chirish jarayoni:
+
+    1. Zarur hujjatlar:
+       - Transkript (xitoy/ingliz tilida)
+       - O'qish joyidan ma'lumotnoma
+       - Dekanlik tavsiyasi
+       - Til sertifikati
+       
+    2. Ko'chirish shartlari:
+       - Kamida 1 kurs tugatilgan bo'lishi
+       - O'rtacha ball 70% dan yuqori
+       - Qarzdor fanlar bo'lmasligi
+       
+    3. Ko'chirish muddatlari:
+       - Kuzgi semestr: mart-may
+       - Bahorgi semestr: oktyabr-dekabr
+       
+    4. Jarayon:
+       - Hujjatlarni tayyorlash: 1-2 oy
+       - Ko'rib chiqish: 2-4 hafta
+       - Viza rasmiylashtirish: 1-2 hafta
+
+    Eslatma: Har bir universitet o'z ko'chirish shartlariga ega.
+lastUpdated: "2024-03-15"

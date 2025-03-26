@@ -1,0 +1,6 @@
+@import '../../../styles/base/global.css';
+
+/* Additional Svelte-specific styling can go here */
+.rotate-180 {
+  transform: rotate(180deg);
+} 

@@ -1,0 +1,36 @@
+id: "how-much-living-cost"
+categoryId: "finance"
+order: 1
+question:
+  uz: "Xitoyda yashash xarajatlari qancha?"
+  ru: "Сколько стоит проживание в Китае?"
+  en: "What are the living costs in China?"
+answer:
+  uz: |
+    Xitoyda oylik yashash xarajatlari (2024-yil):
+
+    1. Yotoqxona:
+       - 2-3 kishilik xona: 600-1000 yuan/oy
+       - 1 kishilik xona: 1200-2000 yuan/oy
+       
+    2. Ovqatlanish:
+       - Universitet oshxonasi: 15-25 yuan/ovqat
+       - Tashqarida ovqatlanish: 25-50 yuan/ovqat
+       - Oylik: 1000-1500 yuan
+       
+    3. Transport:
+       - Metro: 3-5 yuan/yo'nalish
+       - Avtobus: 1-2 yuan/yo'nalish
+       - Oylik: 200-300 yuan
+       
+    4. Internet va aloqa:
+       - SIM-karta: 100 yuan/oy
+       - Internet: 100-200 yuan/oy
+       
+    5. Boshqa xarajatlar:
+       - Darsliklar: 200-500 yuan/semestr
+       - Kiyim-kechak: 500-1000 yuan/oy
+       - Ko'ngilochar tadbirlar: 500-1000 yuan/oy
+
+    Jami: 3000-5000 yuan/oy
+lastUpdated: "2024-03-15"

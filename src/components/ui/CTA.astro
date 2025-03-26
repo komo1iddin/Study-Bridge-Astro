@@ -1,0 +1,49 @@
+---
+import { Phone, ArrowRight } from 'lucide-astro';
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="px-4 sm:px-6 lg:px-8 mt-20 text-center bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl p-12 shadow-xl transform hover:scale-[1.02] transition-all duration-300">
+  <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+    KELAJAGINGIZNI KUTIB O'TIRMANG - UNI YARATING!
+  </h2>
+  <p class="text-primary-100 text-lg mb-8 max-w-2xl mx-auto">
+    Xitoyda o'qish orqali kelajagingizni bugundan boshlab o'zgartiring. Biz sizga yordam berishga tayyormiz!
+  </p>
+  <div class="flex flex-col sm:flex-row gap-4 justify-center">
+    <a 
+      href="tel:+998901234567" 
+      class="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 font-bold rounded-full hover:bg-primary-50 transition-all duration-300 shadow-lg hover:shadow-xl"
+    >
+      <Phone class="w-5 h-5 mr-2" />
+      +998 90 123-45-67
+    </a>
+    <button
+      onclick="window.openContactModal()"
+      class="inline-flex items-center justify-center px-8 py-4 bg-primary-500 text-white font-bold rounded-full hover:bg-primary-400 transition-all duration-300 border-2 border-white/20 shadow-lg hover:shadow-xl"
+    >
+      Formani to'ldiring
+      <ArrowRight class="ml-2 w-5 h-5 group-hover:translate-x-1" />
+    </button>
+  </div>
+</div>
+
+<style>
+  /* Animation for arrow icon */
+  .group:hover .group-hover\:translate-x-1 {
+    transform: translateX(0.25rem);
+  }
+  
+  /* Smooth transition for CTA section */
+  .hover\:scale-\[1\.02\]:hover {
+    transform: scale(1.02);
+  }
+</style>

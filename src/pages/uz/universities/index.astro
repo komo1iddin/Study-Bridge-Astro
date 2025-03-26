@@ -1,0 +1,94 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getLangFromUrl } from '@/i18n/langUtils'; 
+import { useTranslations } from '@/i18n/utils';
+import UniversityPage from '@/components/features/university/UniversityPage/UniversityPage.tsx';
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'js-yaml';
+
+// Определим тип University здесь напрямую, чтобы избежать проблем с импортом
+type University = {
+  id: string;
+  name: string;
+  description?: string;
+  location?: string;
+  website?: string;
+  logo?: string;
+  image?: string;
+  programs?: string[];
+  tuition?: number;
+  rating?: number;
+  [key: string]: any;
+};
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+export function getStaticPaths() {
+  return ['uz', 'ru', 'en'].map((lang) => ({ params: { lang } }));
+}
+
+let universitiesData: University[] = [];
+let error = null;
+
+try {
+  // Читаем YAML-файлы напрямую
+  console.log('Trying to load YAML files directly');
+  
+  // Путь к директории с YAML-файлами университетов
+  const universitiesDir = path.join(process.cwd(), 'src/content/universities');
+  
+  // Проверяем существование директории
+  if (fs.existsSync(universitiesDir)) {
+    // Получаем список файлов в директории
+    const files = fs.readdirSync(universitiesDir).filter(file => 
+      file.endsWith('.yaml') || file.endsWith('.yml')
+    );
+    
+    console.log(`Found ${files.length} YAML files in ${universitiesDir}`);
+    
+    // Читаем и парсим каждый YAML-файл
+    universitiesData = files.map(file => {
+      const filePath = path.join(universitiesDir, file);
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const data = yaml.load(fileContent) as any;
+      
+      // Получаем id из имени файла (без расширения)
+      const id = path.basename(file, path.extname(file));
+      
+      return {
+        id,
+        ...data,
+        // Преобразуем данные в соответствии с языком, если необходимо
+        name: typeof data.name === 'object' ? data.name[lang] || data.name.en || '' : data.name,
+        description: typeof data.description === 'object' ? 
+          data.description[lang] || data.description.en || '' : 
+          data.description || '',
+      };
+    });
+    
+    console.log(`Loaded ${universitiesData.length} universities from YAML files`);
+  } else {
+    console.log(`Directory ${universitiesDir} does not exist`);
+  }
+} catch (e) {
+  error = e;
+  console.error('Failed to fetch universities:', e);
+  universitiesData = []; // Пустой массив в случае ошибки
+}
+---
+
+<Layout title={t('universities.title')}>
+  <div>
+    {error ? (
+      <div class="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="bg-red-50 border border-red-200 rounded-md p-4 text-red-700">
+          <p>Error loading universities: {error.message}</p>
+        </div>
+      </div>
+    ) : (
+      <UniversityPage universities={universitiesData} lang={lang} client:load />
+    )}
+  </div>
+</Layout>

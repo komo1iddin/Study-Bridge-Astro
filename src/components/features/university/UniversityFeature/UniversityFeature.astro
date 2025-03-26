@@ -1,0 +1,62 @@
+---
+import UniversityCard from './UniversityFeature.svelte';
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+import { getFeaturedUniversities } from '@/lib/fileSystemReader';
+import type { UniversityFeatureItem } from './types';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+
+// Fetch universities from collections with error handling
+let universities: UniversityFeatureItem[] = [];
+
+try {
+  console.log("Fetching universities in UniversityFeature.astro");
+  universities = await getFeaturedUniversities(lang, 8);
+  console.log(`Found ${universities.length} universities in UniversityFeature.astro`);
+  
+  // Fallback to static data if no universities found
+  if (universities.length === 0) {
+    console.log("No universities found, using fallback data");
+    const staticData = await import('@/types/university');
+    if (staticData && typeof staticData === 'object' && 'universities' in staticData && Array.isArray(staticData.universities)) {
+      universities = [...staticData.universities] as UniversityFeatureItem[];
+    }
+  }
+} catch (err) {
+  console.error("Error fetching universities:", err);
+  
+  // Fallback to static data on error
+  try {
+    const staticData = await import('@/types/university');
+    if (staticData && typeof staticData === 'object' && 'universities' in staticData && Array.isArray(staticData.universities)) {
+      universities = [...staticData.universities] as UniversityFeatureItem[];
+    }
+  } catch (e) {
+    console.error("Failed to load fallback data:", e);
+  }
+}
+
+// Prepare translations
+const translations = {
+  leadingUniversities: t('universities.featured.title') || 'Yetakchi universitetlar',
+  discoverText: t('universities.featured.subtitle') || 'Eng yaxshi universitetlarni kashf eting',
+  students: t('universities.featured.students') || 'Talabalar',
+  faculties: t('universities.featured.faculties') || 'Fakultetlar',
+  moreInfo: t('universities.featured.moreInfo') || "Batafsil ma'lumot",
+  swipeToSlide: t('universities.featured.swipeToSlide') || 'Swipe to see more',
+  viewAll: t('universities.featured.view_all') || "Barchasini ko'rish"
+};
+---
+
+<UniversityCard 
+  lang={lang} 
+  universities={universities} 
+  translations={translations} 
+  client:load 
+/>

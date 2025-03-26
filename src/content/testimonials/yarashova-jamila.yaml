@@ -1,0 +1,11 @@
+name: 'Yarashova Jamila'
+university: 'Tsinghua University'
+program: 'Computer Science'
+graduationYear: 2024
+image: '/images/testimonials/placeholder.jpeg'
+rating: 5
+quote:
+  uz: "Study Bridge menga Xitoyning eng nufuzli universitetlaridan birida o'qish imkoniyatini berdi. Ularning professional yordami va qo'llab-quvvatlashi tufayli men Tsinghua universitetiga o'qishga kirdim va hozir kompyuter fanlari bo'yicha ta'lim olmoqdaman."
+  ru: 'Study Bridge дал мне возможность учиться в одном из самых престижных университетов Китая. Благодаря их профессиональной помощи и поддержке я поступил в университет Цинхуа и сейчас изучаю компьютерные науки.'
+  en: 'Study Bridge gave me the opportunity to study at one of the most prestigious universities in China. Thanks to their professional help and support, I was admitted to Tsinghua University and am now studying Computer Science.'
+featured: true

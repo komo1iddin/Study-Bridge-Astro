@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap');
+@import './components/blogGrid.css'
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+
+  :root {
+    --swiper-theme-color: #0077CC;
+  }
+
+
+  
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+    background: #F5F8FA;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  /* Faqat kerakli elementlarga transition berish */
+  .animate-transition {
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  /* View transitions ni sozlash */
+  ::view-transition-old(root) {
+    animation: fade-out 0.2s ease-in-out;
+  }
+
+  ::view-transition-new(root) {
+    animation: fade-in 0.2s ease-in-out;
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Performance uchun */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation: none;
+    }
+    
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .header-logo {
+      font-size: 1rem; /* Уменьшаем размер логотипа */
+    }
+    
+    .mobile-nav-container {
+      gap: 0.5rem; /* Уменьшаем отступы между иконками */
+    }
+  }
+
+  .hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -8px rgb(0 0 0 / 0.15);
+  }
+
+/* Container */
+.container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Sidebar */
+#filters-sidebar {
+  height: 100vh;
+}
+
+@media (min-width: 1024px) {
+  #filters-sidebar {
+    height: auto;
+  }
+  
+  #filters-sidebar .lg\:sticky {
+    position: sticky;
+    top: 88px; /* navbar height + padding */
+    max-height: calc(100vh - 88px);
+  }
+}
+
+/* Scrollbar styles */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Page transitions */
+.page-transition {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Universities grid */
+.universities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .universities-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .universities-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,33 @@
+---
+import { ArrowRight, Phone, Mail, MessageSquare } from 'lucide-astro'
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="cta-section">
+    <a href="#contact" class="flex items-center space-x-2">
+        <span>Contact Us</span>
+        <ArrowRight class="w-5 h-5" />
+    </a>
+    <div class="contact-methods flex space-x-4">
+        <a href="tel:+1234567890" class="flex items-center">
+            <Phone class="w-5 h-5 mr-2" />
+            <span>Call us</span>
+        </a>
+        <a href="mailto:info@example.com" class="flex items-center">
+            <Mail class="w-5 h-5 mr-2" />
+            <span>Email us</span>
+        </a>
+        <a href="https://wa.me/1234567890" class="flex items-center">
+            <MessageSquare class="w-5 h-5 mr-2" />
+            <span>WhatsApp</span>
+        </a>
+    </div>
+</div>

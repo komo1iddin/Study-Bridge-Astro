@@ -1,0 +1,294 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { useTranslations } from '@/i18n/utils';
+import { getCollection } from 'astro:content';
+import { Clock, Users, GraduationCap, BookOpen, CheckCircle, ArrowRight, Phone, MessageSquare } from 'lucide-astro';
+import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
+import ContactModal from '@/components/features/contact/ContactModal.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+export async function getStaticPaths() {
+  const programsEntries = await getCollection('programs');
+  return programsEntries.map(entry => {
+    const slug = entry.id.replace('.md', '');
+    return {
+      params: { 
+        type: entry.data.type,
+        id: slug 
+      },
+      props: { program: entry.data, slug }
+    };
+  });
+}
+
+const { program, slug } = Astro.props;
+
+const breadcrumbItems = [
+  { label: t('nav.home'), href: `/${lang}` },
+  { label: t('nav.programs'), href: `/${lang}/programs` },
+  { name: program.title.uz, href: `/${lang}/programs/${program.type}/${slug}` }
+];
+
+const programDetails = [
+  {
+    icon: Clock,
+    label: 'Davomiyligi',
+    value: program.duration
+  },
+  {
+    icon: Users,
+    label: 'Guruh hajmi',
+    value: '15-20 talaba'
+  },
+  {
+    icon: GraduationCap,
+    label: "O'qitish tili",
+    value: program.language
+  },
+  {
+    icon: BookOpen,
+    label: 'Darslar formati',
+    value: 'Offline + Online'
+  }
+];
+
+// Use requirements from content collection if available, otherwise use defaults
+const requirements = program.requirements?.uz || [
+  "O'rta ma'lumot haqidagi hujjat",
+  "Xorijiy pasport",
+  "Sog'liq haqida ma'lumotnoma",
+  "4 dona rasm 3x4",
+  "Ingliz yoki xitoy tilini bilish"
+];
+
+// Use documents from content or default to these
+const documents = [
+  "Pasport nusxasi",
+  "Diplom va ilovasi",
+  "Tarjimai hol",
+  "Motivatsion xat",
+  "Til sertifikati (agar mavjud bo'lsa)"
+];
+
+// Define application stages
+const stages = [
+  {
+    title: "Ariza topshirish",
+    description: "Online ariza to'ldirish va hujjatlarni yuborish"
+  },
+  {
+    title: "Hujjatlarni ko'rib chiqish",
+    description: "Universitetda hujjatlarni ko'rib chiqish (2-3 hafta)"
+  },
+  {
+    title: "Qabul xati",
+    description: "Universitetdan qabul xatini olish"
+  },
+  {
+    title: "Viza olish",
+    description: "Xitoy vizasini rasmiylashtirish (2-3 hafta)"
+  }
+];
+---
+
+<Layout title={`${program.title.uz} | Study in China`}>
+  <div class="bg-gradient-to-b from-primary-50/50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumbs items={breadcrumbItems} class="mb-8" />
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Program Header -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <div class="flex items-center gap-4 mb-6">
+              <div class={`p-3 rounded-lg ${program.bgColor}`}>
+                <GraduationCap class="w-8 h-8 text-primary-600" />
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold text-gray-900">{program.title.uz}</h1>
+                <p class="text-gray-600">{program.description.uz}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {programDetails.map(detail => (
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="flex items-center gap-2 text-gray-600 mb-2">
+                    <detail.icon class="w-5 h-5 text-primary-600" />
+                    <span class="text-sm">{detail.label}</span>
+                  </div>
+                  <div class="font-semibold text-gray-900">{detail.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Program Features -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Dastur afzalliklari</h2>
+            <div class="grid gap-4">
+              {program.features.uz.map(feature => (
+                <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <CheckCircle class="w-5 h-5 text-primary-600 mt-0.5" />
+                  <span class="text-gray-700">{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Requirements -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Qabul talablari</h2>
+            <div class="grid gap-4">
+              {requirements.map(req => (
+                <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                  <CheckCircle class="w-5 h-5 text-primary-600 mt-0.5" />
+                  <span class="text-gray-700">{req}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Required Documents -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Kerakli hujjatlar</h2>
+            <div class="grid gap-4">
+              {documents.map(doc => (
+                <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                  <CheckCircle class="w-5 h-5 text-primary-600 mt-0.5" />
+                  <span class="text-gray-700">{doc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Application Process -->
+          <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">Qabul jarayoni</h2>
+            <div class="space-y-8">
+              {stages.map((stage, index) => (
+                <div class="relative flex gap-6">
+                  <div class="flex flex-col items-center">
+                    <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold">
+                      {index + 1}
+                    </div>
+                    {index < stages.length - 1 && (
+                      <div class="flex-1 w-px bg-primary-200 my-2"></div>
+                    )}
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-gray-900">{stage.title}</h3>
+                    <p class="text-gray-600 mt-1">{stage.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+          <div class="sticky top-8 space-y-6">
+            <!-- Price Card -->
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <div class="text-center mb-6">
+                <div class="text-sm text-gray-600 mb-1">O'qish narxi</div>
+                <div class="text-3xl font-bold text-primary-600">$3,000</div>
+                <div class="text-sm text-gray-600">bir semestr uchun</div>
+              </div>
+              
+              <button
+                onclick="window.openContactModal()"
+                class="w-full bg-primary-600 text-white py-3 px-4 rounded-lg hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 mb-4"
+              >
+                Ariza topshirish
+                <ArrowRight class="w-5 h-5" />
+              </button>
+              
+              <a 
+                href="tel:+998901234567"
+                class="w-full border border-primary-600 text-primary-600 py-3 px-4 rounded-lg hover:bg-primary-50 transition-colors flex items-center justify-center gap-2"
+              >
+                <Phone class="w-5 h-5" />
+                Qo'ng'iroq qilish
+              </a>
+            </div>
+
+            <!-- Program Levels -->
+            {program.levels && program.levels.length > 0 && (
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                <h3 class="font-semibold text-gray-900 mb-4">O'qish darajalari</h3>
+                <div class="space-y-2">
+                  {program.levels.map(level => (
+                    <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                      <CheckCircle class="w-5 h-5 text-primary-600" />
+                      <span class="text-gray-700">{level}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Fields of Study -->
+            {program.fields && program.fields.length > 0 && (
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                <h3 class="font-semibold text-gray-900 mb-4">Mutaxassisliklar</h3>
+                <div class="space-y-2">
+                  {program.fields.map(field => (
+                    <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                      <CheckCircle class="w-5 h-5 text-primary-600" />
+                      <span class="text-gray-700">{field}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ContactModal />
+</Layout>
+
+<style>
+  /* Smooth transitions */
+  .transition-colors {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  /* Hover effects */
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+
+  /* Sticky sidebar */
+  @media (min-width: 1024px) {
+    .sticky {
+      position: sticky;
+      top: 2rem;
+    }
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .grid {
+      gap: 1rem;
+    }
+    
+    .text-2xl {
+      font-size: 1.5rem;
+    }
+    
+    .p-6 {
+      padding: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import '@/styles/components/sections.css';
+import { getLangFromUrl } from '@/i18n/langUtils'; 
+import { useTranslations } from '@/i18n/utils';
+import { getStaticPaths } from '@/i18n/utils';
+import Hero from '@/components/features/home/Hero.astro';
+import MissionStats from '@/components/features/home/MissionStats.astro';
+import UniversityFeature from '@/components/features/university/UniversityFeature/UniversityFeature.astro';
+import SuccessPath from '@/components/features/home/SuccessPath/SuccessPath.astro';
+import ProgramFeature from '@/components/features/programs/ProgramFeature.astro';
+import OurPartners from '@/components/features/home/OurPartners/OurPartners.astro';
+import OurTeam from '@/components/features/home/OurTeam.astro';
+import ContactModal from '@/components/features/contact/ContactModal.astro';
+import Testimonials from '@/components/features/home/TestimonialsSection.astro';
+import Contact from '@/components/shared/contact/Contact.astro';
+import LatestPosts from '@/components/features/blog/LatestPosts.astro'
+import FAQ from '@/components/shared/faq/FAQ.astro';
+import ChinaVsUzbekistan from '@/components/features/home/ChinaVsUzbekistan.astro';
+import WhyChina from '@/components/features/home/WhyChina.astro';
+import OfferPopup from '@/components/shared/popup/OfferPopup.astro';
+
+
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+export { getStaticPaths };
+
+export const prerender = false;
+
+
+---
+
+<Layout title="EduChina - Xitoyda ta'lim olish" description="Xitoy universitetlariga kirish uchun yordam">
+  <main>
+    <Hero />
+    <div class="section section-gradient-1">
+      <WhyChina />
+    </div>
+    <div class="section section-gradient-2">
+      <MissionStats />
+    </div>
+
+    <div class="section-divider-new">
+      <UniversityFeature lang={lang} />
+    </div>
+  
+    <div class="section-divider-new">
+      <ChinaVsUzbekistan />
+    </div>
+
+    <div class="section-divider-new">
+    <OurPartners />
+  </div>
+
+   <div class="section-divider-new">
+    <ProgramFeature />
+    </div>
+
+    <div class="section section-gradient-3">
+      <OurTeam />
+    </div>
+
+    <div class="section-divider-new">
+      <Testimonials />
+    </div>
+    
+    <div class="section-divider-new">
+      <SuccessPath />
+    </div>
+
+    <div class="section-gradient2 section-divider-new">
+    <LatestPosts />
+  </div>
+
+    <div class="section section-gradient-1">
+      <FAQ />
+    </div>
+
+      <Contact />
+ 
+    <ContactModal /> 
+    <OfferPopup />
+  </main>
+
+  <script>
+    import { uiStore } from '@/data/store/ui/uiStore';
+    import { preferencesStore } from '@/data/store/preferences/preferencesStore';
+
+    // Initialize stores
+    if (typeof window !== 'undefined') {
+      window.uiStore = uiStore;
+      
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        preferencesStore.setReducedMotion(true);
+      }
+    }
+  </script>
+</Layout>

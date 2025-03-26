@@ -1,0 +1,38 @@
+id: "how-to-resolve-accomadation"
+categoryId: "life"
+order: 4
+question:
+  uz: "Yashash joyi masalasi qanday hal qilinadi?"
+  ru: "Как решается вопрос с проживанием?"
+  en: "How is accommodation arranged?"
+answer:
+  uz: |
+    Xitoyda talabalar uchun yashash joyi variantlari:
+
+    1. Kampus yotoqxonasi:
+       - 2-4 kishilik xonalar
+       - Oylik: 600-2000 yuan
+       - Asosiy jihozlar mavjud
+       - Internet, konditsioner
+       
+    2. Xususiy yotoqxonalar:
+       - Universitetga yaqin
+       - Yuqori sifatli sharoitlar
+       - Oylik: 1500-3000 yuan
+       - Ko'proq erkinlik
+       
+    3. Kvartira ijarasi:
+       - 1-2 xonali: 3000-5000 yuan
+       - Kommunal to'lovlar qo'shimcha
+       - Depozit to'lovi kerak
+       - Uzoq muddatli shartnoma
+       
+    4. Homestay:
+       - Xitoylik oila bilan yashash
+       - Til amaliyoti
+       - Madaniyatni o'rganish
+       - Oylik: 2500-4000 yuan
+
+    Maslahat: Birinchi semestr yotoqxonada yashash tavsiya etiladi!
+lastUpdated: "2024-03-15"
+image: "/images/accommodation.jpg"

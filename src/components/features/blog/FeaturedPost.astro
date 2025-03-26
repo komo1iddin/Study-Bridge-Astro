@@ -1,0 +1,73 @@
+---
+import type { BlogPost } from '@/types/blog';
+import { Clock, Tag, ChevronRight } from 'lucide-astro';
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+
+const postImage = post.image || '/images/posts/placeholder/post.jpeg';
+const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
+---
+
+<div class="mb-10" data-aos="fade-up" data-aos-duration="1000">
+  <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+    <div class="lg:grid lg:grid-cols-2">
+      <div class="relative h-60 lg:h-auto overflow-hidden">
+        <img
+          src={postImage}
+          alt={post.title}
+          class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+          onerror="this.src='/images/posts/placeholder/post.jpeg'"
+        />
+      </div>
+      
+      <div class="p-8 lg:p-12">
+        <div class="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+          <span class="inline-block px-4 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium">
+            <Tag size={14} class="mr-1.5" />
+            {post.category || "Education"}
+          </span>
+          <span>•</span>
+          <time datetime={post.date || post.publishedDate} class="flex items-center">
+            <Clock size={14} class="mr-1.5" />
+            {new Date(post.date || post.publishedDate).toLocaleDateString()}
+          </time>
+        </div>
+
+        <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
+          <a href={`/uz/blog/${post.slug}`} class="hover:text-primary-600 transition-colors duration-300">
+            {post.title}
+          </a>
+        </h2>
+
+        <p class="text-gray-600 mb-6 line-clamp-3">{post.excerpt}</p>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <img 
+              src={authorImage}
+              alt={post.author}
+              class="h-10 w-10 rounded-full ring-2 ring-primary-100"
+              onerror="this.src='/images/posts/placeholder/author.jpg'"
+            />
+            <div class="ml-3">
+              <p class="text-sm font-medium text-gray-900">{post.author}</p>
+              <p class="text-xs text-gray-500">{post.authorRole || 'Author'}</p>
+            </div>
+          </div>
+
+          <a 
+            href={`/uz/blog/${post.slug}`} 
+            class="inline-flex items-center text-primary-600 font-medium hover:text-primary-700 transition-colors duration-300"
+          >
+            Read More
+            <ChevronRight size={16} class="ml-1" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

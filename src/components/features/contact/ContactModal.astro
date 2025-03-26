@@ -1,0 +1,265 @@
+---
+// src/components/contact/ContactModal.astro
+import { useTranslations } from '@/i18n/utils';
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div id="contactModal" class="modal" data-modal>
+  <div class="modal-backdrop"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">{t('contact.modal.title')}</div>
+      <button class="modal-close" onclick="window.uiStore.toggleContactModal(false)">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-description">{t('contact.modal.description')}</p>
+      
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="name">{t('contact.form.name')}</label>
+          <input type="text" class="form-control" id="name" placeholder={t('contact.form.name.placeholder')} required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">{t('contact.form.phone')}</label>
+          <input type="tel" class="form-control" id="phone" placeholder={t('contact.form.phone.placeholder')} required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">{t('contact.form.email')}</label>
+          <input type="email" class="form-control" id="email" placeholder={t('contact.form.email.placeholder')}>
+        </div>
+        
+        <button type="submit" class="btn submit-btn">{t('contact.form.submit')}</button>
+        
+        <div class="form-text privacy-notice">
+          {t('contact.form.privacy.text')} <a href="#">{t('contact.form.privacy.link')}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { uiStore, $uiState } from '@/data/store/ui/uiStore';
+  import { contactFormSchema } from '@/types/contact';
+  
+  // Subscribe to state changes
+  $uiState.subscribe(state => {
+    const modal = document.querySelector('[data-modal]');
+    if (!modal) return;
+
+    if (state.isContactModalOpen) {
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => {
+        modal.querySelector('.modal-content')?.classList.add('modal-visible');
+      }, 10);
+    } else {
+      modal.querySelector('.modal-content')?.classList.remove('modal-visible');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 300);
+    }
+  });
+
+  // Close modal on backdrop click
+  document.querySelector('.modal-backdrop')?.addEventListener('click', () => {
+    uiStore.toggleContactModal(false);
+  });
+
+  // Close modal on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') uiStore.toggleContactModal(false);
+  });
+
+  // Handle form submission
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      try {
+        // Get and validate form data
+        const formData = new FormData(e.target as HTMLFormElement);
+        const data = Object.fromEntries(formData);
+        const validatedData = contactFormSchema.parse(data);
+      
+        // Here you can add code to send the validated data to your server
+        console.log('Validated form data:', validatedData);
+      
+        // Show success message
+        alert(successMessage);
+      
+        // Close modal
+        uiStore.toggleContactModal(false);
+      
+        // Reset form
+        contactForm.reset();
+      } catch (error) {
+        console.error('Form submission error:', error);
+        alert('An error occurred. Please try again.');
+      }
+    });
+  }
+</script>
+
+
+<style>
+  /* Стили остаются без изменений */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: white;
+    width: 90%;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  .modal-content.modal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .modal-close {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+  }
+
+  .modal-close:hover {
+    color: #333;
+  }
+
+  .modal-description {
+    margin-bottom: 15px;
+    color: #666;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+
+  .form-control:focus {
+    border-color: #0088ff;
+    outline: none;
+  }
+
+  .form-text {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  .privacy-notice {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .privacy-notice a {
+    color: #0088ff;
+    text-decoration: none;
+  }
+
+  .privacy-notice a:hover {
+    text-decoration: underline;
+  }
+
+  .btn {
+    background-color: #0088ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+
+  .btn:hover {
+    background-color: #0066cc;
+  }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    font-weight: bold;
+  }
+
+  @media (max-width: 576px) {
+    .modal-content {
+      width: 95%;
+      margin: 20px auto;
+      padding: 15px;
+    }
+    
+    .modal-title {
+      font-size: 18px;
+    }
+  }
+</style>

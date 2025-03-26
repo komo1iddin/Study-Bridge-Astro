@@ -1,0 +1,67 @@
+name:
+  uz: 'Zhejiang universiteti'
+  ru: 'Чжэцзянский университет'
+  en: 'Zhejiang University'
+location: 'Hangzhou, China'
+rating: 4.6
+students:
+  uz: '60,000+ talaba'
+  ru: '60,000+ студентов'
+  en: '60,000+ students'
+faculties:
+  uz:
+    - 'Muhandislik'
+    - 'Axborot texnologiyalari'
+    - 'Biznes'
+    - 'Qishloq xojaligi'
+    - 'Tibbiyot'
+  ru:
+    - 'Инженерия'
+    - 'Информационные технологии'
+    - 'Бизнес'
+    - 'Сельское хозяйство'
+    - 'Медицина'
+  en:
+    - 'Engineering'
+    - 'Information Technology'
+    - 'Business'
+    - 'Agriculture'
+    - 'Medicine'
+annualFee: 4600
+priceRange: '4,600 - 9,200'
+image: 'images/universities/zhejiang-university/main.jpg'
+logo: 'https://e7.pngegg.com/pngimages/70/430/png-clipart-zhejiang-university-of-science-and-technology-zhejiang-a-f-university-doctor-of-philosophy-student.png'
+featured: false
+programs:
+  - 'Computer Science and Technology'
+  - 'Electrical Engineering'
+  - 'Mechanical Engineering'
+  - 'Business Administration'
+  - 'Agricultural Sciences'
+careerOpportunities:
+  companies:
+    - "Alibaba, Hikvision, NetEase"
+    - "Xitoy davlat tashkilotlari"
+    - "Xalqaro texnologiya kompaniyalari"
+  salaryRanges:
+    - "Boshlang'ich: ¥125,000-185,000/yil"
+    - "3-5 yildan so'ng: ¥210,000-310,000/yil"
+    - "Senior darajada: ¥400,000+/yil"
+costs:
+  tuition:
+    - "Bakalavr: ¥24,000-30,000/yil"
+    - "Magistratura: ¥32,000-42,000/yil"
+    - "Doktorantura: ¥40,000-45,000/yil"
+  additional:
+    - "Yotoqxona: ¥9,000-15,000/yil"
+    - "Ovqatlanish: ¥12,000-18,000/yil"
+    - "Boshqa xarajatlar: ¥9,000-14,000/yil"
+scholarships:
+  - name: "ZJU International Scholarship"
+    description: "To'liq o'qish to'lovi va yashash xarajatlari. Xalqaro talabalar uchun"
+  - name: "Zhejiang Provincial Government Scholarship"
+    description: "Chjejiang viloyati hukumati tomonidan beriladigan stipendiya. Xalqaro talabalar uchun"
+  - name: "Hangzhou Municipal Government Scholarship"
+    description: "Xanchzhou shahri hukumati tomonidan beriladigan stipendiya. Xalqaro talabalar uchun"
+description: |
+  Zhejiang University, founded in 1897, is one of China's oldest and most prestigious higher education institutions. Located in Hangzhou, the capital of Zhejiang province, it is consistently ranked among China's top universities. Known for its comprehensive academic programs, Zhejiang University is particularly strong in engineering, computer science, and agricultural sciences. The university has one of the largest academic libraries in Asia and maintains extensive research facilities across its seven campuses.

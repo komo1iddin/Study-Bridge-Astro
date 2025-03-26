@@ -1,0 +1,125 @@
+name:
+  uz: 'Tsinghua universiteti'
+  ru: 'Университет Цинхуа'
+  en: 'Tsinghua University'
+location: 'Beijing, China'
+ranking: 1
+foundedYear: 1911
+description:
+  uz: "Xitoyning eng nufuzli universitetlaridan biri, Pekinda joylashgan. Muhandislik va kompyuter fanlari dasturlari bilan mashhur. QS World University Rankings bo'yicha Xitoyning #1 universiteti."
+  ru: "Один из самых престижных университетов Китая, расположенный в Пекине. Известен своими программами по инженерии и компьютерным наукам. #1 университет Китая по QS World University Rankings."
+  en: "One of China's most prestigious universities, located in Beijing. Known for engineering and computer science programs. Ranked #1 in China by QS World University Rankings."
+students:
+  uz: '50,000+ talaba'
+  ru: '50,000+ студентов'
+  en: '50,000+ students'
+internationalStudents: 3000
+studentsCount: 36000
+image: '/images/universities/tsinghua/main.jpg'
+logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Tsinghua_University_Logo.svg/2048px-Tsinghua_University_Logo.svg.png'
+featured: true
+hasGrants: true
+city: 'Beijing'
+
+programTypes:
+  - 'bachelor'
+  - 'master'
+  - 'doctor'
+  - '1+2'
+  - 'language'
+
+educationType:
+  - 'bachelor'
+  - 'master'
+  - 'doctor'
+  - 'language'
+
+programs:
+  uz:
+    - 'Fuqarolik muhandisligi'
+    - 'Kompyuter fanlari va texnologiyalari'
+    - 'Biznes boshqaruvi'
+    - 'Arxitektura'
+    - 'Elektr muhandisligi'
+    - 'Mexanika muhandisligi'
+    - 'Kimyoviy muhandislik'
+    - 'Biotexnologiya'
+  ru:
+    - 'Гражданская инженерия'
+    - 'Компьютерные науки и технологии'
+    - 'Управление бизнесом'
+    - 'Архитектура'
+    - 'Электротехника'
+    - 'Механическая инженерия'
+    - 'Химическая инженерия'
+    - 'Биотехнология'
+  en:
+    - 'Civil Engineering'
+    - 'Computer Science and Technology'
+    - 'Business Administration'
+    - 'Architecture'
+    - 'Electrical Engineering'
+    - 'Mechanical Engineering'
+    - 'Chemical Engineering'
+    - 'Biotechnology'
+
+grants:
+  available: true
+  types:
+    - name: 
+        uz: "Davlat granti"
+        ru: "Государственный грант"
+        en: "Government Scholarship"
+      coverage: "100%"
+    - name:
+        uz: "Universitet granti"
+        ru: "Университетский грант"
+        en: "University Scholarship"
+      coverage: "50-75%"
+    - name:
+        uz: "Tsinghua Xalqaro Stipendiyasi"
+        ru: "Международная стипендия Цинхуа"
+        en: "Tsinghua International Scholarship"
+      coverage: "100%"
+
+costs:
+  tuition:
+    bachelor: 26000
+    master: 35000
+    doctor: 40000
+    language: 15000
+  currency: "CNY"
+  additional:
+    - "Yotoqxona: ¥1,200-3,000/yil"
+    - "Ovqatlanish: ¥1,000-1,500/oy"
+    - "Boshqa xarajatlar: ¥500-800/oy"
+
+requirements:
+  bachelor:
+    - "IELTS 6.0 yoki TOEFL iBT 80"
+    - "HSK 4 darajasi (Xitoy tili dasturlari uchun)"
+    - "O'rta maktab diplomi"
+  master:
+    - "IELTS 6.5 yoki TOEFL iBT 90"
+    - "HSK 5 darajasi (Xitoy tili dasturlari uchun)"
+    - "Bakalavr diplomi"
+  doctor:
+    - "IELTS 7.0 yoki TOEFL iBT 100"
+    - "HSK 6 darajasi (Xitoy tili dasturlari uchun)"
+    - "Magistr diplomi"
+
+rankings:
+  qs: 
+    world: 15
+    asia: 3
+  times: 
+    world: 20
+    asia: 2
+
+facilities:
+  - "Zamonaviy kutubxona"
+  - "Sport majmuasi"
+  - "Tadqiqot laboratoriyalari"
+  - "Talabalar turar joyi"
+  - "Wi-Fi kampus"
+  - "Tibbiy markaz"

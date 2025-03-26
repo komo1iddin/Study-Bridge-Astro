@@ -1,0 +1,171 @@
+---
+import { GraduationCap, Brain, DollarSign, Globe, Rocket, BookOpen } from 'lucide-astro';
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import CTA from '@/components/ui/CTA.astro';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+
+const reasons = [
+  {
+    icon: GraduationCap,
+    title: "Yuqori sifatli ta'lim",
+    description: "Xitoy universitetlari jahon reytinglarida TOP-100 ga kiradi va eng zamonaviy ilmiy-texnik bazaga ega",
+    color: "blue"
+  },
+  {
+    icon: Brain,
+    title: "Innovatsiya markazi",
+    description: "Sun'iy intellekt, IT, robototexnika va biznes sohasida dunyoning eng ilg'or davlati",
+    color: "purple"
+  },
+  {
+    icon: DollarSign,
+    title: "Arzon o'qish xarajatlari",
+    description: "Yevropa va AQShga nisbatan 2-3 barobar arzon. Yiliga $2000-4000 dan boshlanadi + grantlar",
+    color: "green"
+  },
+  {
+    icon: Globe,
+    title: "Madaniy rang-baranglik",
+    description: "5000 yillik tarix, zamonaviy texnologiyalar va boy madaniyat – bu nafaqat ta'lim, balki hayot maktabi",
+    color: "orange"
+  },
+  {
+    icon: Rocket,
+    title: "Keng imkoniyatlar",
+    description: "Xitoy tili, xalqaro tajriba va kelajakda yuqori maosh - $2000-5000 dan boshlangan ish o'rinlari",
+    color: "red"
+  },
+  {
+    icon: BookOpen,
+    title: "Zamonaviy infratuzilma",
+    description: "Eng so'nggi texnologiyalar bilan jihozlangan kampus, laboratoriyalar va sport majmualar",
+    color: "indigo"
+  }
+];
+---
+
+<section class="section-container">
+  <!-- Background Elements -->
+  <div class="hero-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <!-- Rest of the WhyChina content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <!-- Section Title -->
+    <SectionHeader
+      title={`${t('whyChina.title.main')} <span class="text-blue-600">${t('whyChina.title.highlight')}</span>`}
+      subtitle={t('whyChina.subtitle')}
+    />
+         
+    <!-- Reasons Flex Container -->
+    <div class="flex flex-wrap gap-8 mb-12">
+      {reasons.map((reason, index) => (
+        <div 
+          class="card flex-1 min-w-[calc(100%-2rem)] md:min-w-[calc(50%-1.5rem)] lg:min-w-[calc(33.333%-1.75rem)]"
+          data-aos="fade-up"
+          data-aos-delay={index * 100}
+        >
+          <div class={`w-14 h-14 rounded-lg bg-${reason.color}-100 flex items-center justify-center mb-6`}>
+            <reason.icon class={`w-7 h-7 text-${reason.color}-600`} />
+          </div>
+          
+          <h3 class="text-xl font-bold text-gray-900 mb-3">
+            {reason.title}
+          </h3>
+          
+          <p class="text-gray-600">
+            {reason.description}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <!-- CTA Section -->
+    <CTA />
+  </div>
+</section>
+
+<style>
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+  
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  .card {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.8));
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.1), 0 10px 10px -5px rgba(59, 130, 246, 0.05);
+    border-color: rgba(59, 130, 246, 0.2);
+    transform: translateY(-4px);
+  }
+  
+  /* Mobile responsive styles */
+  @media (max-width: 640px) {
+    .section-title {
+      font-size: 1.75rem;
+    }
+    
+    .section-subtitle {
+      font-size: 0.875rem;
+    }
+    
+    .card {
+      transform: none !important;
+    }
+  }
+  
+  /* Animation for arrow icon */
+  .group:hover .group-hover\:translate-x-1 {
+    transform: translateX(0.25rem);
+  }
+  
+  /* Smooth transition for CTA section */
+  .hover\:scale-\[1\.02\]:hover {
+    transform: scale(1.02);
+  }
+</style>

@@ -1,0 +1,41 @@
+id: "how-to-open-bank-card"
+categoryId: "finance"
+order: 2
+question:
+  uz: "Bank hisobi qanday ochiladi?"
+  ru: "Как открыть банковский счет?"
+  en: "How to open a bank account?"
+answer:
+  uz: |
+    Xitoyda bank hisobi ochish tartibi:
+
+    1. Kerakli hujjatlar:
+       - Pasport
+       - Talaba guvohnomasi
+       - Yashash joyidan ma'lumotnoma
+       - Telefon raqami
+       
+    2. Bank tanlash:
+       - Bank of China
+       - ICBC
+       - China Construction Bank
+       - Agricultural Bank of China
+       
+    3. Hisob turlari:
+       - Joriy hisob (kunlik operatsiyalar)
+       - Jamg'arma hisobi
+       - WeChat/Alipay ulash
+       
+    4. Xizmatlar:
+       - Bank kartasi
+       - Online banking
+       - Mobile ilovalar
+       - Xalqaro o'tkazmalar
+       
+    5. Foydali maslahatlar:
+       - Ingliz tili bo'limi bor bankni tanlang
+       - Kampusga yaqin filialdan ochish
+       - Xalqaro kartalar bilan ishlashni tekshiring
+
+    Eslatma: Bank hisobi ochish BEPUL!
+lastUpdated: "2024-03-15"

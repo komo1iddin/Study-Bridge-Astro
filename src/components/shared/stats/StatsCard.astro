@@ -1,0 +1,30 @@
+---
+interface Props {
+  value: string;
+  label: string;
+  description?: string;
+  highlighted?: boolean;
+}
+
+const { value, label, description, highlighted = false } = Astro.props;
+---
+
+<div class:list={[
+  "p-6 rounded-lg", 
+  {
+    "bg-primary-50": highlighted,
+    "bg-white": !highlighted
+  }
+]}>
+  <div class="text-3xl font-bold text-primary-600 mb-2">
+    {value}
+  </div>
+  <div class="text-lg font-medium text-gray-900 mb-1">
+    {label}
+  </div>
+  {description && (
+    <p class="text-sm text-gray-600">
+      {description}
+    </p>
+  )}
+</div>

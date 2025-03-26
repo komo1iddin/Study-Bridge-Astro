@@ -1,0 +1,29 @@
+name:
+  uz: 'Fudan universiteti'
+  ru: 'Фуданьский университет'
+  en: 'Fudan University'
+location: 'Shanghai, China'
+rating: 4.7
+ranking: 4.7
+students:
+  uz: '38,000+'
+  ru: '38,000+ студентов'
+  en: '38,000+ students'
+faculties:
+  uz:
+    - 'Jurnalistika'
+    - 'Xalqaro munosabatlar'
+    - 'Fizika'
+  ru:
+    - 'Журналистика'
+    - 'Международные отношения'
+    - 'Физика'
+  en:
+    - 'Journalism'
+    - 'International Relations'
+    - 'Physics'
+image: 'https://www.china-admissions.com/wp-content/uploads/2021/02/Fudan-University-Handan-Campus-1-1200x675.jpg?height=400&width=600'
+logo: 'https://cdn.imgbin.com/3/22/5/imgbin-fudan-university-funda-o-get-lio-vargas-insper-higher-education-school-QDi0N90DANWFVZ4PPrYAQfjtJ.jpg?height=80&width=80'
+foundedYear: 1905
+established: 1905
+featured: true

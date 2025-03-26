@@ -1,0 +1,169 @@
+---
+import Container from '../core/Card/Container.astro';
+import { Mail, Phone, MapPin, Send, Instagram, MessageCircle } from 'lucide-astro';
+import { navigationSchema, type Navigation } from '@/types/navigation';
+
+const navigation: Navigation = {
+  main: [
+    { name: 'Biz haqimizda', href: '/about', icon: 'users' },
+    { name: 'Dasturlar', href: '/programs', icon: 'book-open' },
+    { name: 'Universitetlar', href: '/universities', icon: 'landmark' },
+    { name: 'Blog', href: '/blog', icon: 'file-text' },
+    { name: 'Aloqa', href: '/contacts', icon: 'phone' }
+  ],
+  resources: [
+    { name: 'Stipendiyalar', href: '/scholarships' },
+    { name: 'Viza yordami', href: '/visa-support' },
+    { name: 'Til kurslari', href: '/language-courses' },
+    { name: "Ko'p so\'raladigan savollar", href: '/faq' }
+  ],
+  social: [
+    {
+      name: 'Instagram',
+      href: '#',
+      icon: 'instagram'
+    },
+    {
+      name: 'Telegram',
+      href: '#',
+      icon: 'message-circle'
+    }
+  ]
+};
+
+// Validate navigation data
+const validatedNavigation = navigationSchema.parse(navigation);
+
+---
+
+<footer>
+  
+  <Container>
+
+    <div class="py-12 md:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <!-- Brand Column (4 cols) -->
+        <div class="md:col-span-4 space-y-6">
+          <div class="flex items-center space-x-3">
+            <h2 class="text-2xl font-bold text-blue-600">Study Bridge</h2>
+          </div>
+          
+          <p class="text-gray-600 leading-relaxed">
+            Xitoy ta'limi dunyosiga ishonchli yo'lboshchingiz. 2022 yildan beri talabalarga Xitoyning eng yaxshi universitetlariga kirish uchun yordam beramiz.
+          </p>
+          
+          <div class="pt-2">
+            <div class="flex items-center space-x-4">
+              {navigation.social.map(item => (
+                <a
+                  href={item.href}
+                  class="flex items-center justify-center h-12 w-12 rounded-full bg-white shadow-sm hover:shadow-md text-gray-600 hover:text-primary-600 transform hover:scale-110 transition-all duration-300"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.name}
+                >
+                  {item.icon === 'instagram' ? (
+                    <Instagram class="h-5 w-5" />
+                  ) : (
+                    <MessageCircle class="h-5 w-5" />
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Columns (8 cols total) -->
+        <div class="md:col-span-2">
+          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">Navigatsiya</h3>
+          <ul class="space-y-3">
+            {validatedNavigation.main.map((item, index) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="text-gray-600 hover:text-primary-600 transition-colors duration-300 flex items-center group"
+                >
+                  <span class="w-0 group-hover:w-2 h-0.5 bg-primary-600 mr-0 group-hover:mr-2 transition-all duration-300"></span>
+                  {item.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="md:col-span-2">
+          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">Resurslar</h3>
+          <ul class="space-y-3">
+            {validatedNavigation.resources.map((item, index) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="text-gray-600 hover:text-primary-600 transition-colors duration-300 flex items-center group"
+                >
+                  <span class="w-0 group-hover:w-2 h-0.5 bg-primary-600 mr-0 group-hover:mr-2 transition-all duration-300"></span>
+                  {item.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Contact Column -->
+        <div class="md:col-span-4">
+          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">Biz bilan bog'lanish</h3>
+          
+          <ul class="space-y-4">
+            <li class="text-gray-600 flex items-start">
+              <Phone class="h-5 w-5 text-primary-600 mr-3 flex-shrink-0 mt-0.5" />
+              <a href="tel:+86XXXXXXXXXX" class="hover:text-primary-600 transition-colors duration-300">+86 XXX XXX XXXX</a>
+            </li>
+            <li class="text-gray-600 flex items-start">
+              <Mail class="h-5 w-5 text-primary-600 mr-3 flex-shrink-0 mt-0.5" />
+              <a href="mailto:info@studybridge.com" class="hover:text-primary-600 transition-colors duration-300">info@studybridge.com</a>
+            </li>
+            <li class="text-gray-600 flex items-start">
+              <MapPin class="h-5 w-5 text-primary-600 mr-3 flex-shrink-0 mt-0.5" />
+              <span>Hangzhou, Zhejiang, Xitoy</span>
+            </li>
+          </ul>
+          
+          <!-- Newsletter -->
+          <div class="mt-6 pt-6 border-t border-gray-200">
+            <h4 class="text-sm font-semibold text-gray-800 mb-3">Yangiliklarimizga obuna bo'ling</h4>
+            <form class="relative">
+              <input
+                type="email"
+                required
+                placeholder="Email manzilingiz"
+                class="block w-full rounded-full border border-gray-300 bg-white px-4 py-3 pr-12 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:ring-offset-2 text-sm transition-all duration-300"
+              />
+              <button
+                type="submit"
+                class="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-primary-600 p-2.5 text-white hover:bg-primary-700 transition-all duration-300 shadow-sm hover:shadow-md"
+                aria-label="Obuna bo'lish"
+              >
+                <Send class="h-4 w-4" />
+              </button>
+            </form>
+            <p class="mt-2 text-xs text-gray-500">Dolzarb yangiliklar va takliflarni oling</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Copyright -->
+      <div class="mt-12 pt-8 border-t border-gray-200">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <p class="text-sm text-gray-500 mb-4 md:mb-0">
+            &copy; {new Date().getFullYear()} Study Bridge. Barcha huquqlar himoyalangan.
+          </p>
+          <div class="flex space-x-6 text-xs text-gray-500">
+            <a href="/privacy" class="hover:text-primary-600 transition-colors duration-300">Maxfiylik siyosati</a>
+            <a href="/terms" class="hover:text-primary-600 transition-colors duration-300">Foydalanish shartlari</a>
+            <a href="/sitemap" class="hover:text-primary-600 transition-colors duration-300">Sayt xaritasi</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</footer>

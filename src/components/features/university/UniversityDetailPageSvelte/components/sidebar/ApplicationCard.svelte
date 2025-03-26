@@ -1,0 +1,52 @@
+<script lang="ts">
+  import { Calendar, Clock } from "lucide-svelte";
+  import { Card, CardContent } from "@/components/ui/svelte";
+  import { Button } from "@/components/ui/svelte";
+  import type { University } from "@/types/university";
+  import type { Lang } from "@/i18n/langUtils";
+
+  export let university: University;
+  export let lang: Lang;
+</script>
+
+<Card class="border-none shadow-md overflow-hidden">
+  <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-white">
+    <h3 class="font-bold text-lg">Apply Now</h3>
+    <p class="text-white/80 text-sm mt-1">
+      Start your application to {university.name}
+    </p>
+  </div>
+  <CardContent class="p-4">
+    <div class="space-y-4">
+      <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+        <div class="flex items-center gap-2">
+          <Calendar class="h-5 w-5 text-blue-600" />
+          <span class="text-sm font-medium">Application Deadline</span>
+        </div>
+        <span class="text-sm font-bold">June 30, 2023</span>
+      </div>
+      
+      <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+        <div class="flex items-center gap-2">
+          <Clock class="h-5 w-5 text-blue-600" />
+          <span class="text-sm font-medium">Processing Time</span>
+        </div>
+        <span class="text-sm font-bold">4-6 weeks</span>
+      </div>
+      
+      <div class="bg-slate-50 p-3 rounded-lg">
+        <p class="text-sm text-slate-600">
+          Application Fee: <span class="font-bold text-slate-800">$50 - $100</span>
+        </p>
+      </div>
+      
+      <Button class="w-full bg-blue-600 hover:bg-blue-700">
+        Apply Online
+      </Button>
+      
+      <p class="text-xs text-slate-500 text-center">
+        For more information about the application process, please visit the university's official website.
+      </p>
+    </div>
+  </CardContent>
+</Card> 

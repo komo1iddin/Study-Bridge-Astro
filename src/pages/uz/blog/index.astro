@@ -1,0 +1,93 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { createTranslationFunction } from '@/i18n/translationUtils';
+import { getAllPosts, type Post } from '@/lib/fileSystemReader';
+import type { BlogPost } from '@/types/blog';
+
+// Import blog components
+import FeaturedPost from '@/components/features/blog/FeaturedPost.astro';
+import BlogGrid from '@/components/features/blog/BlogGrid.astro';
+import BlogHeader from '@/components/features/blog/BlogHeader.astro';
+import BlogCategories from '@/components/features/blog/BlogCategories.astro';
+import BlogSearch from '@/components/features/blog/BlogSearch.astro';
+
+const currentLang = getLangFromUrl(Astro.url);
+const t = createTranslationFunction(currentLang);
+
+// Initialize posts array
+let allPosts: BlogPost[] = [];
+let featuredPost: BlogPost | null = null;
+let regularPosts: BlogPost[] = [];
+
+try {
+  // Get posts from our custom file system reader
+  const contentPosts = await getAllPosts('uz');
+  
+  if (contentPosts && contentPosts.length > 0) {
+    allPosts = contentPosts.map((post: Post) => ({
+      slug: post.slug,
+      title: post.data.title.uz,
+      excerpt: post.data.excerpt.uz,
+      publishedDate: post.data.publishedDate,
+      author: post.data.author,
+      authorImage: post.data.authorImage,
+      authorRole: post.data.authorRole?.uz || '',
+      image: post.data.image,
+      category: post.data.category?.uz || 'Education',
+      featured: post.data.featured || false,
+      lang: 'uz' // Add language information
+    }));
+  }
+} catch (e) {
+  console.error('Failed to fetch posts:', e);
+}
+
+// Sort posts by date (newest first)
+allPosts.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+
+// Find featured post
+featuredPost = allPosts.find(post => post.featured) || allPosts[0];
+
+// Get regular posts (excluding featured post)
+regularPosts = allPosts.filter(post => post !== featuredPost);
+---
+
+<Layout title="Xitoyda o'qish - Ta'lim olish imkoniyatlari" description="Xitoyning eng yaxshi universitetlariga o'qishga kirishda yordam beramiz. Til kurslari, bakalavr, magistratura.">
+  <div class="bg-white py-12 md:py-16 lg:py-20">
+    <div class="container px-4 mx-auto">
+      <!-- Blog Header -->
+      <BlogHeader />
+      
+      {allPosts.length > 0 ? (
+        <>
+          <!-- Featured Post -->
+          {featuredPost && (
+            <div class="max-w-4xl mx-auto mb-16">
+              <FeaturedPost post={featuredPost} />
+            </div>
+          )}
+          
+          <!-- Categories -->
+          <BlogCategories currentCategory="all" />
+          
+          <!-- Search -->
+          <BlogSearch blogPosts={allPosts} />
+          
+          <!-- Regular Posts -->
+          {regularPosts.length > 0 && (
+            <div class="max-w-6xl mx-auto">
+              <h2 class="text-2xl font-bold text-gray-900 mb-8">So'nggi maqolalar</h2>
+              <BlogGrid posts={regularPosts} />
+            </div>
+          )}
+        </>
+      ) : (
+        <div class="text-center py-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Hozircha maqolalar mavjud emas</h2>
+          <p class="text-gray-600">Tez orada yangi maqolalar qo'shiladi</p>
+        </div>
+      )}
+    </div>
+  </div>
+</Layout>

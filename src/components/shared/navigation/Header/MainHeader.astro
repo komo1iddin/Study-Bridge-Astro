@@ -1,0 +1,89 @@
+---
+import { Globe, Phone } from 'lucide-astro';
+import DesktopNav from './DesktopNav.astro';
+import MobileNav from './MobileNav.tsx';
+import LanguageSelector from '@/components/shared/LanguageSelector/LanguageSelector.astro';
+
+const currentPath = Astro.url.pathname;
+const currentLang = currentPath.split('/')[1] || 'uz';
+---
+
+<header class="fixed top-0 left-0 right-0 bg-white z-[40] border-b border-gray-200/70">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16">
+      {/* Logo va Navigation */}
+      <div class="flex items-center gap-8">
+        <a href={`/${currentLang}`} class="flex items-center gap-2">
+          <span class="bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent font-bold text-xl tracking-tight">
+            Study Bridge
+          </span>
+        </a>
+
+        {/* Desktop Navigation */}
+        <div class="hidden lg:block">
+          <DesktopNav />
+        </div>
+      </div>
+
+      {/* Right Section - Desktop */}
+      <div class="hidden lg:flex items-center gap-4">
+        {/* Language Selector */}
+        <LanguageSelector /> 
+
+        {/* CTA Button */}
+        <button 
+          onclick="window.showOfferPopup()"
+          class="bg-[#2463EB] hover:bg-[#1d4fd1] text-white px-6 py-2.5 rounded-full flex items-center gap-2 text-[15px] font-semibold transition-all duration-300 hover:shadow-[0_6px_20px_rgba(36,99,235,0.35)] hover:-translate-y-0.5 active:translate-y-0"
+        >
+          <span>Подать заявку</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile Navigation */}
+      <div class="flex lg:hidden items-center gap-2">
+        <button 
+          onclick="window.showLanguageSelector?.()"
+          class="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+        >
+          <Globe class="h-5 w-5" />
+        </button>
+        
+        <a href="tel:+998901234567" class="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors duration-200">
+          <Phone class="h-5 w-5" />
+        </a>
+
+        <MobileNav client:load currentPath={currentPath} />
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('main-header');
+  const headerInner = header?.querySelector('div');
+  
+  // Watch for mobile menu state changes
+  const observer = new MutationObserver(() => {
+    const mobileMenu = document.querySelector('.mobile-menu-container');
+    const isMenuOpen = mobileMenu?.classList.contains('active');
+    
+    if (header && headerInner) {
+      if (isMenuOpen) {
+        header.style.background = 'transparent';
+        headerInner.style.background = 'transparent';
+      } else {
+        header.style.background = '';
+        headerInner.style.background = '';
+      }
+    }
+  });
+
+  // Start observing the body for class changes
+  observer.observe(document.body, { 
+    attributes: true,
+    attributeFilter: ['class']
+  });
+</script>

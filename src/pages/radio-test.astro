@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RadioGroupTest from '../components/ui/svelte/RadioGroupTest.svelte';
+
+const meta = {
+  title: "RadioGroup Test Page",
+  description: "Test page for the RadioGroup component",
+  keywords: ['radio', 'component', 'test']
+};
+---
+
+<Layout meta={meta}>
+  <main class="container mx-auto py-8">
+    <h1 class="text-2xl font-bold mb-6">RadioGroup Component Test</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div>
+        <h2 class="text-xl mb-4">Svelte RadioGroup</h2>
+        <RadioGroupTest client:load />
+      </div>
+    </div>
+  </main>
+</Layout> 

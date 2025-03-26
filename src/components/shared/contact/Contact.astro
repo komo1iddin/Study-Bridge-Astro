@@ -1,0 +1,263 @@
+---
+import { Phone, Send, Mail, MessageSquare, MapPin, ArrowRight, Facebook, Instagram, Youtube, Twitter } from 'lucide-astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { useTranslations } from '@/i18n/utils';
+import { getStaticPaths } from '@/i18n/utils';
+import { getLangFromUrl } from '@/i18n/langUtils'; 
+import type { Lang } from '@/i18n/langUtils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+
+const getIcon = (iconName: string) => {
+  switch (iconName) {
+    case 'Phone':
+      return Phone;
+    case 'Send':
+      return Send;
+    case 'Mail':
+      return Mail;
+    case 'MessageSquare':
+      return MessageSquare;
+    case 'MapPin':
+      return MapPin;
+    default:
+      return Phone;
+  }
+};
+
+export { getStaticPaths };
+---
+
+<section class="section section-gradient-1">
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <SectionHeader
+    title={t('contacts.title')}
+    subtitle={t('contacts.subtitle')}
+  />
+
+    <!-- Contact Methods Cards - Compact Layout -->
+    <div class="grid md:grid-cols-4 gap-6 mb-12">
+      <div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+          <div class="flex items-center">
+            <div class="p-3 bg-primary-50 rounded-full mr-4 group-hover:bg-primary-500 transition-colors duration-300">
+              <Phone class="w-6 h-6 text-primary-600 group-hover:text-white transition-colors duration-300" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold mb-1 text-gray-900">{t('contacts.methods.phone')}</h3>
+              <a 
+                href="tel:+998901234567" 
+                class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200 text-sm group-hover:underline"
+              >
+                +998 90 123 45 67
+                <ArrowRight class="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+          <div class="flex items-center">
+            <div class="p-3 bg-primary-50 rounded-full mr-4 group-hover:bg-primary-500 transition-colors duration-300">
+              <Mail class="w-6 h-6 text-primary-600 group-hover:text-white transition-colors duration-300" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold mb-1 text-gray-900">{t('contacts.methods.email')}</h3>
+              <a 
+                href="mailto:info@example.uz" 
+                class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200 text-sm group-hover:underline"
+              >
+                info@example.uz
+                <ArrowRight class="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+          <div class="flex items-center">
+            <div class="p-3 bg-primary-50 rounded-full mr-4 group-hover:bg-primary-500 transition-colors duration-300">
+              <MessageSquare class="w-6 h-6 text-primary-600 group-hover:text-white transition-colors duration-300" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold mb-1 text-gray-900">{t('contacts.methods.telegram')}</h3>
+              <a 
+                href="https://t.me/example" 
+                class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200 text-sm group-hover:underline"
+              >
+                @example
+                <ArrowRight class="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+          <div class="flex items-center">
+            <div class="p-3 bg-primary-50 rounded-full mr-4 group-hover:bg-primary-500 transition-colors duration-300">
+              <MessageSquare class="w-6 h-6 text-primary-600 group-hover:text-white transition-colors duration-300" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold mb-1 text-gray-900">{t('contacts.methods.whatsapp')}</h3>
+              <a 
+                href="https://wa.me/998901234567" 
+                class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors duration-200 text-sm group-hover:underline"
+              >
+                +998 90 123 45 67
+                <ArrowRight class="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form and Map Section -->
+    <div class="grid md:grid-cols-5 gap-8 items-start">
+      <!-- Contact Form -->
+      <div class="md:col-span-3 bg-white rounded-xl shadow-sm p-8 border border-gray-100 hover:shadow-xl transition-all duration-300">
+        <h2 class="text-2xl font-bold mb-2 text-gray-900">{t('contacts.form.title')}</h2>
+        <p class="text-base text-gray-600 mb-8">
+          {t('contact.modal.description', 'Formani to\'ldiring va biz siz bilan tez orada bog\'lanamiz')}
+        </p>
+        
+        <form class="space-y-5">
+          <div class="grid sm:grid-cols-2 gap-5">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">{t('contacts.form.name')}</label>
+              <input
+                type="text"
+                id="name"
+                placeholder={t('contacts.form.message_placeholder')}
+                class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200"
+              />
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">{t('contacts.form.phone')}</label>
+              <input
+                type="tel"
+                id="phone"
+                placeholder={t('contact.form.phone.placeholder')}
+                class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{t('contacts.form.email')}</label>
+            <input
+              type="email"
+              id="email"
+              placeholder={t('contact.form.email.placeholder')}
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200"
+            />
+          </div>
+          
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">{t('contacts.form.message')}</label>
+            <textarea
+              id="message"
+              placeholder={t('contact.form.message.placeholder', 'Xabaringizni yozing...')}
+              class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all duration-200 resize-none"
+              rows="4"
+            ></textarea>
+          </div>
+          
+          <div class="flex items-center">
+            <input type="checkbox" id="agreement" class="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500" />
+            <label for="agreement" class="ml-2 text-sm text-gray-600">
+              {t('contact.form.privacy.text', 'Men ')}
+              <a href="#" class="text-primary-600 hover:underline">
+                {t('contact.form.privacy.link', 'shaxsiy ma\'lumotlarni qayta ishlash shartlariga roziman')}
+              </a>
+            </label>
+          </div>
+          
+          <button
+            type="submit"
+            class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex items-center justify-center group"
+          >
+            {t('contacts.form.submit')}
+            <Send class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+          </button>
+        </form>
+      </div>
+
+      <!-- Map and Address -->
+      <div class="md:col-span-2">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-full flex flex-col hover:shadow-xl transition-all duration-300">
+          <div class="p-6">
+            <h3 class="text-xl font-semibold mb-4 text-gray-900">{t('contacts.offices.title', 'Bizning ofislar')}</h3>
+            <ul class="space-y-4 mb-6">
+              <li class="flex items-center gap-3">
+                <div class="p-2 bg-primary-50 rounded-full flex items-center justify-center">
+                  <MapPin class="w-5 h-5 text-primary-600" />
+                </div>
+                <span class="text-gray-700">г. Ташкент, Шайхантаурский район, ул. Примерная, 123</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="p-2 bg-primary-50 rounded-full flex items-center justify-center">
+                  <Phone class="w-5 h-5 text-primary-600" />
+                </div>
+                <a href="tel:+998901234567" class="text-gray-700 hover:text-primary-600 transition-colors">+998 90 123 45 67</a>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="p-2 bg-primary-50 rounded-full flex items-center justify-center">
+                  <Mail class="w-5 h-5 text-primary-600" />
+                </div>
+                <a href="mailto:info@example.uz" class="text-gray-700 hover:text-primary-600 transition-colors">info@example.uz</a>
+              </li>
+              <li class="flex items-center gap-3">
+                <div class="p-2 bg-primary-50 rounded-full flex items-center justify-center">
+                  <MessageSquare class="w-5 h-5 text-primary-600" />
+                </div>
+                <div class="text-gray-700">
+                  {t('contacts.offices.hours', 'Ish vaqti')}: 09:00 - 18:00
+                </div>
+              </li>
+            </ul>
+            <div class="flex gap-3">
+              <a href="#" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all duration-300">
+                <Facebook class="w-5 h-5" />
+              </a>
+              <a href="#" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all duration-300">
+                <Instagram class="w-5 h-5" />
+              </a>
+              <a href="#" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all duration-300">
+                <Youtube class="w-5 h-5" />
+              </a>
+              <a href="#" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-primary-500 hover:text-white transition-all duration-300">
+                <Twitter class="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+          
+          <div class="flex-grow">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d47958.13169296129!2d69.24968449010171!3d41.31141597928339!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38ae8b0cc379e9c3%3A0xa5a9323b4aa5cb98!2z0KjQsNC50YXQsNC90YLQsNGD0YDRgdC60LjQuSDRgNCw0LnQvtC9LCDQotCw0YjQutC10L3Rgg!5e0!3m2!1sru!2s!4v1614167220218!5m2!1sru!2s" 
+              width="100%" 
+              height="100%" 
+              style="border:0; min-height:250px;" 
+              allowfullscreen="" 
+              loading="lazy"
+              class="grayscale hover:grayscale-0 transition-all duration-500"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

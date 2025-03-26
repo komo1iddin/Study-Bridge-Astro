@@ -1,0 +1,157 @@
+---
+import { 
+  ChevronDown, 
+  MessageCircleQuestion,
+  FileText,
+  Wallet,
+  Languages,
+  Stamp,
+  Building,
+  HelpCircle,
+  CheckCircle,
+  GraduationCap,
+  Users,
+  Award
+} from 'lucide-astro'
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+import { getAllFAQ } from '@/lib/fileSystemReader';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+import ContactButton from '@/components/ui/astro/ContactButton.astro';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+
+// Get FAQ items using fileSystemReader
+const faqItems = await getAllFAQ(lang);
+// Sort by order if specified
+const sortedFaqItems = faqItems.sort((a, b) => 
+  (a.data.order || 0) - (b.data.order || 0)
+);
+
+function getIcon(category: string = '') {
+  switch(category.toLowerCase()) {
+    case 'documents':
+    case 'admission':
+      return FileText;
+    case 'costs':
+    case 'fees':
+      return Wallet;
+    case 'language':
+      return Languages;
+    case 'visa':
+      return Stamp;
+    case 'accommodation':
+      return Building;
+    case 'graduation':
+      return GraduationCap;
+    case 'students':
+      return Users;
+    case 'achievements':
+      return Award;
+    case 'requirements':
+      return CheckCircle;
+    default:
+      return HelpCircle;
+  }
+}
+---
+
+<section class="section-container" id="faq" data-aos="fade-up">
+  <div class="max-w-2xl mx-auto">
+    <SectionHeader
+      title={t('faq.title')}
+      subtitle={t('faq.subtitle')}
+    />
+
+    <div class="space-y-4">
+      {
+        sortedFaqItems.map((item) => {
+          const Icon = getIcon(item.data.category);
+          return (
+            <div class="overflow-hidden group transition-all duration-300 rounded-xl
+              border border-gray-200
+              bg-[linear-gradient(to_bottom_right,rgba(255,255,255,0.9),rgba(255,255,255,0.8))]
+              backdrop-blur-[10px]
+              shadow-[0_1px_3px_0px_rgba(0,0,0,0.06)]
+              hover:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-2px_rgba(0,0,0,0.05)]
+              hover:border-[rgba(59,130,246,0.2)]"
+            >
+              <details class="group/details">
+                <summary class="flex items-center justify-between cursor-pointer list-none p-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <Icon class="w-5 h-5 text-primary" />
+                    </div>
+                    <span class="text-base font-medium text-gray-800 group-hover:text-primary transition-colors">
+                      {item.data.question[lang]}
+                    </span>
+                  </div>
+                  <ChevronDown 
+                    class="w-5 h-5 text-primary/70 flex-shrink-0 group-open/details:rotate-180 transition-transform"
+                  />
+                </summary>
+                <div class="pl-16 pr-4 pb-4 text-gray-600">
+                  {item.data.answer[lang]}
+                </div>
+              </details>
+            </div>
+          )
+        })
+      }
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-10 text-center">
+      <p class="text-base text-gray-600 mb-3">
+        {t('faq.notFoundQuestion')}
+      </p>
+
+        <div class="container">
+          <!-- Мобильная кнопка (скрыта на десктопе) -->
+          <div class="text-center mt-12">
+            <ContactButton
+            text={t('faq.askQuestion')} 
+            variant="mobile" 
+            showOnDesktop={false}
+            />
+          </div>
+        
+          <!-- Десктопная кнопка (скрыта на мобильных) -->
+          <div class="text-center mt-12">
+            <ContactButton
+            text={t('faq.askQuestion')} 
+            variant="desktop" 
+            showOnMobile={false}
+            />
+          </div>
+        </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  details > summary {
+    outline: none;
+  }
+  
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const details = document.querySelectorAll('details');
+    details.forEach(detail => {
+      detail.addEventListener('toggle', () => {
+        // Minimal animation is handled by Tailwind classes
+      });
+    });
+  });
+</script>

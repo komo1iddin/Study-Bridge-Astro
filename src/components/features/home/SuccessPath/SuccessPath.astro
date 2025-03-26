@@ -1,0 +1,8 @@
+---
+import SuccessPathComponent from './SuccessPath.svelte';
+import { getLangFromUrl } from '@/i18n/langUtils';
+
+const lang = getLangFromUrl(Astro.url);
+---
+
+<SuccessPathComponent lang={lang} client:load />

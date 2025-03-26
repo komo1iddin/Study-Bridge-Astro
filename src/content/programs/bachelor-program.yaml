@@ -1,0 +1,126 @@
+id: "bachelor-program"
+type: "bachelor"
+title:
+  uz: "Bakalavr dasturi"
+  ru: "Программа бакалавриата"
+  en: "Bachelor's Program"
+description:
+  uz: "Xitoyning eng yaxshi universitetlarida to'rt yillik bakalavr dasturi"
+  ru: "Четырехлетняя программа бакалавриата в лучших университетах Китая"
+  en: "Four-year bachelor's program at China's top universities"
+duration: "4 yil"
+features:
+  uz:
+    - "Xalqaro tan olingan diplom"
+    - "Grant va stipendiya imkoniyatlari"
+    - "Zamonaviy o'quv bazasi"
+    - "Amaliyot dasturlari"
+    - "Karyera markazlari xizmati"
+    - "Xalqaro almashinuv dasturlari"
+  ru:
+    - "Международно признанный диплом"
+    - "Возможности грантов и стипендий"
+    - "Современная учебная база"
+    - "Программы стажировок"
+    - "Услуги карьерных центров"
+    - "Программы международного обмена"
+  en:
+    - "Internationally recognized diploma"
+    - "Grant and scholarship opportunities"
+    - "Modern educational facilities"
+    - "Internship programs"
+    - "Career center services"
+    - "International exchange programs"
+studyProcess:
+  uz:
+    - title: "Nazariy darslar"
+      description: "Asosiy fanlar bo'yicha ma'ruzalar"
+      hours: "Haftasiga 20 soat"
+    - title: "Laboratoriya ishlari"
+      description: "Amaliy va laboratoriya mashg'ulotlari"
+      hours: "Haftasiga 15 soat"
+    - title: "Mustaqil ta'lim"
+      description: "Individual loyihalar va tadqiqotlar"
+      hours: "Haftasiga 10 soat"
+  ru:
+    - title: "Теоретические занятия"
+      description: "Лекции по основным предметам"
+      hours: "20 часов в неделю"
+    - title: "Лабораторные работы"
+      description: "Практические и лабораторные занятия"
+      hours: "15 часов в неделю"
+    - title: "Самостоятельное обучение"
+      description: "Индивидуальные проекты и исследования"
+      hours: "10 часов в неделю"
+  en:
+    - title: "Theoretical classes"
+      description: "Lectures on core subjects"
+      hours: "20 hours per week"
+    - title: "Laboratory work"
+      description: "Practical and laboratory sessions"
+      hours: "15 hours per week"
+    - title: "Independent study"
+      description: "Individual projects and research"
+      hours: "10 hours per week"
+careerOpportunities:
+  uz:
+    - position: "Xalqaro kompaniyalarda mutaxassis"
+      salary: "$2,500 - $5,000"
+      companies: ["Huawei", "Alibaba", "Tencent"]
+    - position: "Tadqiqotchi"
+      salary: "$2,000 - $4,000"
+      companies: ["Ilmiy markazlar", "Universitetlar"]
+    - position: "IT mutaxassis"
+      salary: "$3,000 - $6,000"
+      companies: ["IT kompaniyalar", "Start-uplar"]
+  ru:
+    - position: "Специалист в международных компаниях"
+      salary: "$2,500 - $5,000"
+      companies: ["Huawei", "Alibaba", "Tencent"]
+    - position: "Исследователь"
+      salary: "$2,000 - $4,000"
+      companies: ["Научные центры", "Университеты"]
+    - position: "IT специалист"
+      salary: "$3,000 - $6,000"
+      companies: ["IT компании", "Стартапы"]
+  en:
+    - position: "Specialist in international companies"
+      salary: "$2,500 - $5,000"
+      companies: ["Huawei", "Alibaba", "Tencent"]
+    - position: "Researcher"
+      salary: "$2,000 - $4,000"
+      companies: ["Research centers", "Universities"]
+    - position: "IT specialist"
+      salary: "$3,000 - $6,000"
+      companies: ["IT companies", "Start-ups"]
+testimonials:
+  uz:
+    - name: "Sardor Rahimov"
+      program: "Kompyuter muhandisligi - 2023"
+      quote: "Xitoyda o'qish menga katta imkoniyatlar eshigini ochdi. Hozir Huawei kompaniyasida ishlayapman."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Malika Karimova"
+      program: "Biznes boshqaruvi - 2023"
+      quote: "Universitetdagi zamonaviy o'quv dasturi va amaliyot imkoniyatlari tufayli yaxshi karyera qura oldim."
+      image: "/images/testimonials/placeholder.jpeg"
+  ru:
+    - name: "Сардор Рахимов"
+      program: "Компьютерная инженерия - 2023"
+      quote: "Учеба в Китае открыла для меня большие возможности. Сейчас я работаю в компании Huawei."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Малика Каримова"
+      program: "Управление бизнесом - 2023"
+      quote: "Благодаря современной учебной программе и возможностям практики в университете я смогла построить хорошую карьеру."
+      image: "/images/testimonials/placeholder.jpeg"
+  en:
+    - name: "Sardor Rahimov"
+      program: "Computer Engineering - 2023"
+      quote: "Studying in China opened up great opportunities for me. I now work at Huawei."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Malika Karimova"
+      program: "Business Administration - 2023"
+      quote: "Thanks to the modern curriculum and internship opportunities at the university, I was able to build a good career."
+      image: "/images/testimonials/placeholder.jpeg"
+icon: "graduation-cap"
+bgColor: "from-green-50 to-green-100"
+language: "English"

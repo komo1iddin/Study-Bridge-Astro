@@ -1,0 +1,286 @@
+---
+import { Send, GraduationCap, CheckCircle, Calendar, BookOpen, Info } from 'lucide-astro';
+import '@/styles/components/hero.css';
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+
+// Получаем текущую локаль из Astro
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+
+// Data structures
+interface Stat {
+  value: string;
+  label: string;
+}
+
+interface Card {
+  icon: typeof CheckCircle;
+  color: string;
+  titleKey: string;
+  descKey: string;
+}
+
+// Data
+const stats: Stat[] = [
+  { value: '15+', label: t('hero.stats.universities') },
+  { value: '1000+', label: t('hero.stats.students') },
+  { value: '98%', label: t('hero.stats.success') },
+  { value: '10+', label: t('hero.stats.experience') }
+];
+
+const cards: Card[] = [
+  { 
+    icon: GraduationCap, 
+    color: 'blue-600', 
+    titleKey: 'hero.cards.scholarship.title', 
+    descKey: 'hero.cards.scholarship.desc' 
+  },
+  { 
+    icon: CheckCircle, 
+    color: 'blue-600', 
+    titleKey: 'hero.cards.admission.title', 
+    descKey: 'hero.cards.admission.desc' 
+  },
+];
+---
+
+<header class="hero">
+  <!-- Background Elements -->
+  <div class="absolute inset-0 z-0">
+    <div class="absolute top-0 left-0 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob"></div>
+    <div class="absolute top-0 right-0 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-100 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-4000"></div>
+  </div>
+
+  <!-- Rest of the hero content -->
+  <div class="container">
+    <div class="hero-grid">
+      <!-- Content Section -->
+      <div class="content">
+        <div class="scroll-animate space-y-8">
+          <!-- Status Badge -->
+          <div class="badge mb-6">
+            <span class="badge-icon">
+              <Calendar class="icon animate-bounce-gentle w-4 h-4" />
+            </span>
+            <span class="badge-text">{t('hero.badge.enrollment')}</span>
+          </div>
+
+          <!-- Main content -->
+          <h1 class="title mb-6 text-4xl md:text-5xl lg:text-6xl">
+            {t('hero.title.first')} 
+            <br>
+            <span class="highlight">
+              <span class="highlight-text animate-charming-reallik">{t('hero.title.highlight')}</span>
+              <svg aria-hidden="true" viewBox="0 0 418 42" class="highlight-svg">
+                <path d="M203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z" />
+              </svg>
+            </span>
+          </h1>
+
+          <style>
+            .animate-charming-reallik {
+              animation: charming-reallik 2s ease-in-out infinite;
+            }
+          </style>
+
+          <div class="description-container">
+            <p class="description mb-8">
+              {t('hero.description')}
+              <span class="tooltip-container" id="infoTooltip">
+                <button type="button" class="tooltip-trigger" aria-label={t('hero.tooltip.label')}>
+                  <Info class="tooltip-icon w-5 h-5" />
+                </button>
+                <span class="tooltip-content">
+                  {t('hero.tooltip.content')}
+                </span>
+              </span>
+            </p>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="cta space-x-4 mb-12">
+            <a href="/contact/" class="button primary animate-pulse-scale">
+              <Send class="button-icon" />
+              {t('hero.buttons.apply')}
+            </a>
+            <a href="/programs/" class="button secondary animate-gentle-bounce">
+              <BookOpen class="button-icon" />
+              {t('hero.buttons.programs')}
+            </a>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats mt-auto">
+            {stats.map((stat) => (
+              <div class="stat">
+                <div class="stat-value" data-value={stat.value}>{stat.value}</div>
+                <div class="stat-label">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <style>
+            /* Only component-specific animations and styles */
+            .animate-pulse-scale {
+              animation: pulseScale 2s infinite;
+            }
+          
+            .animate-gentle-bounce {
+              animation: gentleBounce 1.5s infinite;
+            }
+          
+            @keyframes pulseScale {
+              0%, 100% { transform: scale(1); }
+              50% { transform: scale(1.05); }
+            }
+          
+            @keyframes gentleBounce {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-3px); }
+            }
+          
+            /* Stats specific styles */
+            .stat-value {
+              opacity: 0;
+              transform: translateY(10px);
+            }
+          
+            .stat-value.animated {
+              opacity: 1;
+              transform: translateY(0);
+              transition: opacity 0.3s, transform 0.3s;
+            }
+          </style>
+
+          <style>
+            .animate-charming-reallik {
+              animation: charming-reallik 1s ease-out forwards;
+            }
+          </style>
+
+          <script>
+            // Stats counter animation
+            function animateValue(element, start, end, duration) {
+              const startNum = parseInt(start) || 0;
+              const endNum = parseInt(end) || 0;
+              const isPlus = end.includes('+');
+              
+              let current = startNum;
+              const increment = (endNum - startNum) / (duration / 16);
+              
+              const timer = setInterval(() => {
+                current += increment;
+                
+                if (current >= endNum) {
+                  current = endNum;
+                  clearInterval(timer);
+                }
+                
+                element.textContent = Math.floor(current) + (isPlus ? '+' : '');
+              }, 16);
+            }
+          
+            // Intersection Observer for stats
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  const statValue = entry.target;
+                  const finalValue = statValue.dataset.value;
+                  
+                  statValue.classList.add('animated');
+                  animateValue(statValue, '0', finalValue, 2000);
+                  
+                  observer.unobserve(statValue);
+                }
+              });
+            }, { threshold: 0.5 });
+          
+            // Observe all stat values
+            document.querySelectorAll('.stat-value').forEach(stat => {
+              observer.observe(stat);
+            });
+          </script>
+        </div>
+      </div>
+
+      <!-- Image Section -->
+      <!-- Image Section -->
+      <div class="image-section">
+        <div class="parallax-container">
+          <div class="parallax-element">
+            <div class="gradient-overlay-1" aria-hidden="true" />
+            <div class="gradient-overlay-2" aria-hidden="true" />
+            
+            <img 
+              src="/images/hero/campus.jpg"
+              alt={t('hero.image.alt')}
+              class="main-image w-full h-full object-cover"
+              width="1686"
+              height="1124"
+              loading="eager"
+            />
+          </div>
+        </div>
+        
+        <!-- Floating Cards -->
+        <div class="cards-container">
+          {cards.map((card, index) => (
+            <div class={`floating-card ${index === 0 ? 'bottom-right animate-float-slow' : 'top-left animate-float-delayed'}`}>
+              <div class="card-content">
+                <div class={`card-icon bg-${card.color}`}>
+                  <card.icon class="icon text-white w-6 h-6" />
+                </div>
+                <div>
+                  <h3 class="card-title">{t(card.titleKey)}</h3>
+                  <p class="card-desc">{t(card.descKey)}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  import "@/components/scripts/hero";
+
+  // Инициализация тултипов
+  document.addEventListener('DOMContentLoaded', () => {
+    const tooltipContainer = document.getElementById('infoTooltip');
+    const tooltipTrigger = tooltipContainer?.querySelector('.tooltip-trigger');
+    
+    if (tooltipTrigger) {
+      // Для десктопов используем hover
+      tooltipTrigger.addEventListener('mouseenter', () => {
+        tooltipContainer.classList.add('active');
+      });
+      
+      tooltipTrigger.addEventListener('mouseleave', () => {
+        tooltipContainer.classList.remove('active');
+      });
+      
+      // Для мобильных устройств используем клик
+      tooltipTrigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        tooltipContainer.classList.toggle('active');
+      });
+      
+      // Закрываем тултип при клике вне его
+      document.addEventListener('click', (e) => {
+        if (!tooltipContainer.contains(e.target)) {
+          tooltipContainer.classList.remove('active');
+        }
+      });
+    }
+  });
+</script>
+

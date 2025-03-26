@@ -1,0 +1,70 @@
+title:
+  uz: Konfutsiy instituti granti
+  ru: Грант института Конфуция
+  en: Confucius Institute Scholarship
+description:
+  uz: Xitoy tilini o'rganish uchun maxsus grant dasturi
+  ru: Специальная стипендиальная программа для изучения китайского языка
+  en: Special scholarship program for Chinese language studies
+type: Language Scholarship
+coverage:
+  uz:
+    - Til kursi to'lovi
+    - Yotoqxona to'lovi
+    - Oylik stipendiya
+    - Madaniy tadbirlar
+  ru:
+    - Оплата языковых курсов
+    - Проживание в общежитии
+    - Ежемесячная стипендия
+    - Культурные мероприятия
+  en:
+    - Language course fee
+    - Accommodation
+    - Monthly stipend
+    - Cultural activities
+deadline: "2024-03-30"
+requirements:
+  uz:
+    - 18 yoshdan katta bo'lish
+    - HSK imtihonidan o'tish
+    - Sog'liq haqida ma'lumotnoma
+  ru:
+    - Старше 18 лет
+    - Сдача экзамена HSK
+    - Справка о состоянии здоровья
+  en:
+    - Above 18 years old
+    - HSK exam qualification
+    - Health certificate
+documents:
+  uz:
+    - Pasport nusxasi
+    - HSK sertifikati
+    - Ariza formasini to'ldirish
+  ru:
+    - Копия паспорта
+    - Сертификат HSK
+    - Заполнение анкеты
+  en:
+    - Passport copy
+    - HSK certificate
+    - Application form
+benefits:
+  uz:
+    - Bepul til kurslari
+    - Bepul yotoqxona
+    - Oylik stipendiya
+    - Madaniy tadbirlarda ishtirok etish
+  ru:
+    - Бесплатные языковые курсы
+    - Бесплатное проживание
+    - Ежемесячная стипендия
+    - Участие в культурных мероприятиях
+  en:
+    - Free language courses
+    - Free accommodation
+    - Monthly stipend
+    - Cultural activities participation
+image: /images/grants/confucius.jpg
+color: red

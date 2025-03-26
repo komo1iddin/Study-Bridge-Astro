@@ -1,0 +1,84 @@
+---
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+
+interface Props {
+  lang?: Lang;
+  title: string;
+  subtitle?: string;
+  centered?: boolean;
+  animation?: string;
+  animationDuration?: string;
+  animationDelay?: string;
+  maxWidth?: string;
+}
+
+const { 
+  lang = 'uz', 
+  title, 
+  subtitle,
+  centered = true,
+  animation = "fade-up",
+  animationDuration = "800",
+  animationDelay = "0",
+  maxWidth = "800px"
+} = Astro.props;
+
+const t = useTranslations(lang);
+---
+
+<div 
+  class={`mx-auto max-w-[${maxWidth}] text-center mb-8 md:mb-12`} 
+  data-aos={animation}
+  data-aos-duration={animationDuration}
+  data-aos-delay={animationDelay}
+>
+  <h2 class="text-3xl font-bold tracking-tight md:text-3xl lg:text-4xl mb-5 animate-title">
+    <slot name="title">
+      <Fragment set:html={title} />
+    </slot>
+  </h2>
+  {subtitle && (
+    <p class="text-muted-foreground md:text-lg max-w-[600px] mx-auto animate-text">
+      <slot name="subtitle">{subtitle}</slot>
+    </p>
+  )}
+  <div class="h-1 w-20 bg-blue-600 mx-auto mt-4 animate-line"></div>
+</div>
+
+<style>
+  @keyframes title-animation {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes text-animation {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes line-animation {
+    0% { width: 0; }
+    100% { width: 5rem; }
+  }
+  
+  .animate-title {
+    animation: title-animation 0.8s ease-out forwards;
+  }
+  
+  .animate-text {
+    animation: text-animation 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+  }
+  
+  .animate-line {
+    animation: line-animation 0.8s ease-out 0.4s forwards;
+  }
+  
+  @media (max-width: 640px) {
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+  }
+</style>

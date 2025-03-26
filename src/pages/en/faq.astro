@@ -1,0 +1,175 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { School, FileText, BookOpen, Home, DollarSign, ChevronDown, ArrowRight } from 'lucide-astro';
+import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
+import { getLangFromUrl } from '@/i18n/langUtils'; 
+import { useTranslations } from '@/i18n/utils';
+import Contact from '@/components/shared/contact/Contact.astro';
+import ContactModal from '@/components/features/contact/ContactModal.astro';
+import { getCollection } from 'astro:content';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const categories = [
+  { id: 'admission', name: 'Поступление', icon: 'school' },
+  { id: 'visa', name: 'Визы и документы', icon: 'file-text' },
+  { id: 'study', name: 'Обучение', icon: 'book-open' },
+  { id: 'life', name: 'Жизнь в Китае', icon: 'home' },
+  { id: 'finance', name: 'Финансы', icon: 'dollar-sign' }
+];
+
+const breadcrumbItems = [
+  { label: t('nav.home'), href: `/${lang}` },
+  { label: t('nav.faq'), href: `/${lang}/faq` }
+];
+
+const faqItems = await getCollection('faq');
+---
+
+<Layout title="FAQ - Часто задаваемые вопросы | Study in China">
+  <div class="bg-gradient-to-b from-primary-50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <Breadcrumbs items={breadcrumbItems} />
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- Hero Section -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          Часто задаваемые вопросы
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Найдите ответы на самые популярные вопросы об обучении в Китае
+        </p>
+      </div>
+
+      <!-- Categories -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12">
+        {categories.map((category) => (
+          <button class="flex flex-col items-center p-4 bg-white rounded-xl border border-gray-200 hover:border-primary-200 hover:bg-primary-50 transition-all">
+            {category.icon === 'school' && <School class="w-8 h-8 text-primary-600 mb-2" />}
+            {category.icon === 'file-text' && <FileText class="w-8 h-8 text-primary-600 mb-2" />}
+            {category.icon === 'book-open' && <BookOpen class="w-8 h-8 text-primary-600 mb-2" />}
+            {category.icon === 'home' && <Home class="w-8 h-8 text-primary-600 mb-2" />}
+            {category.icon === 'dollar-sign' && <DollarSign class="w-8 h-8 text-primary-600 mb-2" />}
+            <span class="text-sm font-medium text-gray-900">{category.name}</span>
+          </button>
+        ))}
+      </div>
+
+      <!-- FAQ Items -->
+      <div class="max-w-3xl mx-auto">
+        <div class="space-y-4">
+          {faqItems.map((item) => (
+            <div class="bg-white rounded-lg shadow-sm">
+              <details class="group">
+                <summary class="flex items-center justify-between p-6 cursor-pointer">
+                  <h3 class="text-lg font-medium text-gray-900">
+                    {item.data.question[lang]}
+                  </h3>
+                  <span class="ml-6 flex-shrink-0">
+                    <ChevronDown class="w-6 h-6 text-gray-400 group-open:rotate-180 transition-transform" />
+                  </span>
+                </summary>
+                <div class="px-6 pb-6 text-gray-600">
+                  {item.data.answer[lang]}
+                </div>
+              </details>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Contact Section -->
+      <div class="mt-16 text-center">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">
+          Не нашли ответ на свой вопрос?
+        </h2>
+        <p class="text-gray-600 mb-8">
+          Свяжитесь с нами, и мы с радостью поможем вам
+        </p>
+        <button
+          id="contactButton"
+          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+        >
+          Связаться с нами
+          <ArrowRight class="ml-2 h-5 w-5" />
+        </button>
+      </div>
+      
+      <!-- Contact Section -->
+      <Contact />
+      
+      <!-- Contact Modal -->
+      <ContactModal />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  details {
+    transition: all 0.3s ease;
+  }
+
+  details[open] summary {
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  details[open] summary + div {
+    animation: slideDown 0.3s ease-out forwards;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+      max-height: 0;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 500px;
+    }
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+    
+    .p-6 {
+      padding: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // FAQ interactions
+  document.addEventListener('astro:page-load', () => {
+    const details = document.querySelectorAll('details');
+    
+    details.forEach(detail => {
+      detail.addEventListener('click', (e) => {
+        // Close other details when opening a new one
+        details.forEach(otherDetail => {
+          if (otherDetail !== detail && otherDetail.hasAttribute('open')) {
+            otherDetail.removeAttribute('open');
+          }
+        });
+      });
+    });
+
+    // Contact modal button
+    const contactButton = document.getElementById('contactButton');
+    if (contactButton) {
+      contactButton.addEventListener('click', () => {
+        window.openContactModal();
+      });
+    }
+  });
+</script>

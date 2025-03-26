@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base section styles */
+.section {
+  @apply relative py-16 md:py-20 overflow-hidden;
+}
+
+.section-divider-new {
+ border-bottom: 2px solid #e2e8f0;
+}
+
+/* Section background variations */
+.section-gradient-1 {
+  @apply bg-gradient-to-br from-blue-50 via-white to-indigo-50 relative;
+}
+
+.section-gradient-2 {
+  @apply bg-gradient-to-br from-indigo-50 via-white to-blue-50 relative;
+}
+
+.section-gradient-3 {
+  @apply bg-gradient-to-br from-white via-gray-50 to-white relative;
+}
+
+.section-gradient-4 {
+  @apply bg-gradient-to-br from-blue-50 via-white to-indigo-50 relative;
+}
+
+/* Section header styles */
+.section-header {
+  @apply text-center max-w-3xl mx-auto mb-12 md:mb-16;
+}
+
+.section-badge {
+  @apply inline-block px-4 py-1.5 bg-primary-50 text-primary-700 rounded-full text-sm font-medium mb-4;
+}
+
+.section-title {
+  @apply text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4;
+}
+
+.section-subtitle {
+  @apply text-base md:text-lg text-gray-600 max-w-2xl mx-auto;
+}
+
+.section-divider {
+  @apply w-24 h-0.5 bg-gradient-to-r from-transparent via-primary-200 to-transparent mx-auto my-8;
+}
+
+/* Card styles */
+.card {
+  @apply bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-100 transition-all duration-300;
+}
+
+.card:hover {
+  @apply shadow-xl -translate-y-2 border-primary-100;
+}
+
+/* Animations */
+@layer utilities {
+  @keyframes float-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+
+  @keyframes float-delayed {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-float-slow {
+    animation: float-slow 8s ease-in-out infinite;
+  }
+
+  .animate-float-delayed {
+    animation: float-delayed 6s ease-in-out 1s infinite;
+  }
+  
+  .animate-fade-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+  
+  /* Animation delays */
+  .delay-1 {
+    animation-delay: 0.1s;
+  }
+
+  .delay-2 {
+    animation-delay: 0.2s;
+  }
+
+  .delay-3 {
+    animation-delay: 0.3s;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .animate-float-slow, .animate-float-delayed {
+    animation: none;
+  }
+}
+
+/* CTA styles */
+.cta-button {
+  @apply inline-flex items-center px-6 py-3 md:px-8 md:py-4 bg-primary-600 text-white font-bold rounded-full hover:bg-primary-700 transform transition-all duration-300 hover:scale-105 hover:shadow-lg;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .section {
+    @apply py-12;
+  }
+
+  .section-title {
+    @apply text-2xl;
+  }
+}
+
+/* Section spacing */
+.section + .section {
+  @apply mt-0 relative;
+}
+
+.section::after {
+  content: '';
+  @apply absolute bottom-0 left-0 right-0 h-px w-full z-10 bg-gray-200/30;
+  background-color: #b9cae7;
+}
+
+/* Section container */
+.section-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10;
+}

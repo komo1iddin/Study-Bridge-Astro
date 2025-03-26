@@ -1,0 +1,126 @@
+id: "language-course"
+type: "language"
+title:
+  uz: "Xitoy tili kursi"
+  ru: "Курс китайского языка"
+  en: "Chinese Language Course"
+description:
+  uz: "HSK darajasini oshirish va Xitoy tilini professional darajada o'rganish uchun intensiv kurs"
+  ru: "Интенсивный курс для повышения уровня HSK и профессионального изучения китайского языка"
+  en: "Intensive course for HSK level improvement and professional Chinese language learning"
+duration: "6-12 oy"
+features:
+  uz:
+    - "Malakali o'qituvchilar bilan darslar"
+    - "Kichik guruhlarda o'qitish (8-12 talaba)"
+    - "HSK imtihoniga tayyorgarlik"
+    - "Amaliy mashg'ulotlar"
+    - "Online qo'shimcha darslar"
+    - "Talaffuz mashqlari"
+  ru:
+    - "Занятия с квалифицированными преподавателями"
+    - "Обучение в малых группах (8-12 студентов)"
+    - "Подготовка к экзамену HSK"
+    - "Практические занятия"
+    - "Дополнительные онлайн занятия"
+    - "Упражнения по произношению"
+  en:
+    - "Classes with qualified teachers"
+    - "Small group teaching (8-12 students)"
+    - "HSK exam preparation"
+    - "Practical classes"
+    - "Additional online lessons"
+    - "Pronunciation exercises"
+studyProcess:
+  uz:
+    - title: "Nazariy darslar"
+      description: "Professional o'qituvchilar tomonidan o'tiladigan nazariy mashg'ulotlar"
+      hours: "Haftasiga 20 soat"
+    - title: "Amaliy mashg'ulotlar"
+      description: "Talaffuz va muloqot mashqlari"
+      hours: "Haftasiga 10 soat"
+    - title: "Online darslar"
+      description: "Masofaviy qo'shimcha mashg'ulotlar"
+      hours: "Haftasiga 5 soat"
+  ru:
+    - title: "Теоретические занятия"
+      description: "Теоретические занятия с профессиональными преподавателями"
+      hours: "20 часов в неделю"
+    - title: "Практические занятия"
+      description: "Упражнения по произношению и разговорной речи"
+      hours: "10 часов в неделю"
+    - title: "Онлайн занятия"
+      description: "Дополнительные дистанционные занятия"
+      hours: "5 часов в неделю"
+  en:
+    - title: "Theoretical classes"
+      description: "Theoretical lessons with professional teachers"
+      hours: "20 hours per week"
+    - title: "Practical classes"
+      description: "Pronunciation and conversation exercises"
+      hours: "10 hours per week"
+    - title: "Online classes"
+      description: "Additional distance learning sessions"
+      hours: "5 hours per week"
+careerOpportunities:
+  uz:
+    - position: "Xitoy tili o'qituvchisi"
+      salary: "$1,500 - $3,000"
+      companies: ["Ta'lim markazlari", "Maktablar", "Universitetlar"]
+    - position: "Tarjimon"
+      salary: "$2,000 - $4,000"
+      companies: ["Xalqaro kompaniyalar", "Davlat idoralari"]
+    - position: "Gid"
+      salary: "$1,800 - $3,500"
+      companies: ["Turizm kompaniyalari", "Mehmonxonalar"]
+  ru:
+    - position: "Преподаватель китайского языка"
+      salary: "$1,500 - $3,000"
+      companies: ["Образовательные центры", "Школы", "Университеты"]
+    - position: "Переводчик"
+      salary: "$2,000 - $4,000"
+      companies: ["Международные компании", "Государственные учреждения"]
+    - position: "Гид"
+      salary: "$1,800 - $3,500"
+      companies: ["Туристические компании", "Отели"]
+  en:
+    - position: "Chinese Language Teacher"
+      salary: "$1,500 - $3,000"
+      companies: ["Education Centers", "Schools", "Universities"]
+    - position: "Translator"
+      salary: "$2,000 - $4,000"
+      companies: ["International Companies", "Government Agencies"]
+    - position: "Guide"
+      salary: "$1,800 - $3,500"
+      companies: ["Tourism Companies", "Hotels"]
+testimonials:
+  uz:
+    - name: "Aziza Karimova"
+      program: "HSK 6 - 2023"
+      quote: "6 oylik kurs davomida HSK 4 dan HSK 6 darajasiga chiqdim. O'qituvchilar juda professional va darslar qiziqarli o'tadi."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Bobur Aliyev"
+      program: "HSK 5 - 2023"
+      quote: "Kurs davomida nafaqat til bilimim, balki Xitoy madaniyati haqidagi tushunchalarim ham kengaydi."
+      image: "/images/testimonials/placeholder.jpeg"
+  ru:
+    - name: "Азиза Каримова"
+      program: "HSK 6 - 2023"
+      quote: "За 6 месяцев курса я поднялась с HSK 4 до HSK 6. Преподаватели очень профессиональные, а занятия интересные."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Бобур Алиев"
+      program: "HSK 5 - 2023"
+      quote: "Во время курса я не только улучшил знание языка, но и расширил понимание китайской культуры."
+      image: "/images/testimonials/placeholder.jpeg"
+  en:
+    - name: "Aziza Karimova"
+      program: "HSK 6 - 2023"
+      quote: "During the 6-month course, I advanced from HSK 4 to HSK 6. The teachers are very professional and the classes are interesting."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Bobur Aliyev"
+      program: "HSK 5 - 2023"
+      quote: "During the course, I not only improved my language skills but also expanded my understanding of Chinese culture."
+      image: "/images/testimonials/placeholder.jpeg"
+icon: "book"
+bgColor: "from-blue-50 to-blue-100"
+language: "Chinese"

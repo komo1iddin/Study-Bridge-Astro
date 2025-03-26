@@ -1,0 +1,39 @@
+id: "how-is-admission-process"
+categoryId: "admission"
+order: 2
+question:
+  uz: "Qabul jarayoni qanday bosqichlardan iborat?"
+  ru: "Из каких этапов состоит процесс поступления?"
+  en: "What are the steps in the admission process?"
+answer:
+  uz: |
+    Xitoy universitetiga qabul jarayoni bosqichlari:
+
+    1. Tayyorgarlik (2-3 oy):
+       - Universitet tanlash
+       - Dastur tanlash
+       - Hujjatlarni tayyorlash
+       - Til sertifikatini olish
+       
+    2. Hujjatlar topshirish (1-2 oy):
+       - Online ariza to'ldirish
+       - Hujjatlarni yuborish
+       - To'lovni amalga oshirish
+       
+    3. Ko'rib chiqish (3-4 hafta):
+       - Hujjatlar tekshiruvi
+       - Intervyu (kerak bo'lsa)
+       - Qabul xati
+       
+    4. Viza olish (2-3 hafta):
+       - JW formani olish
+       - Viza uchun ariza
+       - Tibbiy ko'rik
+       
+    5. Yo'lga tayyorgarlik (2-3 hafta):
+       - Aviabilet
+       - Sug'urta
+       - Yotoqxona bron qilish
+
+    Biz har bir bosqichda yordam beramiz va qo'llab-quvvatlaymiz.
+lastUpdated: "2024-03-15"

@@ -1,0 +1,315 @@
+---
+import { GraduationCap, BookOpen, Building, Users, CheckCircle2, ChevronDown } from "lucide-astro";
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+import ButtonView from '@/components/ui/astro/ButtonView.astro'
+import CTA from '@/components/ui/CTA.astro'
+import SectionHeader from "@/components/ui/SectionHeader.astro";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+
+const cn = (...classes: (string | undefined | boolean)[]) => {
+  return classes.filter(Boolean).join(' ');
+};
+
+const categories = [
+  {
+    id: "education",
+    title: "Oliy ta'lim",
+    icon: GraduationCap,
+    china: ["Top 500 ga kiruvchi 50+ universitet", "Xalqaro tan olingan diplomlar", "Ko'p tilli ta'lim muhiti"],
+    uzb: ["Mahalliy akkreditatsiya", "Milliy diplomlar", "O'zbek va rus tillarida ta'lim"],
+  },
+  {
+    id: "programs",
+    title: "O'quv dasturlari",
+    icon: BookOpen,
+    china: ["Xalqaro standartlarga mos", "Zamonaviy o'quv materiallari", "Online ta'lim platformalari"],
+    uzb: ["Milliy standartlar asosida", "An'anaviy o'quv materiallari", "Cheklangan online resurslar"],
+  },
+  {
+    id: "infrastructure",
+    title: "Infratuzilma",
+    icon: Building,
+    china: ["Zamonaviy kampuslar", "To'liq jihozlangan laboratoriyalar", "Yuqori tezlikdagi internet"],
+    uzb: ["Rivojlanayotgan kampuslar", "Bazaviy laboratoriyalar", "O'rta tezlikdagi internet"],
+  },
+  {
+    id: "teachers",
+    title: "O'qituvchilar",
+    icon: Users,
+    china: ["Xalqaro ekspertlar", "Yuqori malakali kadrlar", "Doimiy malaka oshirish"],
+    uzb: ["Mahalliy mutaxassislar", "O'rta malakali kadrlar", "Davriy malaka oshirish"],
+  },
+];
+
+const activeCategory = Astro.url.searchParams.get('category') || 'education';
+const activeItem = categories.find((c) => c.id === activeCategory) || categories[0];
+---
+
+<section class="container max-w-7xl bg-background mx-auto py-12 md:py-16 lg:py-20">
+  <div class="container px-4 md:px-6">
+    <!-- Header -->
+    <SectionHeader
+    title={t('comparison.title')}
+    subtitle={t('comparison.subtitle')}
+  />
+
+    <!-- Category Selector - Mobile -->
+    <div class="md:hidden mb-8">
+      <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg">
+        <div class="text-base font-medium">Kategoriyani tanlang</div>
+        <div class="relative w-full">
+          <select 
+            id="category-select-mobile"
+            class="w-full appearance-none bg-background border rounded-md px-4 py-2 pr-8"
+            value={activeCategory}
+          >
+            {categories.map((category) => (
+              <option value={category.id}>{category.title}</option>
+            ))}
+          </select>
+          <ChevronDown class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" />
+        </div>
+      </div>
+    </div>
+
+<!-- Category Pills - Desktop -->
+<div class="hidden md:flex justify-center mb-8">
+  <div class="inline-flex p-1 bg-gray-50 border rounded-lg shadow-sm">
+    {categories.map((category) => (
+      <button
+        type="button"
+        data-category={category.id}
+        class={cn(
+          "flex items-center gap-2 px-6 py-3 rounded-md transition-all",
+          activeCategory === category.id 
+            ? "bg-white shadow-sm border text-primary font-medium" 
+            : "hover:bg-gray-100 text-gray-600"
+        )}
+      >
+        <category.icon class="h-4 w-4" />
+        <span>{category.title}</span>
+      </button>
+    ))}
+  </div>
+</div>
+
+    <!-- Comparison Content -->
+    <div class="md:max-w-6xl mx-auto">
+      <div id="comparison-content">
+        <div class="border-2 rounded-xl shadow-sm overflow-hidden">
+          <div class="bg-muted/10 border-b pb-3 p-6">
+            <div class="flex items-center justify-between">
+              <h3 class="font-medium text-xl">{activeItem.title}</h3>
+              <div class="text-sm text-muted-foreground">Qiyosiy tahlil</div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x">
+            <!-- China Column -->
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="h-6 w-6 rounded-full bg-[#DE2910] flex items-center justify-center text-white text-xs font-bold">
+                  CN
+                </div>
+                <h4 class="font-medium text-lg">Xitoy</h4>
+              </div>
+              <hr class="mb-4" />
+              <ul class="space-y-4">
+                {activeItem.china.map((item) => (
+                  <li class="flex items-start gap-3">
+                    <CheckCircle2 class="h-5 w-5 text-[#DE2910] mt-0.5 flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <!-- Uzbekistan Column -->
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="h-6 w-6 rounded-full bg-[#1A5BE1] flex items-center justify-center text-white text-xs font-bold">
+                  UZ
+                </div>
+                <h4 class="font-medium text-lg">O'zbekiston</h4>
+              </div>
+              <hr class="mb-4" />
+              <ul class="space-y-4">
+                {activeItem.uzb.map((item) => (
+                  <li class="flex items-start gap-3">
+                    <CheckCircle2 class="h-5 w-5 text-[#1A5BE1] mt-0.5 flex-shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
+            Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Мобильная кнопка (скрыта на десктопе) -->
+      <div class="text-center mt-12">
+        <ButtonView
+          href={`/${lang}/blog`} 
+          text={t("Maqolani o'\qing")} 
+          variant="mobile" 
+          showOnDesktop={false} 
+        />
+      </div>
+    
+      <!-- Десктопная кнопка (скрыта на мобильных) -->
+      <div class="text-center mt-12">
+        <ButtonView
+          href={`/${lang}/blog`} 
+          text={t("Maqolani o'\qing")} 
+          variant="desktop" 
+          showOnMobile={false} 
+        />
+      </div>
+    </div>
+
+   <CTA class="px-4 sm:px-6 lg:px-8" />
+
+  </div>
+</section>
+
+<script>
+  function updateContent(category) {
+    // Категория маълумотлари
+    const categories = {
+      education: {
+        title: "Oliy ta'lim",
+        china: ["Top 500 ga kiruvchi 50+ universitet", "Xalqaro tan olingan diplomlar", "Ko'p tilli ta'lim muhiti"],
+        uzb: ["Mahalliy akkreditatsiya", "Milliy diplomlar", "O'zbek va rus tillarida ta'lim"]
+      },
+      programs: {
+        title: "O'quv dasturlari",
+        china: ["Xalqaro standartlarga mos", "Zamonaviy o'quv materiallari", "Online ta'lim platformalari"],
+        uzb: ["Milliy standartlar asosida", "An'anaviy o'quv materiallari", "Cheklangan online resurslar"]
+      },
+      infrastructure: {
+        title: "Infratuzilma",
+        china: ["Zamonaviy kampuslar", "To'liq jihozlangan laboratoriyalar", "Yuqori tezlikdagi internet"],
+        uzb: ["Rivojlanayotgan kampuslar", "Bazaviy laboratoriyalar", "O'rta tezlikdagi internet"]
+      },
+      teachers: {
+        title: "O'qituvchilar",
+        china: ["Xalqaro ekspertlar", "Yuqori malakali kadrlar", "Doimiy malaka oshirish"],
+        uzb: ["Mahalliy mutaxassislar", "O'rta malakali kadrlar", "Davriy malaka oshirish"]
+      }
+    };
+
+    const activeItem = categories[category];
+    if (!activeItem) return;
+
+    // URL ни янгилаш
+    const url = new URL(window.location.href);
+    url.searchParams.set('category', category);
+    history.pushState({}, '', url);
+
+    // Актив табни янгилаш
+    document.querySelectorAll('[data-category]').forEach(el => {
+  const isActive = el.dataset.category === category;
+  if (isActive) {
+    el.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+    el.classList.remove('hover:bg-gray-100', 'text-gray-600');
+  } else {
+    el.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+    el.classList.add('hover:bg-gray-100', 'text-gray-600');
+  }
+});
+
+    // Контентни янгилаш
+    const newContent = `
+      <div class="border-2 rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-muted/10 border-b pb-3 p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-medium text-xl">${activeItem.title}</h3>
+            <div class="text-sm text-muted-foreground">Qiyosiy tahlil</div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x">
+          <!-- China Column -->
+          <div class="p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="h-6 w-6 rounded-full bg-[#DE2910] flex items-center justify-center text-white text-xs font-bold">
+                CN
+              </div>
+              <h4 class="font-medium text-lg">Xitoy</h4>
+            </div>
+            <hr class="mb-4" />
+            <ul class="space-y-4">
+              ${activeItem.china.map(item => `
+                <li class="flex items-start gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DE2910" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mt-0.5 flex-shrink-0">
+                    <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                  </svg>
+                  <span>${item}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+
+          <!-- Uzbekistan Column -->
+          <div class="p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="h-6 w-6 rounded-full bg-[#1A5BE1] flex items-center justify-center text-white text-xs font-bold">
+                UZ
+              </div>
+              <h4 class="font-medium text-lg">O'zbekiston</h4>
+            </div>
+            <hr class="mb-4" />
+            <ul class="space-y-4">
+              ${activeItem.uzb.map(item => `
+                <li class="flex items-start gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A5BE1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mt-0.5 flex-shrink-0">
+                    <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                  </svg>
+                  <span>${item}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
+          Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
+        </div>
+      </div>
+    `;
+
+    document.getElementById('comparison-content').innerHTML = newContent;
+  }
+
+  // Десктоп таблар учун
+  document.querySelectorAll('[data-category]').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const category = button.dataset.category;
+      if (category) {
+        updateContent(category);
+      }
+    });
+  });
+
+  // Мобил селект учун
+  const categorySelect = document.getElementById('category-select-mobile');
+  if (categorySelect) {
+    categorySelect.addEventListener('change', (e) => {
+      const category = (e.target as HTMLSelectElement).value;
+      updateContent(category);
+    });
+  }
+</script>

@@ -1,0 +1,100 @@
+---
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+
+const lang: Lang = 'uz';
+const t = useTranslations(lang);
+
+// Success stories
+const successStories = [
+  {
+    name: t('comparison.stories.story1.name'),
+    university: t('comparison.stories.story1.university'),
+    year: t('comparison.stories.story1.year'),
+    position: t('comparison.stories.story1.position'),
+    quote: t('comparison.stories.story1.quote'),
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+  },
+  {
+    name: t('comparison.stories.story2.name'),
+    university: t('comparison.stories.story2.university'),
+    year: t('comparison.stories.story2.year'),
+    position: t('comparison.stories.story2.position'),
+    quote: t('comparison.stories.story2.quote'),
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+  },
+  {
+    name: t('comparison.stories.story3.name'),
+    university: t('comparison.stories.story3.university'),
+    year: t('comparison.stories.story3.year'),
+    position: t('comparison.stories.story3.position'),
+    quote: t('comparison.stories.story3.quote'),
+    image: "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+  }
+];
+---
+
+<section>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16" data-aos="fade-up">
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 relative inline-block group">
+        {t('comparison.stories.title')}
+        <span class="absolute bottom-0 left-0 w-full h-1 bg-primary-600 transform scale-x-0 transition-transform duration-500 origin-left group-hover:scale-x-100"></span>
+      </h2>
+      <div class="w-24 h-1 bg-primary-600 mx-auto mt-6"></div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {successStories.map((story, index) => (
+        <div 
+          key={`story-${index}`}
+          class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-500 group" 
+          data-aos="fade-up" 
+          data-aos-delay={200 + index * 150}
+        >
+          <div class="flex items-center mb-4">
+            <div class="w-16 h-16 rounded-full overflow-hidden shadow-md border-2 border-primary-100">
+              <img 
+                src={story.image} 
+                alt={story.name} 
+                class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" 
+              />
+            </div>
+            <div class="ml-4">
+              <h4 class="text-lg font-semibold text-gray-900 transition-colors duration-300 group-hover:text-primary-600">{story.name}</h4>
+              <p class="text-primary-600">{story.university}, {story.year}</p>
+              <p class="text-sm text-gray-500">{story.position}</p>
+            </div>
+          </div>
+          <blockquote class="italic text-gray-600 border-l-4 border-primary-600 pl-4 py-2 bg-primary-50 rounded-r-lg shadow-sm transition-all duration-300 group-hover:bg-primary-100 group-hover:shadow-md">
+            "{story.quote}"
+          </blockquote>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+/* Дополнительные стили для плавных анимаций */
+@media (prefers-reduced-motion: no-preference) {
+  .group {
+    will-change: transform;
+  }
+  
+  .group:hover {
+    z-index: 10;
+  }
+  
+  .group:hover blockquote {
+    transform: translateY(2px);
+  }
+}
+
+/* Мобильная адаптивность */
+@media (max-width: 640px) {
+  .group:hover {
+    transform: translateY(-4px) !important;
+  }
+}
+</style>

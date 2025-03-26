@@ -1,0 +1,71 @@
+---
+import type { BlogPost } from '@/types/blog';
+import { Clock, Tag, ChevronRight } from 'lucide-astro';
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+
+const postImage = post.image || '/images/posts/placeholder/post.jpeg';
+const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
+---
+
+<div class="blog-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+  <div class="relative h-48 overflow-hidden">
+    <img 
+      src={postImage} 
+      alt={post.title} 
+      class="blog-card-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      onerror="this.src='/images/posts/placeholder/post.jpeg'"
+    />
+    <div class="absolute top-3 left-3">
+      <span class="inline-block px-4 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium">
+        <Tag size={12} class="mr-1" />
+        {post.category || "Education"}
+      </span>
+    </div>
+  </div>
+  
+  <div class="p-6">
+    <div class="flex items-center space-x-2 text-xs text-gray-600 mb-2">
+      <time datetime={post.date || post.publishedDate} class="blog-card-date flex items-center">
+        <Clock size={12} class="mr-1" />
+        {new Date(post.date || post.publishedDate).toLocaleDateString(post.lang === 'ru' ? 'ru-RU' : (post.lang === 'en' ? 'en-US' : 'uz-UZ'))}
+      </time>
+      <span>•</span>
+      <span>{post.readTime || "5 min"}</span>
+    </div>
+    
+    <h3 class="blog-card-title text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+      <a href={`/uz/blog/${post.slug}`} class="hover:text-primary-600 transition-colors duration-300">
+        {post.title}
+      </a>
+    </h3>
+    
+    <p class="blog-card-excerpt text-sm text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
+    
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <img 
+          src={authorImage} 
+          alt={post.author} 
+          class="h-8 w-8 rounded-full ring-1 ring-primary-100"
+          onerror="this.src='/images/posts/placeholder/author.jpg'"
+        />
+        <div class="ml-2">
+          <p class="text-xs font-medium text-gray-900">{post.author}</p>
+        </div>
+      </div>
+      
+      <a 
+        href={`/uz/blog/${post.slug}`} 
+        class="inline-flex items-center text-xs text-primary-600 font-medium hover:text-primary-700 transition-colors duration-300"
+      >
+        {post.lang === 'ru' ? 'Читать' : (post.lang === 'en' ? 'Read' : 'O\'qish')}
+        <ChevronRight size={12} class="ml-1" />
+      </a>
+    </div>
+  </div>
+</div>

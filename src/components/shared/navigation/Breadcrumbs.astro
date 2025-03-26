@@ -1,0 +1,81 @@
+---
+import { Home, ChevronRight } from 'lucide-astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  items: {
+    label: string;
+    href?: string;
+  }[];
+  class?: string;
+  showHome?: boolean;
+}
+
+const { items, class: className = '', showHome = true } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<nav class={`breadcrumbs ${className}`} aria-label="Breadcrumbs">
+  <ol class="breadcrumbs-list">
+    {showHome && (
+      <li class="breadcrumbs-item">
+        <a href={`/${lang}`} class="breadcrumbs-link">
+          <Home class="icon" />
+          <span>{t('nav.home')}</span>
+        </a>
+      </li>
+    )}
+    {
+      items.map((item) => (
+        <li class="breadcrumbs-item">
+          <ChevronRight class="icon separator" />
+          {item.href ? (
+            <a href={item.href} class="breadcrumbs-link">
+              {item.label}
+            </a>
+          ) : (
+            <span class="breadcrumbs-text">{item.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+@tailwind utilities;
+@layer utilities {
+  .hover\:text-primary-600:hover {
+    color: theme('colors.primary.600');
+  }
+}
+  .breadcrumbs {
+    @apply mb-6;
+  }
+
+  .breadcrumbs-list {
+    @apply flex flex-wrap items-center;
+  }
+
+  .breadcrumbs-item {
+    @apply flex items-center;
+  }
+
+  .breadcrumbs-link {
+    @apply flex items-center text-sm text-gray-600 hover:text-primary-600 transition-colors;
+  }
+
+  .breadcrumbs-text {
+    @apply text-sm text-gray-400;
+  }
+
+  .icon {
+    @apply w-4 h-4;
+  }
+
+  .separator {
+    @apply mx-2 text-gray-400;
+  }
+</style>

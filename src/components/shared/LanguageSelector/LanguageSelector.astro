@@ -1,0 +1,113 @@
+---
+// components/LanguageSelector.astro
+import { ChevronDown, Languages } from 'lucide-astro';
+import { getLangFromUrl, type Lang } from '@/i18n/langUtils';
+
+const { isMobile = false } = Astro.props;
+const currentLang = getLangFromUrl(Astro.url);
+const currentPath = Astro.url.pathname;
+
+const languageOptions = [
+  {
+    code: 'ru' as Lang,
+    name: 'RU',
+    fullName: 'Русский'
+  },
+  {
+    code: 'uz' as Lang,
+    name: 'UZ',
+    fullName: 'O\'zbekcha'
+  },
+  {
+    code: 'en' as Lang,
+    name: 'EN',
+    fullName: 'English'
+  }
+];
+
+const currentLanguage = languageOptions.find(lang => lang.code === currentLang) || languageOptions[0];
+
+function getPathForLang(lang: Lang) {
+  const segments = currentPath.split('/');
+  segments[1] = lang;
+  return segments.join('/');
+}
+---
+
+{!isMobile && (
+  <div class="relative language-selector-container">
+    <button
+      type="button"
+      class="flex items-center gap-1.5 text-gray-600 hover:text-blue-600 py-1.5 px-2.5 rounded-lg hover:bg-gray-50 transition-colors duration-200 language-selector-button"
+      aria-expanded="false"
+      aria-haspopup="true"
+    >
+      <Languages class="w-5 h-5" />
+      <span class="text-sm font-medium">{currentLanguage.name}</span>
+      <ChevronDown class="w-4 h-4 ml-0.5 chevron-icon" />
+    </button>
+
+    <div
+      class="absolute right-0 z-50 mt-1 w-32 origin-top-right rounded-lg shadow-md hidden bg-white border border-gray-100 language-selector-menu"
+      role="menu"
+      aria-orientation="vertical"
+      tabindex="-1"
+    >
+      <div class="py-1.5" role="none">
+        {languageOptions.map((language) => (
+          <a
+            href={getPathForLang(language.code)}
+            class:list={[
+              "flex items-center px-3 py-2 text-sm transition-colors duration-200 justify-center",
+              currentLang === language.code
+                ? "text-blue-600 bg-blue-50"
+                : "text-gray-600 hover:bg-gray-50 hover:text-blue-600"
+            ]}
+            role="menuitem"
+            tabindex="-1"
+            data-astro-reload
+          >
+            {language.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const containers = document.querySelectorAll('.language-selector-container');
+    
+    containers.forEach(container => {
+      const button = container.querySelector('.language-selector-button');
+      const menu = container.querySelector('.language-selector-menu');
+      const chevron = container.querySelector('.chevron-icon');
+      
+      if (!button || !menu) return;
+      
+      let isOpen = false;
+      
+      function toggleMenu() {
+        isOpen = !isOpen;
+        menu.classList.toggle('hidden', !isOpen);
+        button.setAttribute('aria-expanded', String(isOpen));
+        chevron?.classList.toggle('rotate-180', isOpen);
+      }
+      
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+      });
+      
+      document.addEventListener('click', (e) => {
+        if (!container.contains(e.target as Node)) {
+          isOpen = false;
+          menu.classList.add('hidden');
+          button.setAttribute('aria-expanded', 'false');
+          chevron?.classList.remove('rotate-180');
+        }
+      });
+    });
+  });
+</script>

@@ -1,0 +1,48 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getLangFromUrl } from '@/i18n/langUtils'; 
+import { useTranslations } from '@/i18n/utils';
+import { getStaticPaths } from '@/i18n/utils';
+import { getCollection } from 'astro:content';
+import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
+import ProgramHero from '@/components/features/programs/ProgramHero.astro';
+import ProgramGrid from '@/components/features/programs/ProgramGrid.astro';
+import ProgramContact from '@/components/features/programs/ProgramContact.astro';
+import ContactModal from '@/components/features/contact/ContactModal.astro';
+import Contact from '@/components/shared/contact/Contact.astro';
+import FAQ from '@/components/shared/faq/FAQ.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+export { getStaticPaths };
+
+// Get programs from content collection
+const programsEntries = await getCollection('programs');
+const programs = programsEntries.map(entry => ({
+  ...entry.data,
+  title: entry.data.title.uz,
+  description: entry.data.description.uz,
+  features: entry.data.features.uz,
+  slug: entry.id.replace('.yaml', '')
+}));
+
+const breadcrumbItems = [
+  { label: t('common.home'), href: `/${lang}` }, // Updated with language prefix
+  { label: t('common.programs'), href: `/${lang}/programs` }, // Updated with language prefix
+];
+---
+
+<Layout title={`${t('common.programs')} | Study in China`}> {/* Tarjima qo'shildi */}
+  <main class="bg-background min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumbs items={breadcrumbItems} />
+      <ProgramHero />
+      <ProgramGrid programs={programs} />
+      <ProgramContact />
+      <ContactModal />
+      <FAQ />
+    <Contact />
+    </div>
+  </main>
+</Layout>

@@ -1,0 +1,81 @@
+---
+import { UserRound, Files, Languages, Send } from 'lucide-astro';
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+import CTA from '@/components/ui/CTA.astro';
+import { getCollection } from 'astro:content';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+
+// Get features from content collection
+const features = await getCollection('features');
+// Sort by order if specified
+const sortedFeatures = features.sort((a, b) => 
+  (a.data.order || 0) - (b.data.order || 0)
+);
+
+// Массив импортированных иконок
+const Icons = [UserRound, Files, Languages, Send];
+---
+
+<section class="section-container">
+    <!-- Section Title -->
+    <SectionHeader
+        title={t('howWeWork.title')}
+        subtitle={t('howWeWork.subtitle')}
+    />
+    
+    <div class="flex flex-col md:flex-row flex-wrap gap-8 relative max-w-sm md:max-w-none mx-auto">
+        <!-- Progress Line - Desktop -->
+        <div class="hidden md:block absolute top-[45%] left-0 right-0 h-0.5 bg-gray-200 z-0" />
+        
+        <!-- Progress Line - Mobile -->
+        <div class="md:hidden absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-200 z-0" />
+        
+        {sortedFeatures.map((feature, index) => {
+            // Используем иконку из массива импортированных иконок
+            const Icon = Icons[index % Icons.length];
+            
+            return (
+                <div class="group relative bg-white p-4 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 z-10 flex-1 min-w-[calc(25%-24px)]">
+                    <div class="absolute -top-4 -left-4">
+                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
+                            {index + 1}
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center text-center pt-4">
+                        <div class="p-3 bg-blue-100 rounded-full mb-3 group-hover:bg-blue-500 transition-colors duration-300">
+                            <Icon 
+                                class="w-5 h-5 text-blue-500 group-hover:text-white transition-colors duration-300"
+                            />
+                        </div>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">
+                            {feature.data.title[lang]}
+                        </h3>
+                        <p class="text-sm md:text-base text-gray-600 leading-snug">
+                            {feature.data.description[lang]}
+                        </p>
+                    </div>
+                </div>
+            )
+        })}
+    </div>
+    <CTA />
+</section>
+
+<style>
+    .group:hover .group-hover\:bg-blue-500 {
+        background-color: rgb(59 130 246);
+    }
+    
+    .group:hover .group-hover\:text-white {
+        color: white;
+    }
+</style>

@@ -1,0 +1,71 @@
+---
+import type { LucideIcon } from 'lucide-astro';
+
+interface Props {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  position: 'top-left' | 'bottom-right';
+  color: string;
+}
+
+const { icon: Icon, title, description, position, color } = Astro.props;
+---
+
+<div class={`floating-card ${position === 'bottom-right' ? 'bottom-right animate-float-slow' : 'top-left animate-float-delayed'}`}>
+  <div class="card-content">
+    <div class={`card-icon bg-${color}`}>
+      <Icon class="icon text-white w-6 h-6" />
+    </div>
+    <div>
+      <h3 class="card-title">{title}</h3>
+      <p class="card-desc">{description}</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.floating-card {
+  @apply absolute bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl max-w-[280px] border border-gray-100 z-10;
+}
+
+.card-content {
+  @apply flex items-start gap-4;
+}
+
+.card-icon {
+  @apply w-12 h-12 rounded-full flex items-center justify-center shrink-0;
+}
+
+.card-title {
+  @apply font-semibold text-gray-900;
+}
+
+.card-desc {
+  @apply text-sm text-gray-600 mt-1;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .floating-card {
+    @apply static max-w-full mb-4 shadow-md;
+    position: static;
+    transform: none !important;
+  }
+  
+  .floating-card.bottom-right,
+  .floating-card.top-left {
+    position: static;
+    margin: 1rem 0;
+    animation: none;
+  }
+}
+
+.floating-card.bottom-right {
+  @apply -bottom-6 -right-6 animate-float-slow;
+}
+
+.floating-card.top-left {
+  @apply -top-6 -left-6 animate-float-delayed;
+}
+</style>

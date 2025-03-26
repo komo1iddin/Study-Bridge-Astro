@@ -1,0 +1,10 @@
+title:
+  uz: "Ariza topshirish"
+  ru: "Подача заявки"
+  en: "Application Submission"
+description:
+  uz: "Ariza topshirishda yordam beramiz va ko'rib chiqish jarayonini nazorat qilamiz"
+  ru: "Помогаем с подачей заявки и контролируем процесс рассмотрения"
+  en: "We help with submitting applications and monitor the review process"
+icon: "Send"
+order: 4

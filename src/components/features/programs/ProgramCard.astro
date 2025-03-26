@@ -1,0 +1,215 @@
+---
+import { Clock, Check, ArrowRight, GraduationCap, Award, Globe } from 'lucide-astro';
+import type { Program } from '@/types/program';
+import { getLangFromUrl } from '@/i18n/langUtils';
+
+interface Props {
+  program: Program;
+}
+
+const { program } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+
+// Define color classes based on program type if not provided
+const bgColorClass = program.bgColor || 'bg-blue-50';
+const textColorClass = program.textColor || 'text-blue-700';
+const iconColorClass = program.color ? `text-${program.color}-500` : 'text-primary-600';
+---
+
+<div class="program-card">
+  <div class={`card h-full overflow-hidden transition-all duration-300 border-2 rounded-lg ${bgColorClass} p-6`}>
+    <div class="icon-wrapper mb-6">
+      {program.icon === "globe" && <Globe class={`h-8 w-8 ${iconColorClass}`} />}
+      {program.icon === "graduation-cap" && <GraduationCap class={`h-8 w-8 ${iconColorClass}`} />}
+      {program.icon === "award" && <Award class={`h-8 w-8 ${iconColorClass}`} />}
+      {!["globe", "graduation-cap", "award"].includes(program.icon) && <GraduationCap class={`h-8 w-8 ${iconColorClass}`} />}
+    </div>
+
+    <h3 class={`text-2xl font-bold tracking-tight ${textColorClass} mb-2`}>
+      {program.title}
+    </h3>
+    <p class="text-slate-600 mb-4">{program.description}</p>
+
+    <div class="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+      <Clock class="w-5 h-5 text-primary-500" />
+      <span>Длительность: {program.duration}</span>
+    </div>
+
+    {program.features && program.features.length > 0 && (
+      <ul class="features-list space-y-2 mt-3">
+        {program.features.map((feature, featureIndex) => (
+          <li class="feature-item flex items-start gap-2 text-slate-700" style={`animation-delay: ${featureIndex * 50}ms`}>
+            <span class={`flex-shrink-0 w-5 h-5 mt-0.5 ${textColorClass}`}>•</span>
+            <span>{feature}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <div class="space-y-4 mt-auto">
+      {program.levels && program.levels.length > 0 && (
+        <div>
+          <h4 class="text-sm font-medium text-gray-900 mb-2">Уровни обучения:</h4>
+          <div class="flex flex-wrap gap-2">
+            {program.levels.map(level => (
+              <span class="px-3 py-1 text-xs font-medium text-primary-700 bg-primary-50 rounded-full transition-colors duration-200 hover:bg-primary-100">
+                {level}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {program.fields && program.fields.length > 0 && (
+        <div>
+          <h4 class="text-sm font-medium text-gray-900 mb-2">Направления:</h4>
+          <div class="flex flex-wrap gap-2">
+            {program.fields.map(field => (
+              <span class="px-3 py-1 text-xs font-medium text-primary-700 bg-primary-50 rounded-full transition-colors duration-200 hover:bg-primary-100">
+                {field}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <a
+      href={`/${lang}/programs/${program.type}/${program.slug}`}
+      class={`w-full mt-6 px-4 py-2 border-2 rounded-lg flex items-center justify-center gap-2 transition-all duration-200 text-slate-700 hover:border-slate-400 group`}
+    >
+      <span>Batafsil ma'lumot</span>
+      <ArrowRight class="h-4 w-4 arrow-icon" />
+    </a>
+  </div>
+
+  <div class="indicator-dots hidden">
+    {[...Array(5)].map((_, i) => (
+      <div class={`dot ${textColorClass}`} style={`animation-delay: ${i * 50}ms`} />
+    ))}
+  </div>
+</div>
+
+<style>
+  /* Animatsiyalar */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Element animatsiyalari */
+  .program-card {
+    animation: scaleIn 0.5s ease-out forwards;
+    opacity: 0;
+    position: relative;
+  }
+
+  .feature-item {
+    animation: slideInRight 0.3s ease-out forwards;
+    opacity: 0;
+  }
+
+  /* Hover effektlari */
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .program-card:hover .card {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .icon-wrapper {
+    transition: transform 0.3s ease;
+  }
+
+  .program-card:hover .icon-wrapper {
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  .arrow-icon {
+    transition: transform 0.3s ease;
+  }
+
+  .program-card:hover .arrow-icon {
+    transform: translateX(4px);
+  }
+
+  /* Indikator nuqtalar */
+  .indicator-dots {
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  .program-card:hover .indicator-dots {
+    display: flex;
+  }
+
+  .program-card:hover .dot {
+    animation: dotAppear 0.3s ease-out forwards;
+  }
+
+  @keyframes dotAppear {
+    from {
+      transform: scale(0);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .program-card {
+      animation-delay: 0s !important;
+    }
+    
+    .feature-item {
+      animation-delay: 0s !important;
+    }
+  }
+</style>

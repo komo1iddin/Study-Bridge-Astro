@@ -1,0 +1,22 @@
+---
+import OurPartnersComponent from './OurPartners.svelte';
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+
+// Подготовьте все необходимые переводы
+const translations = {
+  partnersTitle: t('partners.title'),
+  partnersDescription: t('partners.description'),
+  swipeToSlide: t('partners.swipeToSlide'),
+  viewAllPartners: t('partners.viewAllPartners')
+};
+---
+
+<OurPartnersComponent lang={lang} translations={translations} client:load />

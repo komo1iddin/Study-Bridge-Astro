@@ -1,0 +1,163 @@
+---
+import { stats } from '@/data/educationData/stats';
+import { advantages } from '@/data/educationData/advantages';
+import { useTranslations } from '@/i18n/utils';
+import type { Lang } from '@/i18n/langUtils';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="section-container">
+    <!-- Section Title -->
+    <SectionHeader
+    badge={t('education.mission.badge')}
+    title={t('education.mission.title')}
+    subtitle={t('education.mission.subtitle')}
+  />
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 stats-grid">
+      {stats.map((stat, index) => (
+        <div 
+          class="bg-white rounded-2xl p-6 shadow-lg shadow-blue-500/5 border border-blue-100 hover:border-blue-200 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 flex flex-col h-full"
+          data-aos="fade-up"
+          data-aos-delay={100 * index}
+        >
+          <div class="flex items-start gap-4 mb-4">
+            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white">
+              <stat.icon class="w-6 h-6" />
+            </div>
+            <div class="flex-grow min-h-[60px] flex flex-col">
+              <div class="text-3xl font-bold text-gray-900 counter-value" data-target={stat.value}>
+                {stat.value}
+              </div>
+              <div class="text-sm font-medium text-gray-500 whitespace-pre-line">{t(stat.translationKey.label)}</div>
+            </div>
+          </div>
+          <p class="text-gray-600 text-sm mt-auto">{t(stat.translationKey.description)}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Advantages -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {advantages.map((advantage, index) => (
+        <div 
+          class="relative group h-full"
+          data-aos="fade-up"
+          data-aos-delay={150 * index}
+        >
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-all duration-300"></div>
+          <div class="relative bg-white rounded-2xl p-8 shadow-lg shadow-blue-500/5 border border-blue-100 hover:border-blue-200 transition-all duration-300 group-hover:translate-y-[-2px] group-hover:shadow-xl h-full flex flex-col">
+            <div class="text-blue-600 mb-4 transition-transform duration-300 group-hover:scale-110">
+              <advantage.icon class="w-8 h-8" />
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">{t(advantage.translationKey.title)}</h3>
+            <p class="text-gray-600 flex-grow mt-auto">{t(advantage.translationKey.description)}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+</section>
+
+<script is:inline>
+  // Используем requestIdleCallback для запуска анимации в свободное время
+  function initCounters() {
+    // Оптимизированная функция анимации счетчиков
+    function animateCounter(element) {
+      const target = parseInt(element.dataset.target?.replace(/\D/g, '') || '0');
+      // Уменьшаем длительность анимации для повышения производительности
+      const duration = 1000;
+      const step = target / (duration / 16);
+      let current = 0;
+  
+      const updateCounter = () => {
+        current += step;
+        if (current < target) {
+          element.textContent = Math.ceil(current).toLocaleString() + '+';
+          requestAnimationFrame(updateCounter);
+        } else {
+          element.textContent = target.toLocaleString() + '+';
+        }
+      };
+  
+      updateCounter();
+    }
+  
+    // Intersection Observer для запуска анимации только когда элемент виден
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counterElements = entry.target.querySelectorAll('.counter-value');
+          counterElements.forEach(element => {
+            if (element instanceof HTMLElement) {
+              animateCounter(element);
+            }
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      // Уменьшаем порог для более раннего запуска анимации
+      threshold: 0.1,
+      // Добавляем отступ для предварительной загрузки
+      rootMargin: '50px'
+    });
+  
+    // Наблюдаем за контейнером счетчиков вместо отдельных элементов
+    const counterContainer = document.querySelector('.stats-grid');
+    if (counterContainer) {
+      observer.observe(counterContainer);
+    }
+  }
+  
+  // Запускаем инициализацию после загрузки DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(initCounters, { timeout: 2000 });
+      } else {
+        setTimeout(initCounters, 1000);
+      }
+    });
+  } else {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(initCounters, { timeout: 2000 });
+    } else {
+      setTimeout(initCounters, 1000);
+    }
+  }
+</script>
+
+<style>
+.counter-value {
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+</style>

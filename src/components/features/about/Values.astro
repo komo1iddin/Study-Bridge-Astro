@@ -1,0 +1,31 @@
+---
+import type { LucideIcon } from 'lucide-astro';
+
+interface Value {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+}
+
+interface Props {
+  values: Value[];
+}
+
+const { values } = Astro.props;
+---
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+  {values.map((value, index) => (
+    <div 
+      class="bg-white rounded-xl shadow-md p-8 text-center transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-xl" 
+      data-aos="fade-up" 
+      data-aos-delay={100 * index}
+    >
+      <div class="flex items-center justify-center w-16 h-16 mx-auto rounded-full bg-primary-100 text-primary-600 mb-6">
+        <value.icon size={32} />
+      </div>
+      <h3 class="text-2xl font-semibold text-gray-900 mb-4">{value.title}</h3>
+      <p class="text-gray-600 text-lg">{value.description}</p>
+    </div>
+  ))}
+</div>

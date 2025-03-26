@@ -1,0 +1,34 @@
+id: "what-kind-scholarships"
+categoryId: "scholarships"
+order: 1
+question:
+  uz: "Qanday grant dasturlari mavjud?"
+  ru: "Какие стипендиальные программы доступны?"
+  en: "What scholarship programs are available?"
+answer:
+  uz: |
+    Xitoyda o'qish uchun asosiy grant dasturlari:
+
+    1. Xitoy hukumati granti (CSC):
+       - To'liq kontrakt
+       - Oylik stipendiya
+       - Yotoqxona
+       - Tibbiy sug'urta
+       
+    2. Konfutsiy instituti stipendiyasi:
+       - Til o'rganish uchun
+       - 6-12 oylik dasturlar
+       
+    3. Provinsiya grantlari:
+       - Har bir viloyat o'z grantlarini taklif qiladi
+       - Turli darajadagi qoplanish
+
+    4. Universitet grantlari:
+       - Akademik ko'rsatkichlarga qarab
+       - Qisman yoki to'liq qoplanish
+
+    Grant miqdorlari:
+    - CSC: 2500-3000 yuan/oy
+    - Konfutsiy: 2000-2500 yuan/oy
+    - Provinsiya: 1500-2500 yuan/oy
+lastUpdated: "2024-03-15"

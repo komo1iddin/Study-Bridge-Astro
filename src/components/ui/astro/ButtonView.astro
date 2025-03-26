@@ -1,0 +1,57 @@
+---
+// Button.astro
+interface Props {
+  href?: string;
+  text: string;
+  variant?: 'mobile' | 'desktop';
+  className?: string;
+  showOnMobile?: boolean;
+  showOnDesktop?: boolean;
+  onclick?: string;
+  icon?: any;
+}
+
+import { ArrowRight } from 'lucide-astro';
+
+const { 
+  href, 
+  text, 
+  variant = 'desktop', 
+  className = '',
+  showOnMobile = true,
+  showOnDesktop = true,
+  onclick,
+  icon: Icon = ArrowRight
+} = Astro.props;
+
+const baseClasses = "inline-flex items-center font-medium rounded-full text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 shadow-sm";
+
+const variantClasses = {
+  mobile: "px-6 py-3 text-sm",
+  desktop: "px-8 py-4 text-lg hover:scale-105 shadow-md"
+};
+
+const visibilityClasses = [];
+if (!showOnMobile) visibilityClasses.push("hidden md:inline-flex");
+if (!showOnDesktop) visibilityClasses.push("md:hidden");
+if (showOnMobile && showOnDesktop) visibilityClasses.push("");
+
+const iconClasses = {
+  mobile: "ml-1.5 h-4 w-4",
+  desktop: "ml-2.5 h-6 w-6"
+};
+
+const finalClasses = `${baseClasses} ${variantClasses[variant]} ${visibilityClasses.join(' ')} ${className}`;
+---
+
+{href ? (
+  <a href={href} class={finalClasses}>
+    {text}
+    <Icon class={iconClasses[variant]} />
+  </a>
+) : (
+  <button onclick={onclick} class={finalClasses}>
+    {Icon && <Icon class={iconClasses[variant]} />}
+    {text}
+  </button>
+)}

@@ -1,0 +1,33 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Container from '../core/Card/Container.astro';
+import type { Meta } from '@/types/common';
+
+export interface Props {
+  meta?: Meta;
+  title: string;
+  description?: string;
+  wide?: boolean;
+}
+
+const { meta, title, description, wide = false } = Astro.props;
+---
+
+<Layout meta={meta}>
+  <Container size={wide ? 'xl' : 'lg'}>
+    <div class="py-12">
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-900 sm:text-5xl">
+          {title}
+        </h1>
+        {description && (
+          <p class="mt-4 text-xl text-gray-600">
+            {description}
+          </p>
+        )}
+      </div>
+      
+      <slot />
+    </div>
+  </Container>
+</Layout>
