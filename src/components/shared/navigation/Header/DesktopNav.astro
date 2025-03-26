@@ -1,5 +1,5 @@
 ---
-import { ChevronDown } from 'lucide-astro';
+import { ChevronDown, MoreHorizontal } from 'lucide-astro';
 import { getNavigation } from '@/data/constants/navigation';
 
 // Получаем текущий язык из URL
@@ -11,22 +11,23 @@ const navigation = getNavigation(currentLang);
 ---
 
 <nav class="flex items-center">
-  <div class="flex items-center gap-1">
+  <div class="flex items-center gap-0 xs:gap-0.5 sm:gap-1 md:gap-1.5 lg:gap-2.5">
+    {/* First item always visible */}
     {
-      navigation.map((item) => {
+      navigation.slice(0, 1).map((item) => {
         if (item.items) {
           return (
             <div class="relative group">
-              <button class="flex items-center text-gray-600 hover:text-blue-600 text-sm font-medium gap-1 py-2 px-2.5 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              <button class="flex items-center text-gray-600 hover:text-blue-600 text-xs xxs:text-sm font-medium gap-0.5 py-1 px-1 xxs:py-1.5 xxs:px-1.5 sm:py-2 sm:px-2 md:px-2.5 lg:px-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                 {item.name}
-                <ChevronDown class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180 ml-0.5" />
+                <ChevronDown class="h-3 w-3 xxs:h-3.5 xxs:w-3.5 sm:h-4 sm:w-4 transition-transform duration-200 group-hover:rotate-180 ml-0.5" />
               </button>
-              <div class="absolute left-1/2 -translate-x-1/2 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                <div class="bg-white rounded-lg shadow-md py-1.5 min-w-[200px] border border-gray-100">
+              <div class="absolute left-1/2 -translate-x-1/2 top-full pt-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20">
+                <div class="bg-white rounded-lg shadow-md py-1.5 min-w-[160px] xxs:min-w-[180px] sm:min-w-[200px] border border-gray-100">
                   {item.items.map((subItem) => (
                     <a
                       href={subItem.href}
-                      class="flex items-center px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+                      class="flex items-center px-2.5 py-1.5 xxs:py-1.5 sm:py-2 text-xs xxs:text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
                     >
                       {subItem.name}
                     </a>
@@ -39,12 +40,193 @@ const navigation = getNavigation(currentLang);
         return (
           <a
             href={item.href}
-            class="px-2.5 py-2 text-gray-600 hover:text-blue-600 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
+            class="px-1 xxs:px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-1 xxs:py-1.5 sm:py-2 text-xs xxs:text-sm text-gray-600 hover:text-blue-600 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200"
           >
             {item.name}
           </a>
         );
       })
     }
+
+    {/* Items 2-3 shown with progressive breakpoints */}
+    {
+      navigation.slice(1, 3).map((item, index) => {
+        const visibilityClass = index === 0 ? "hidden sm:block" : "hidden md:block";
+        
+        if (item.items) {
+          return (
+            <div class={`relative group ${visibilityClass}`}>
+              <button class="flex items-center text-gray-600 hover:text-blue-600 text-xs xxs:text-sm font-medium gap-0.5 py-1 px-1 xxs:py-1.5 xxs:px-1.5 sm:py-2 sm:px-2 md:px-2.5 lg:px-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 whitespace-nowrap">
+                {item.name}
+                <ChevronDown class="h-3 w-3 xxs:h-3.5 xxs:w-3.5 sm:h-4 sm:w-4 transition-transform duration-200 group-hover:rotate-180 ml-0.5" />
+              </button>
+              <div class="absolute left-1/2 -translate-x-1/2 top-full pt-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20">
+                <div class="bg-white rounded-lg shadow-md py-1.5 min-w-[160px] xxs:min-w-[180px] sm:min-w-[200px] border border-gray-100">
+                  {item.items.map((subItem) => (
+                    <a
+                      href={subItem.href}
+                      class="flex items-center px-2.5 py-1.5 xxs:py-1.5 sm:py-2 text-xs xxs:text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+                    >
+                      {subItem.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <a
+            href={item.href}
+            class={`px-1 xxs:px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-1 xxs:py-1.5 sm:py-2 text-xs xxs:text-sm text-gray-600 hover:text-blue-600 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200 whitespace-nowrap ${visibilityClass}`}
+          >
+            {item.name}
+          </a>
+        );
+      })
+    }
+
+    {/* Medium screen items - items 3-6 with increasing breakpoints */}
+    {
+      navigation.slice(3).map((item, index) => {
+        // Progressive visibility based on index:
+        let visibilityClass;
+        if (index === 0) visibilityClass = "hidden lg:block"; // 4th item: lg+
+        else if (index === 1) visibilityClass = "hidden xl:block"; // 5th item: xl+
+        else visibilityClass = "hidden 2xl:block"; // 6th+ items: 2xl+
+        
+        if (item.items) {
+          return (
+            <div class={`relative group ${visibilityClass}`}>
+              <button class="flex items-center text-gray-600 hover:text-blue-600 text-xs xxs:text-sm font-medium gap-0.5 py-1 px-1 xxs:py-1.5 xxs:px-1.5 sm:py-2 sm:px-2 md:px-2.5 lg:px-3 rounded-lg hover:bg-gray-50 transition-colors duration-200 whitespace-nowrap">
+                {item.name}
+                <ChevronDown class="h-3 w-3 xxs:h-3.5 xxs:w-3.5 sm:h-4 sm:w-4 transition-transform duration-200 group-hover:rotate-180 ml-0.5" />
+              </button>
+              <div class="absolute left-1/2 -translate-x-1/2 top-full pt-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20">
+                <div class="bg-white rounded-lg shadow-md py-1.5 min-w-[160px] xxs:min-w-[180px] sm:min-w-[200px] border border-gray-100">
+                  {item.items.map((subItem) => (
+                    <a
+                      href={subItem.href}
+                      class="flex items-center px-2.5 py-1.5 xxs:py-1.5 sm:py-2 text-xs xxs:text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200"
+                    >
+                      {subItem.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <a
+            href={item.href}
+            class={`px-1 xxs:px-1.5 sm:px-2 md:px-2.5 lg:px-3 py-1 xxs:py-1.5 sm:py-2 text-xs xxs:text-sm text-gray-600 hover:text-blue-600 font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200 whitespace-nowrap ${visibilityClass}`}
+          >
+            {item.name}
+          </a>
+        );
+      })
+    }
+
+    {/* More dropdown menu - only shown when needed */}
+    <div class="relative group 2xl:hidden">
+      <button 
+        class="flex items-center justify-center text-gray-600 hover:text-blue-600 text-xs xxs:text-sm font-medium ml-auto py-1 px-1 xxs:py-1.5 xxs:px-1.5 sm:py-2 sm:px-2 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+        aria-label="More menu options"
+      >
+        <MoreHorizontal class="h-4 w-4 xxs:h-4.5 xxs:w-4.5 sm:h-5 sm:w-5" />
+      </button>
+      <div class="absolute right-0 top-full pt-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-20">
+        <div class="bg-white rounded-lg shadow-md py-1.5 min-w-[160px] xxs:min-w-[180px] sm:min-w-[200px] border border-gray-100">
+          {/* Show items based on screen size */}
+          {navigation.slice(1, 3).map((item, index) => {
+            const conditionalClass = index === 0 ? "sm:hidden" : "md:hidden";
+            return (
+              <a
+                href={item.href}
+                class={`flex items-center px-2.5 py-1.5 xxs:py-1.5 sm:py-2 text-xs xxs:text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200 ${conditionalClass}`}
+              >
+                {item.name}
+              </a>
+            );
+          })}
+          
+          {/* Show 4th+ items based on screen size */}
+          {navigation.slice(3).map((item, index) => {
+            let conditionalClass;
+            if (index === 0) conditionalClass = "lg:hidden"; // Hide 4th item on lg+
+            else if (index === 1) conditionalClass = "xl:hidden"; // Hide 5th item on xl+
+            else conditionalClass = "2xl:hidden"; // Hide 6th+ items on 2xl+
+            
+            return (
+              <a
+                href={item.href}
+                class={`flex items-center px-2.5 py-1.5 xxs:py-1.5 sm:py-2 text-xs xxs:text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-200 ${conditionalClass}`}
+              >
+                {item.name}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   </div>
 </nav>
+
+<style>
+  /* Extra extra small screens (320px+) */
+  @media (min-width: 320px) {
+    .xxs\:block {
+      display: block;
+    }
+    .xxs\:hidden {
+      display: none;
+    }
+    .xxs\:text-sm {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+    .xxs\:px-1\.5 {
+      padding-left: 0.375rem;
+      padding-right: 0.375rem;
+    }
+    .xxs\:py-1\.5 {
+      padding-top: 0.375rem;
+      padding-bottom: 0.375rem;
+    }
+    .xxs\:h-3\.5 {
+      height: 0.875rem;
+    }
+    .xxs\:w-3\.5 {
+      width: 0.875rem;
+    }
+    .xxs\:h-4 {
+      height: 1rem;
+    }
+    .xxs\:w-4 {
+      width: 1rem;
+    }
+    .xxs\:h-4\.5 {
+      height: 1.125rem;
+    }
+    .xxs\:w-4\.5 {
+      width: 1.125rem;
+    }
+    .xxs\:min-w-\[180px\] {
+      min-width: 180px;
+    }
+  }
+  
+  /* Custom extra small screens (375px+) */
+  @media (min-width: 375px) {
+    .xs\:block {
+      display: block;
+    }
+    .xs\:hidden {
+      display: none;
+    }
+    .xs\:gap-0\.5 {
+      gap: 0.125rem;
+    }
+  }
+</style>
