@@ -3,9 +3,16 @@
   import type { University, GalleryCategory, GalleryImage } from "@/types/university";
   import type { Lang } from "@/i18n/langUtils";
   import { onMount } from "svelte";
+  import { useLazyLoad } from "@/utils/componentLazyLoader";
 
   export let university: University;
   export let lang: Lang;
+  
+  // Create lazy loading action
+  const lazyGallery = useLazyLoad('gallery-thumbnails', {
+    rootMargin: '100px',
+    threshold: 0.1
+  });
   
   let isLoaded = false;
   let hasError = false;
@@ -120,6 +127,35 @@
   function isValidImage(image: any): boolean {
     return image && typeof image === 'object' && typeof image.src === 'string';
   }
+
+  // Function to optimize image URLs
+  function optimizeImageUrl(url: string, width: number = 800): string {
+    if (!url) return '';
+    
+    // If it's already a local URL or doesn't need optimization, return as is
+    if (url.startsWith('/') || url.includes('placeholder')) {
+      return url;
+    }
+    
+    // For Unsplash images, we can use their built-in optimization
+    if (url.includes('unsplash.com')) {
+      // Add width and quality parameters to Unsplash URLs
+      const baseUrl = url.split('?')[0];
+      return `${baseUrl}?w=${width}&q=75&auto=format`;
+    }
+    
+    // Add width and height parameters to other image URLs when possible
+    if (url.includes('?')) {
+      // URL already has query parameters
+      if (!url.includes('width=') && !url.includes('w=')) {
+        return `${url}&width=${width}`;
+      }
+      return url;
+    } else {
+      // URL has no query parameters
+      return `${url}?width=${width}`;
+    }
+  }
 </script>
 
 {#if !isLoaded}
@@ -163,9 +199,11 @@
           <div class="mb-6">
             <div class="aspect-video rounded-lg overflow-hidden bg-slate-100">
               <img 
-                src={selectedImage.src} 
+                src={optimizeImageUrl(selectedImage.src, 1200)} 
                 alt={selectedImage.alt || 'University image'}
                 class="w-full h-full object-cover"
+                loading="eager" 
+                fetchpriority="high"
                 on:error={handleImageError}
               />
             </div>
@@ -183,7 +221,7 @@
         {/if}
         
         <!-- Categories and thumbnails -->
-        <div class="space-y-6">
+        <div class="space-y-6" use:lazyGallery>
           {#if galleryData && galleryData.length > 0}
             {#each galleryData as category}
               {#if category && category.images && category.images.length > 0}
@@ -198,9 +236,11 @@
                         on:click={() => selectImage(image)}
                       >
                         <img 
-                          src={image.src} 
+                          src={optimizeImageUrl(image.src, 400)} 
                           alt={image.alt || 'Gallery image'}
                           class="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
                           on:error={handleImageError}
                         />
                       </button>
@@ -212,37 +252,6 @@
           {:else}
             <p class="text-center text-slate-500">No gallery images available</p>
           {/if}
-        </div>
-      </CardContent>
-    </Card>
-    
-    <Card class="border-none shadow-md">
-      <CardHeader>
-        <CardTitle class="text-xl font-bold text-slate-800">Virtual Tour</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div class="aspect-video bg-slate-100 rounded-lg flex items-center justify-center">
-          <div class="text-center p-6">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-2 text-slate-400"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
-            <p class="text-slate-500">360° Virtual Campus Tour</p>
-            <p class="text-sm text-slate-400 mt-1">Click to explore our campus virtually</p>
-          </div>
-        </div>
-        
-        <div class="mt-4 grid grid-cols-2 gap-4">
-          <div class="p-3 bg-slate-50 rounded-lg">
-            <h4 class="font-medium text-slate-800 mb-1">Download Virtual Tour App</h4>
-            <p class="text-sm text-slate-600">
-              Experience our campus in VR/AR with our dedicated mobile app.
-            </p>
-          </div>
-          
-          <div class="p-3 bg-slate-50 rounded-lg">
-            <h4 class="font-medium text-slate-800 mb-1">Schedule Guided Tour</h4>
-            <p class="text-sm text-slate-600">
-              Book an in-person guided tour with our student ambassadors.
-            </p>
-          </div>
         </div>
       </CardContent>
     </Card>

@@ -92,6 +92,9 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
       as="script"
     />
 
+    <!-- Lazy loading styles -->
+    <link rel="stylesheet" href="/styles/lazyload.css">
+
     <!-- Preconnect to important domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -125,10 +128,9 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
 
       // Import AOS initializer
       import '../components/scripts/aos-init';
-
-
       
-
+      // Import lazy loading initializer
+      import '../components/scripts/lazy-load-init';
 
       // Lazy load images
       document.addEventListener('DOMContentLoaded', () => {
@@ -158,10 +160,6 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
       if (prefersReducedMotion.matches) {
         document.documentElement.classList.add('reduce-motion');
       }
-
-
-
-
 
       // Check if user prefers reduced motion
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

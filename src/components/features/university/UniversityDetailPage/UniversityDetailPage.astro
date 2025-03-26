@@ -6,4 +6,4 @@ const { university } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 ---
 
-<UniversityDetailPageComponent university={university} lang={lang} client:load /> 
+<UniversityDetailPageComponent university={university} lang={lang} client:visible /> 
