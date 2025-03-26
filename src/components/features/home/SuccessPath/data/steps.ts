@@ -1,4 +1,4 @@
-import { Users, School, FileText, Building2, Plane, Home } from "lucide-react"
+import { Users, School, FileText, Building2, Plane, Home } from "lucide-svelte"
 
 // Colors configuration
 export const colors = {
