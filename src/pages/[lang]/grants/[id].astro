@@ -1,0 +1,43 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { languages, type Lang } from '@/i18n/langUtils';
+
+import { getCollection } from 'astro:content';
+import GrantsDetailPage from '@/components/features/grants/GrantsDetailPage/GrantsDetailPage.svelte';
+import { transformGrantData } from '@/lib/transformers/grantTransformer';
+
+export async function getStaticPaths() {
+  const grants = await getCollection('grants');
+  
+  return grants.map((grant) => {
+    return {
+      params: { id: grant.id },
+      props: { grant },
+    };
+  });
+}
+
+const { grant } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+
+if (!grant) {
+  return Astro.redirect('/404');
+}
+
+// Ma'lumotlarni transformatsiya qilish
+const transformedGrantData = transformGrantData({ id: grant.id, ...grant.data }, lang);
+
+// Prepare meta information for the layout
+const meta = {
+  title: grant.data.title[lang],
+  description: grant.data.description[lang]
+};
+---
+
+<Layout meta={meta}>
+  <GrantsDetailPage
+    client:visible
+    grant={transformedGrantData} 
+    lang={lang} 
+  />
+</Layout>

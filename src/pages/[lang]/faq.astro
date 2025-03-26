@@ -1,0 +1,386 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { languages, type Lang } from '@/i18n/langUtils';
+import { Search, ChevronDown, ArrowRight, Clock, Star } from 'lucide-astro';
+import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
+ 
+
+import Contact from '@/components/shared/contact/Contact.astro';
+import ContactModal from '@/components/features/contact/ContactModal.astro';
+import { getCollection } from 'astro:content';
+import { faqCategories } from '@/data/faq/categories';
+
+// Get the language from the URL parameter
+const { lang } = Astro.params;
+
+// Validate the language parameter
+if (!lang || !languages.includes(lang as Lang)) {
+  return Astro.redirect('/uz/'); // Redirect to default language if invalid
+}
+const breadcrumbItems = [
+  { label: t('nav.home'), href: `/${lang}` },
+  { label: t('nav.faq'), href: `/${lang}/faq` }
+];
+
+// Get FAQ items from collection
+const faqItems = await getCollection('faq');
+
+// Get popular questions (items with order < 3)
+const popularQuestions = faqItems
+  .filter(item => item.data.order && item.data.order < 3)
+  .sort((a, b) => (a.data.order || 0) - (b.data.order || 0));
+
+// Group remaining FAQ items by category
+const faqByCategory = faqItems.reduce((acc, item) => {
+  if (item.data.order && item.data.order < 3) return acc; // Skip popular questions
+  const categoryId = item.data.categoryId || 'other';
+  if (!acc[categoryId]) {
+    acc[categoryId] = [];
+  }
+  acc[categoryId].push(item);
+  return acc;
+}, {});
+
+// Get step-by-step guides
+const guides = faqItems.filter(item => 
+  item.data.categoryId === 'admission' || 
+  item.data.categoryId === 'documents' ||
+  item.data.categoryId === 'visa'
+);
+---
+
+<Layout meta={{ title: "Page Title", description: "Page Description" }}>
+  <div class="min-h-screen bg-gradient-to-b from-primary-50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <Breadcrumbs items={breadcrumbItems} />
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- Hero Section -->
+      <div class="text-center mb-12" data-aos="fade-up">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">
+          {t('faq.title')}
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          {t('faq.subtitle')}
+        </p>
+      </div>
+
+      <!-- Search Section -->
+      <div class="max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
+        <div class="relative">
+          <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <input
+            type="text"
+            id="faqSearch"
+            placeholder={t('faq.search.placeholder')}
+            class="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all"
+          />
+        </div>
+      </div>
+
+      <!-- Popular Questions Section -->
+      <div class="mb-16" data-aos="fade-up" data-aos-delay="200">
+        <div class="flex items-center gap-2 mb-6">
+          <Star class="h-6 w-6 text-amber-400" />
+          <h2 class="text-2xl font-bold text-gray-900">
+            {t('faq.popularQuestions')}
+          </h2>
+        </div>
+        <div class="grid gap-4">
+          {popularQuestions.map((item) => (
+            <div class="bg-white rounded-xl shadow-sm border-2 border-primary-100 overflow-hidden transition-all hover:shadow-md">
+              <details class="group">
+                <summary class="flex items-center justify-between p-6 cursor-pointer bg-primary-50/50">
+                  <div class="flex items-center gap-4">
+                    <Star class="h-5 w-5 text-amber-400" />
+                    <h3 class="text-lg font-medium text-gray-900">
+                      {item.data.question[lang]}
+                    </h3>
+                  </div>
+                  <ChevronDown class="w-5 h-5 text-gray-500 transition-transform duration-300 group-open:rotate-180" />
+                </summary>
+                <div class="px-6 pb-6">
+                  <div class="prose prose-sm max-w-none text-gray-600">
+                    {item.data.answer[lang]}
+                  </div>
+                  {item.data.lastUpdated && (
+                    <div class="flex items-center gap-2 mt-4 text-sm text-gray-500">
+                      <Clock class="h-4 w-4" />
+                      <span>Last updated: {new Date(item.data.lastUpdated).toLocaleDateString()}</span>
+                    </div>
+                  )}
+                </div>
+              </details>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Step-by-Step Guides -->
+      <div class="mb-16" data-aos="fade-up">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">
+          {t('faq.guides.title')}
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {guides.map((guide, index) => (
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all">
+              <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold">
+                    {index + 1}
+                  </div>
+                  <h3 class="font-medium text-gray-900">{guide.data.question[lang]}</h3>
+                </div>
+                <div class="prose prose-sm">
+                  {guide.data.answer[lang]}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+<!-- Categories Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12" data-aos="fade-up" data-aos-delay="200">
+  {faqCategories.map((category, index) => ( // изменено с categoryId на category
+    <button 
+      class="category-button flex flex-col items-center p-6 bg-white rounded-xl border border-gray-200 hover:border-primary-200 hover:bg-primary-50 transition-all"
+      data-category={category.id} // используем category.id вместо category
+      data-aos="fade-up"
+      data-aos-delay={index * 50}
+    >
+      <div class="p-3 bg-primary-100 rounded-full mb-3">
+        <category.icon class="w-6 h-6 text-primary-600" />
+      </div>
+      <span class="text-sm font-medium text-gray-900 text-center">
+        {t(category.translationKey)}
+      </span>
+    </button>
+  ))}
+</div>
+
+      <!-- FAQ Content -->
+      <div class="max-w-3xl mx-auto">
+        {Object.entries(faqByCategory).map(([categoryId, items]) => ( 
+          <div 
+            class="faq-category mb-8" 
+            data-category={categoryId} 
+            data-aos="fade-up"
+          >
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+              {t(`faq.categories.${categoryId}`)} 
+            </h2>
+            <div class="space-y-4">
+              {items.map((item) => (
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md">
+                  <details class="group">
+                    <summary class="flex items-center justify-between p-6 cursor-pointer">
+                      <h3 class="text-lg font-medium text-gray-900 pr-8">
+                        {item.data.question[lang]}
+                      </h3>
+                      <ChevronDown class="w-5 h-5 text-gray-500 transition-transform duration-300 group-open:rotate-180" />
+                    </summary>
+                    <div class="px-6 pb-6">
+                      <div class="prose prose-sm max-w-none text-gray-600">
+                        {item.data.answer[lang]}
+                      </div>
+                      {item.data.image && (
+                        <img 
+                          src={item.data.image} 
+                          alt=""
+                          class="mt-4 rounded-lg w-full object-cover"
+                          loading="lazy"
+                        />
+                      )}
+                      {item.data.lastUpdated && (
+                        <div class="flex items-center gap-2 mt-4 text-sm text-gray-500">
+                          <Clock class="h-4 w-4" />
+                          <span>Last updated: {new Date(item.data.lastUpdated).toLocaleDateString()}</span>
+                        </div>
+                      )}
+                    </div>
+                  </details>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Contact Section -->
+      <div class="mt-16 text-center" data-aos="fade-up">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">
+          {t('faq.notFoundQuestion')}
+        </h2>
+        <p class="text-gray-600 mb-8">
+          {t('faq.contactUs')}
+        </p>
+        <button
+          onclick="window.uiStore.toggleContactModal(true)"
+          class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-all duration-300"
+        >
+          {t('faq.askQuestion')}
+          <ArrowRight class="ml-2 h-5 w-5" />
+        </button>
+      </div>
+
+      <!-- Contact Section -->
+      <div class="mt-20">
+        <Contact />
+      </div>
+    </div>
+  </div>
+
+  <ContactModal />
+</Layout>
+
+<style>
+  /* Smooth transitions */
+  details {
+    transition: all 0.3s ease;
+  }
+
+  details[open] summary {
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  details[open] summary + div {
+    animation: slideDown 0.3s ease-out forwards;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+      max-height: 0;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 1000px;
+    }
+  }
+
+  /* Category button hover effects */
+  .category-button {
+    transition: all 0.3s ease;
+  }
+
+  .category-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .category-button.active {
+    @apply bg-primary-50 border-primary-200;
+  }
+
+  /* Search input focus styles */
+  #faqSearch:focus {
+    @apply outline-none ring-2 ring-primary-200 border-primary-500;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .grid-cols-2 {
+      gap: 1rem;
+    }
+    
+    .p-6 {
+      padding: 1rem;
+    }
+
+    .text-4xl {
+      font-size: 2rem;
+    }
+  }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    details[open] summary + div {
+      animation: none;
+    }
+
+    .category-button:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  // FAQ search functionality
+  document.addEventListener('astro:page-load', () => {
+    const searchInput = document.getElementById('faqSearch') as HTMLInputElement;
+    const faqItems = document.querySelectorAll('details');
+    const categories = document.querySelectorAll('.faq-category');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+
+      faqItems.forEach(item => {
+        const question = item.querySelector('summary')?.textContent?.toLowerCase() || '';
+        const answer = item.querySelector('div')?.textContent?.toLowerCase() || '';
+        const isMatch = question.includes(searchTerm) || answer.includes(searchTerm);
+        
+        item.closest('.faq-category')?.classList.toggle('hidden', !isMatch);
+        if (isMatch) {
+          item.classList.remove('hidden');
+          if (searchTerm.length > 2) {
+            item.setAttribute('open', 'true');
+          }
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      // Hide empty categories
+      categories.forEach(category => {
+        const visibleItems = category.querySelectorAll('details:not(.hidden)');
+        category.classList.toggle('hidden', visibleItems.length === 0);
+      });
+    });
+
+    // Category filtering
+    const categoryButtons = document.querySelectorAll('.category-button');
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const categoryId = button.getAttribute('data-category');
+        
+        // Toggle active state
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Show/hide categories
+        categories.forEach(category => {
+          if (categoryId === 'all' || category.getAttribute('data-category') === categoryId) {
+            category.classList.remove('hidden');
+          } else {
+            category.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Expand/collapse all in a category
+    document.querySelectorAll('.faq-category').forEach(category => {
+      const details = category.querySelectorAll('details');
+      let isExpanded = false;
+
+      const toggleButton = document.createElement('button');
+      toggleButton.className = 'text-sm text-primary-600 hover:text-primary-700 font-medium mb-4';
+      toggleButton.textContent = t('faq.common.showAll');
+
+      toggleButton.addEventListener('click', () => {
+        isExpanded = !isExpanded;
+        details.forEach(detail => {
+          detail.open = isExpanded;
+        });
+        toggleButton.textContent = isExpanded ? t('faq.common.hideAll') : t('faq.common.showAll');
+      });
+
+      category.querySelector('h2')?.parentNode?.insertBefore(toggleButton, category.querySelector('.space-y-4'));
+    });
+  });
+</script>

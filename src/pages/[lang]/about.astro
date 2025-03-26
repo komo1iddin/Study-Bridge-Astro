@@ -1,7 +1,20 @@
 ---
 import { languages, type Lang } from '@/i18n/langUtils';
-import { getTranslation } from '@/i18n/translationUtils';
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import Layout from '@/layouts/Layout.astro';
+import { ArrowRight } from 'lucide-astro';
+import HeroStats from '@/components/features/about/HeroStats.astro';
+import Timeline from '@/components/features/about/Timeline.astro';
+import TeamMember from '@/components/features/about/TeamMember.astro';
+import Values from '@/components/features/about/Values.astro';
+import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+
+// Import data
+import { stats } from '@/data/about/stats';
+import { achievements } from '@/data/about/achievements';
+import { values } from '@/data/about/values';
+import { timeline } from '@/data/about/timeline';
+import { teamMembers } from '@/data/team';
 
 // Get the language from the URL parameter
 const { lang } = Astro.params;
@@ -11,138 +24,236 @@ if (!lang || !languages.includes(lang as Lang)) {
   return Astro.redirect('/uz/about'); // Redirect to default language if invalid
 }
 
-// Use the language parameter to get translations
-const t = (key: string) => getTranslation(lang as Lang, key);
+// Custom meta data
+const meta = {
+  title: "About Us - EduChina",
+  description: "Learn about our mission to help students study in China"
+};
 
-// Page metadata
-const title = t('about.title');
-const description = t('about.description');
+const breadcrumbItems = [
+  { label: 'Home', href: `/${lang}` },
+  { label: 'About Us', href: `/${lang}/about` }
+];
 ---
 
-<BaseLayout title={title} description={description} lang={lang as Lang}>
-  <section class="page-header">
-    <div class="container">
-      <h1>{title}</h1>
-      <p class="lead">{t('about.subtitle')}</p>
-    </div>
-  </section>
-  
-  <section class="content-section">
-    <div class="container">
-      <div class="mission-vision">
-        <div class="card mission">
-          <h2>{t('about.mission.title')}</h2>
-          <p>{t('about.mission.description')}</p>
-        </div>
-        
-        <div class="card vision">
-          <h2>{t('about.vision.title')}</h2>
-          <p>{t('about.vision.description')}</p>
-        </div>
+<Layout meta={meta}>
+  <div class="bg-white">
+    <!-- Page Header Section -->
+    <section class="relative bg-gradient-to-br from-blue-50 to-white py-16 overflow-hidden">
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-100 rounded-full opacity-30 blur-3xl"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-100 rounded-full opacity-30 blur-3xl"></div>
       </div>
       
-      <div class="values-section">
-        <h2 class="section-title">{t('about.values.title')}</h2>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <Breadcrumbs items={breadcrumbItems} class="mb-8" />
         
-        <div class="values-grid">
-          <div class="value-card">
-            <h3>{t('about.values.value1.title')}</h3>
-            <p>{t('about.values.value1.description')}</p>
-          </div>
-          
-          <div class="value-card">
-            <h3>{t('about.values.value2.title')}</h3>
-            <p>{t('about.values.value2.description')}</p>
-          </div>
-          
-          <div class="value-card">
-            <h3>{t('about.values.value3.title')}</h3>
-            <p>{t('about.values.value3.description')}</p>
+        <div class="max-w-3xl">
+          <h1 class="text-4xl font-bold text-gray-900 mb-6">{meta.title}</h1>
+          <p class="text-xl text-gray-600 leading-relaxed mb-8">
+            Learn about our mission, values, and the team behind EduChina
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <button
+              onclick="window.uiStore.toggleContactModal(true)"
+              class="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-all duration-300"
+            >
+              Contact Us
+              <ArrowRight class="ml-2 h-5 w-5" />
+            </button>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-</BaseLayout>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <div 
+              class="bg-white p-6 rounded-xl border border-gray-100 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+              data-aos="fade-up"
+              data-aos-delay={index * 100}
+            >
+              <div class="text-3xl font-bold text-primary-600 mb-2">{stat.value}</div>
+              <div class="text-gray-600">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="w-full h-px bg-gray-200"></div>
+
+    <!-- Our Story Section -->
+    <section class="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeader
+          title="Our Story"
+          subtitle="The journey of EduChina from the beginning"
+        />
+
+        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+          <div class="mb-10 lg:mb-0" data-aos="fade-right">
+            <div class="relative rounded-xl overflow-hidden shadow-xl">
+              <img 
+                src="/images/hero/campus.jpg" 
+                alt="Our Campus"
+                class="w-full h-auto object-cover transform transition-transform duration-700 hover:scale-105"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <p class="text-lg font-medium">10+ Years of Experience</p>
+                <p class="text-sm opacity-90">Helping students achieve their dreams</p>
+              </div>
+            </div>
+          </div>
+          
+          <div data-aos="fade-left">
+            <div class="space-y-6 mb-8">
+              <p class="text-lg text-gray-600">
+                Founded with a vision to bridge educational gaps between China and Uzbekistan, we've been helping students for over a decade.
+              </p>
+              <p class="text-lg text-gray-600">
+                We partner with top universities across China to provide the best opportunities for our students.
+              </p>
+            </div>
+            
+            <Timeline items={timeline.map(item => ({
+              ...item,
+              title: item.title,
+              description: item.description
+            }))} />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="w-full h-px bg-gray-200"></div>
+
+    <!-- Mission & Values Section -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeader
+          title="Our Values"
+          subtitle="The principles that guide our work"
+        />
+        
+        <Values values={values.map(value => ({
+          ...value,
+          title: value.title,
+          description: value.description
+        }))} />
+      </div>
+    </section>
+
+    <div class="w-full h-px bg-gray-200"></div>
+
+    <!-- Achievements Section -->
+    <section class="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {achievements.map((achievement, index) => (
+            <div 
+              class="bg-white rounded-xl p-8 shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              data-aos="fade-up"
+              data-aos-delay={index * 100}
+            >
+              <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary-100 text-primary-600 mb-6">
+                <achievement.icon class="w-6 h-6" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-4">{achievement.title}</h3>
+              <p class="text-gray-600 mb-4">{achievement.description}</p>
+              <div class="text-2xl font-bold text-primary-600">{achievement.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="w-full h-px bg-gray-200"></div>
+
+    <!-- Team Section -->
+    <section class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <SectionHeader
+          title="Our Team"
+          subtitle="Meet the professionals behind EduChina"
+        />
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {teamMembers.map((member) => (
+            <TeamMember {...member} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="w-full h-px bg-gray-200"></div>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-primary-600">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="max-w-3xl mx-auto">
+          <h2 class="text-3xl font-bold text-white mb-6">
+            Ready to Start Your Educational Journey?
+          </h2>
+          <p class="text-xl text-primary-100 mb-8">
+            Contact us today to learn more about studying in China
+          </p>
+          <button
+            onclick="window.uiStore.toggleContactModal(true)"
+            class="inline-flex items-center px-8 py-4 bg-white text-primary-600 font-bold rounded-lg hover:bg-primary-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          >
+            Contact Us Now
+            <ArrowRight class="ml-2 h-5 w-5" />
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
 
 <style>
-  .page-header {
-    background-color: var(--light-gray);
-    padding: 4rem 0;
-    text-align: center;
+  /* Optimize transitions */
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
   }
   
-  .page-header h1 {
-    font-size: 2.5rem;
-    color: var(--secondary-color);
-    margin-bottom: 1rem;
+  /* Hover effects */
+  .hover\:shadow-lg:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 
+                0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
   
-  .lead {
-    font-size: 1.25rem;
-    color: #4b5563;
-    max-width: 700px;
-    margin: 0 auto;
+  .hover\:-translate-y-1:hover {
+    transform: translateY(-0.25rem);
   }
-  
-  .content-section {
-    padding: 4rem 0;
-  }
-  
-  .mission-vision {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-bottom: 4rem;
-  }
-  
-  .card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
-  }
-  
-  .card h2 {
-    color: var(--secondary-color);
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-  }
-  
-  .section-title {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    font-size: 2rem;
-    color: var(--secondary-color);
-  }
-  
-  .values-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-  }
-  
-  .value-card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    padding: 1.5rem;
-    border-top: 4px solid var(--primary-color);
-  }
-  
-  .value-card h3 {
-    color: var(--secondary-color);
-    margin-bottom: 0.75rem;
-    font-size: 1.25rem;
-  }
-  
-  @media (max-width: 768px) {
-    .mission-vision {
-      grid-template-columns: 1fr;
-    }
-    
-    .page-header h1 {
-      font-size: 2rem;
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    .transition-all,
+    .hover\:-translate-y-1:hover,
+    [data-aos] {
+      transition: none !important;
+      transform: none !important;
+      animation: none !important;
     }
   }
-</style> 
+</style>
+
+<script>
+  // Initialize AOS
+  import AOS from 'aos';
+  
+  document.addEventListener('astro:page-load', () => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 50,
+    });
+  });
+</script>

@@ -3,8 +3,9 @@ import { defaultLang, languages } from './i18n/langUtils';
 
 // Language detection priorities:
 // 1. URL path parameter
-// 2. Browser preference (Accept-Language header)
-// 3. Default language
+// 2. User's stored preference (via cookies/localStorage)
+// 3. Browser preference (Accept-Language header)
+// 4. Default language
 
 export const onRequest = defineMiddleware(async ({ request, locals, redirect }, next) => {
   const url = new URL(request.url);
@@ -53,6 +54,11 @@ export const onRequest = defineMiddleware(async ({ request, locals, redirect }, 
     // Construct the new path with the detected language
     const newPath = `/${detectedLang}${pathname === '/' ? '' : pathname}`;
     return redirect(newPath, 307); // Temporary redirect
+  }
+  
+  // If it's just the root path, redirect to default language
+  if (pathname === '/') {
+    return redirect(`/${defaultLang}/`, 307);
   }
   
   // Add language to locals for use in components

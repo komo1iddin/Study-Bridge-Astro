@@ -1,0 +1,147 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { languages, type Lang } from '@/i18n/langUtils';
+ 
+
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import { getAllPosts, type Post } from '@/lib/fileSystemReader';
+import type { BlogPost } from '@/types/blog';
+
+// Import blog components
+import RelatedPosts from '@/components/features/blog/RelatedPosts.astro';
+import PostHeader from '@/components/features/blog/PostHeader.astro';
+import PostContent from '@/components/features/blog/PostContent.astro';
+import PostNavigation from '@/components/features/blog/PostNavigation.astro';
+
+export async function getStaticPaths() {
+  try {
+    const posts = await getAllPosts('uz');
+    return posts.map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+  } catch (e) {
+    console.error('Failed to generate static paths:', e);
+    return [];
+  }
+}
+
+const { post: rawPost } = Astro.props;
+// Get the language from the URL parameter
+const { lang } = Astro.params;
+
+// Validate the language parameter
+if (!lang || !languages.includes(lang as Lang)) {
+  return Astro.redirect('/uz/'); // Redirect to default language if invalid
+}
+// Initialize variables
+let post: BlogPost;
+let allBlogPosts: BlogPost[] = [];
+let relatedPosts: BlogPost[] = [];
+let prevPost: BlogPost | null = null;
+let nextPost: BlogPost | null = null;
+
+try {
+  // Format date
+  const formattedDate = new Date(rawPost.data.publishedDate).toLocaleDateString('uz-UZ', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  // Convert current post to BlogPost format
+  post = {
+    slug: rawPost.slug,
+    title: rawPost.data.title.uz,
+    excerpt: rawPost.data.excerpt.uz,
+    publishedDate: formattedDate,
+    author: typeof rawPost.data.author === 'string' ? rawPost.data.author : rawPost.data.author.name,
+    authorImage: typeof rawPost.data.author === 'string' ? rawPost.data.authorImage : rawPost.data.author.image,
+    authorRole: typeof rawPost.data.author === 'string' ? 
+      (rawPost.data.authorRole?.uz || '') : 
+      (rawPost.data.author.role || ''),
+    image: rawPost.data.image || '/images/placeholder.jpg', // Fallback image
+    category: rawPost.data.category?.uz || 'Ta\'lim',
+    content: rawPost.data.content.uz,
+    featured: rawPost.data.featured || false
+  };
+
+  // Get all posts for related posts and navigation
+  const allPosts = await getAllPosts('uz');
+  if (allPosts && allPosts.length > 0) {
+    // Convert to BlogPost format
+    allBlogPosts = allPosts.map(p => {
+      const pDate = new Date(p.data.publishedDate).toLocaleDateString('uz-UZ', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      return {
+        slug: p.slug,
+        title: p.data.title.uz,
+        excerpt: p.data.excerpt.uz,
+        publishedDate: pDate,
+        author: typeof p.data.author === 'string' ? p.data.author : p.data.author.name,
+        authorImage: typeof p.data.author === 'string' ? p.data.authorImage : p.data.author.image,
+        authorRole: typeof p.data.author === 'string' ? 
+          (p.data.authorRole?.uz || '') : 
+          (p.data.author.role || ''),
+        image: p.data.image || '/images/placeholder.jpg', // Fallback image
+        category: p.data.category?.uz || 'Ta\'lim',
+        content: p.data.content.uz,
+        featured: p.data.featured || false
+      };
+    });
+    
+    // Sort posts by date (newest first)
+    allBlogPosts.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
+    
+    // Get related posts (excluding current post)
+    relatedPosts = allBlogPosts
+      .filter(p => p.slug !== post.slug)
+      .slice(0, 3);
+    
+    // Get previous and next posts
+    const currentIndex = allBlogPosts.findIndex(p => p.slug === post.slug);
+    prevPost = currentIndex > 0 ? allBlogPosts[currentIndex - 1] : null;
+    nextPost = currentIndex < allBlogPosts.length - 1 ? allBlogPosts[currentIndex + 1] : null;
+  }
+} catch (e) {
+  console.error('Failed to process posts:', e);
+  return Astro.redirect('/404');
+}
+---
+
+<Layout meta={{ title: "Page Title", description: "Page Description" }}>
+  <div class="bg-white py-12 md:py-16 lg:py-20">
+    <div class="container px-4 mx-auto">
+      <div class="max-w-4xl mx-auto">
+        <!-- Breadcrumbs -->
+        <Breadcrumbs 
+          items={[
+            { label: t('nav.home'), href: '/uz/' },
+            { label: t('nav.blog'), href: '/uz/blog' },
+            { label: post.title, href: '#', current: true }
+          ]} 
+        />
+        
+        <!-- Post Header -->
+        <PostHeader post={post} formattedDate={post.publishedDate} />
+        
+        <!-- Post Content -->
+        <PostContent post={post} />
+        
+        <!-- Post Navigation -->
+        {(prevPost || nextPost) && (
+          <PostNavigation prevPost={prevPost} nextPost={nextPost} />
+        )}
+        
+        <!-- Related Posts -->
+        {relatedPosts.length > 0 && (
+          <RelatedPosts posts={relatedPosts} />
+        )}
+      </div>
+    </div>
+  </div>
+</Layout>

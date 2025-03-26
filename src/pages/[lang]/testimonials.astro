@@ -1,0 +1,69 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { languages, type Lang } from '@/i18n/langUtils';
+ 
+
+
+import Reviews from '@/components/shared/review/Reviews.astro'
+
+
+// Get the language from the URL parameter
+const { lang } = Astro.params;
+
+// Validate the language parameter
+if (!lang || !languages.includes(lang as Lang)) {
+  return Astro.redirect('/uz/'); // Redirect to default language if invalid
+}
+
+
+const stats = [
+  { value: '98%', label: 'Довольных клиентов' },
+  { value: '500+', label: 'Успешных поступлений' },
+  { value: '50+', label: 'Университетов-партнеров' },
+];
+---
+
+<Layout title="Отзывы | Study in China">
+  <div class="bg-white">
+    <!-- Hero Section -->
+    <div class="relative bg-primary-700 text-white py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-4xl font-bold mb-4">Отзывы наших студентов</h1>
+          <p class="text-lg text-primary-100 max-w-3xl mx-auto">
+            Узнайте, что говорят о нас студенты, которые уже учатся в Китае
+          </p>
+        </div>
+        
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {stats.map((stat) => (
+            <div class="bg-white/10 backdrop-blur-lg rounded-lg p-6 text-center">
+              <p class="text-3xl font-bold">{stat.value}</p>
+              <p class="mt-2">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Testimonials Grid -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <Reviews />
+    </div>
+  
+
+    <!-- CTA Section -->
+    <div class="bg-gray-50 py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8">Готовы начать свой путь?</h2>
+        <a
+          href="/contact"
+          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-colors duration-200"
+        >
+          Связаться с нами
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
