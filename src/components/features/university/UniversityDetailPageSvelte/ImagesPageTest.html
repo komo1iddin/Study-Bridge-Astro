@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ImagesSection Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      color: #1e40af;
+    }
+    pre {
+      background-color: #f3f4f6;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      overflow-x: auto;
+    }
+    .btn {
+      background-color: #2563eb;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: 500;
+    }
+    .btn:hover {
+      background-color: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+  <h1>ImagesSection Test Page</h1>
+  
+  <div class="card">
+    <h2>Navigation Options</h2>
+    <p>There are several ways to navigate to the Images tab:</p>
+    
+    <ol>
+      <li>
+        <strong>URL Hash Navigation</strong>
+        <p>Append <code>#images</code> to the URL:</p>
+        <pre>http://localhost:4321/en/universities/test-university#images</pre>
+        <a href="http://localhost:4321/en/universities/test-university#images" class="btn" target="_blank">
+          Try Direct URL Navigation
+        </a>
+      </li>
+      
+      <li>
+        <strong>Tab Navigation</strong>
+        <p>Click on the "Images" tab in the navigation tabs</p>
+      </li>
+      
+      <li>
+        <strong>View Gallery Button</strong>
+        <p>Click on the "View Gallery" button in the sidebar</p>
+      </li>
+    </ol>
+  </div>
+  
+  <div class="card">
+    <h2>Debugging Notes</h2>
+    <p>If the ImagesSection is not displaying correctly:</p>
+    <ol>
+      <li>Open browser console to view debug messages</li>
+      <li>Verify that the university object has galleryCategories data</li>
+      <li>Check network requests for any errors</li>
+      <li>Confirm the tab navigation is working properly</li>
+    </ol>
+  </div>
+  
+  <div class="card">
+    <h2>Manual Testing Script</h2>
+    <pre>
+// In browser console:
+// Wait for the component to be mounted
+setTimeout(() => {
+  // Get the Svelte component instance
+  const component = document.querySelector('astro-island[component-url*="UniversityDetailPage"]')?.__svelte?.[0];
+  
+  if (component) {
+    // Access component state
+    console.log('Component mounted:', component.mounted);
+    console.log('Active tab:', component.activeTab);
+    console.log('University data:', component.university);
+    
+    // Force change to images tab
+    component.activeTab = 'images';
+  } else {
+    console.log('Component not found or not mounted yet');
+  }
+}, 2000);
+</pre>
+  </div>
+</body>
+</html> 

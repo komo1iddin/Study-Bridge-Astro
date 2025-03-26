@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import { getLangFromUrl } from '@/i18n/langUtils';
 import { useTranslations } from '@/i18n/utils';
 import { getCollection } from 'astro:content';
-import UniversityDetailPage from '@/components/features/university/UniversityDetailPage/UniversityDetailPage.astro';
+import UniversityDetailPage from '@/components/features/university/UniversityDetailPageSvelte/UniversityDetailPage.astro';
 import ContactModal from '@/components/features/contact/ContactModal.astro';
 
 const lang = getLangFromUrl(Astro.url);
@@ -124,7 +124,9 @@ export async function getStaticPaths() {
                 tuition: [],
                 additional: []
               },
-              scholarships: data.scholarships || []
+              scholarships: data.scholarships || [],
+              // Pass gallery categories
+              galleryCategories: data.galleryCategories || []
             },
             validUniversityIds
           }
@@ -145,6 +147,10 @@ interface Props {
 
 const { id } = Astro.params;
 const { university, validUniversityIds } = Astro.props;
+
+// Debug university data
+console.log('University being passed to component:', id, university ? Object.keys(university) : null);
+console.log('Gallery categories:', university?.galleryCategories);
 
 // Check if university exists in props
 if (!university) {

@@ -29,9 +29,30 @@
   let activeTab = "overview";
   let isLoading = true;
 
+  // Debug the university object
+  console.log("University object in main component:", university);
+  console.log("Gallery categories:", university?.galleryCategories);
+
+  // Check URL for active tab
+  function checkUrlForTab() {
+    if (typeof window !== "undefined") {
+      const url = window.location.href;
+      if (url.includes("#images")) {
+        activeTab = "images";
+      }
+    }
+  }
+
   onMount(() => {
-    mounted = true;
-    isLoading = false;
+    console.log("UniversityDetailPage component mounted");
+    checkUrlForTab();
+    
+    // Force loading to end immediately
+    setTimeout(() => {
+      console.log("Setting mounted and isLoading");
+      mounted = true;
+      isLoading = false;
+    }, 100);
   });
 
   // Direct tab change handler - simpler and more reliable
@@ -39,6 +60,16 @@
     if (!mounted) return;
     console.log("Changing tab to:", value);
     activeTab = value;
+    
+    // Update URL hash for shareable links
+    if (typeof window !== "undefined") {
+      window.location.hash = value;
+    }
+  }
+
+  // Helper function to navigate specifically to the images tab
+  function showImages() {
+    activeTab = "images";
   }
 </script>
 
@@ -101,6 +132,14 @@
           <ApplicationCard {university} {lang} />
           <StatsCard {university} {lang} />
           <ContactCard {university} {lang} />
+          
+          <!-- Add a button to view gallery -->
+          <button 
+            class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            on:click={showImages}
+          >
+            View Gallery
+          </button>
         </div>
       </main>
     </div>

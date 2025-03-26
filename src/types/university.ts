@@ -8,6 +8,59 @@ export interface I18nText {
 
 export type Lang = 'uz' | 'ru' | 'en';
 
+export interface FAQ {
+  question: string;
+  answer: string;
+}
+
+export interface FAQCategory {
+  name: string;
+  faqs: FAQ[];
+}
+
+export interface DormInfo {
+  name: string;
+  image: string;
+  description: string;
+  roomTypes: string[];
+  amenities: string[];
+  mealPlan: string;
+  yearBuilt: number;
+  distanceToCampus: string;
+}
+
+export interface FacilityCategory {
+  name: string;
+  description: string;
+  facilities: {
+    name: string;
+    description: string;
+    icon?: string;
+  }[];
+}
+
+export interface ScholarshipInfo {
+  name: string;
+  description: string;
+  amount?: string;
+  eligibility?: string[];
+}
+
+export type ProgramsType = string[] | {
+  [key in Lang]?: string[];
+};
+
+export interface GalleryImage {
+  src: string;
+  alt: string;
+  caption: string;
+}
+
+export interface GalleryCategory {
+  name: string;
+  images: GalleryImage[];
+}
+
 export interface University {
   id: string;
   name: string;
@@ -18,8 +71,15 @@ export interface University {
   priceRange: string;
   image: string;
   logoImage?: string;
+  logo?: string;
   shortDescription?: string;
+  description?: string | I18nText;
   isTopUniversity: boolean;
+  featured?: boolean;
+  hasGrants?: boolean;
+  established?: number | string;
+  foundedYear?: number | string;
+  ranking?: number;
   location: {
     city: string;
     country: string;
@@ -34,6 +94,30 @@ export interface University {
     currency: string;
   };
   programs: string[];
+  educationType?: string[];
+  // Additional fields for detail page
+  faqs?: FAQCategory[];
+  dorms?: DormInfo[];
+  facilities?: FacilityCategory[];
+  scholarships?: ScholarshipInfo[];
+  galleryCategories?: GalleryCategory[];
+  careerOpportunities?: {
+    companies?: string[];
+    salaryRanges?: string[];
+  };
+  costs?: {
+    tuition?: string[];
+    additional?: string[];
+  };
+  admissionRequirements?: {
+    requirement: string;
+    required: boolean;
+  }[];
+  admissionDeadlines?: {
+    round: string;
+    deadline: string;
+    notification: string;
+  }[];
 }
 
 export interface UniversityI18n {
@@ -92,13 +176,40 @@ export interface UniversityEntry {
     image?: string;
     logo?: string;
     annualFee?: number;
-    description?: string;
+    description?: string | I18nText;
     tuitionRange?: {
       min: number;
       max: number;
       currency: string;
     };
-    programs?: string[];
+    programs?: ProgramsType;
+    faqs?: FAQCategory[];
+    dorms?: DormInfo[];
+    facilities?: FacilityCategory[];
+    scholarships?: ScholarshipInfo[];
+    galleryCategories?: GalleryCategory[];
+    careerOpportunities?: {
+      companies?: string[];
+      salaryRanges?: string[];
+    };
+    costs?: {
+      tuition?: string[];
+      additional?: string[];
+    };
+    admissionRequirements?: {
+      requirement: string;
+      required: boolean;
+    }[];
+    admissionDeadlines?: {
+      round: string;
+      deadline: string;
+      notification: string;
+    }[];
+    educationType?: string[];
+    hasGrants?: boolean;
+    established?: number | string;
+    foundedYear?: number | string;
+    ranking?: number;
     [key: string]: unknown;
   };
 }
@@ -144,7 +255,35 @@ export function localizeUniversities(universities: UniversityI18n[], lang: Lang)
   return universities.map((uni) => localizeUniversity(uni, lang));
 }
 
-
+// Safe function to extract programs from either array or i18n object
+function extractProgramsByLang(programs: unknown, lang: Lang): string[] {
+  if (!programs) {
+    return [];
+  }
+  
+  if (Array.isArray(programs)) {
+    return programs;
+  }
+  
+  if (typeof programs === 'object' && programs !== null) {
+    // Use type assertion to properly type the programs object
+    const programsObj = programs as Record<string, unknown>;
+    
+    // Try to get programs for the specified language
+    const langPrograms = programsObj[lang];
+    if (Array.isArray(langPrograms)) {
+      return langPrograms;
+    }
+    
+    // Fall back to English
+    const enPrograms = programsObj['en'];
+    if (Array.isArray(enPrograms)) {
+      return enPrograms;
+    }
+  }
+  
+  return [];
+}
 
 export function convertEntryToUniversity(entry: UniversityEntry, lang: Lang): University {
   if (!entry || !entry.data) {
@@ -155,14 +294,31 @@ export function convertEntryToUniversity(entry: UniversityEntry, lang: Lang): Un
   const slug = entry.id.replace(/\.(md|yaml)$/, '');
   const location = parseLocation(data.location);
 
-
   const isI18n =
     data.name &&
     typeof data.name === 'object' &&
     ('uz' in data.name || 'ru' in data.name || 'en' in data.name);
 
+  // Process programs data
+  const processedPrograms = extractProgramsByLang(data.programs, lang);
+
+  // Get any additional fields
+  const faqs = data.faqs || undefined;
+  const dorms = data.dorms || undefined;
+  const facilities = data.facilities || undefined;
+  const scholarships = data.scholarships || undefined;
+  const galleryCategories = data.galleryCategories || undefined;
+  const careerOpportunities = data.careerOpportunities || undefined;
+  const costs = data.costs || undefined;
+  const admissionRequirements = data.admissionRequirements || undefined;
+  const admissionDeadlines = data.admissionDeadlines || undefined;
+  const educationType = data.educationType || undefined;
+  const featured = !!data.featured;
+  const hasGrants = !!data.hasGrants;
+  const established = data.established || data.foundedYear || undefined;
+  const ranking = data.ranking || 0;
+
   if (isI18n) {
-  
     const i18nData: UniversityI18n = {
       id: slug,
       name: data.name as I18nText,
@@ -174,17 +330,38 @@ export function convertEntryToUniversity(entry: UniversityEntry, lang: Lang): Un
       image: data.image || '',
       logoImage: data.logo || '',
       shortDescription: (data.description as string) || '', 
-      isTopUniversity: !!data.featured,
+      isTopUniversity: featured,
       location,
       price: {
         amount: data.annualFee || 0,
         currency: 'USD',
       },
       tuitionRange: data.tuitionRange || getDefaultTuitionRange(),
-      programs: data.programs || [],
+      programs: processedPrograms,
     };
 
-    return localizeUniversity(i18nData, lang);
+    const university = localizeUniversity(i18nData, lang);
+    
+    // Add additional fields
+    return {
+      ...university,
+      featured,
+      hasGrants,
+      established,
+      ranking,
+      educationType,
+      faqs,
+      dorms,
+      facilities,
+      scholarships,
+      galleryCategories,
+      careerOpportunities,
+      costs,
+      admissionRequirements,
+      admissionDeadlines,
+      description: data.description,
+      logo: data.logo,
+    };
   } else {
     return {
       id: slug,
@@ -197,21 +374,35 @@ export function convertEntryToUniversity(entry: UniversityEntry, lang: Lang): Un
       image: data.image || '',
       logoImage: data.logo || '', 
       shortDescription: (data.description as string) || '',
-      isTopUniversity: !!data.featured,
+      isTopUniversity: featured,
       location,
       price: {
         amount: data.annualFee || 0,
         currency: 'USD',
       },
       tuitionRange: data.tuitionRange || getDefaultTuitionRange(),
-      programs: data.programs || [],
+      programs: processedPrograms,
+      // Additional fields
+      featured,
+      hasGrants,
+      established,
+      ranking,
+      educationType,
+      faqs,
+      dorms,
+      facilities,
+      scholarships,
+      galleryCategories,
+      careerOpportunities,
+      costs,
+      admissionRequirements,
+      admissionDeadlines,
+      description: data.description,
+      logo: data.logo,
     };
   }
 }
 
-/**
-
- */
 export function convertEntriesToUniversities(entries: UniversityEntry[], lang: Lang): University[] {
   if (!entries || !Array.isArray(entries)) {
     return [];

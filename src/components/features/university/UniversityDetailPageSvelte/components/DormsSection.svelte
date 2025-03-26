@@ -1,14 +1,14 @@
 <script lang="ts">
   import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/svelte";
   import { Wifi, Utensils, Coffee, ShowerHead, Building, DoorClosed } from "lucide-svelte";
-  import type { University } from "@/types/university";
+  import type { University, DormInfo } from "@/types/university";
   import type { Lang } from "@/i18n/langUtils";
 
   export let university: University;
   export let lang: Lang;
   
   // Sample dorm data - in a real app, this would come from university data
-  const dorms = [
+  const sampleDorms: DormInfo[] = [
     {
       name: "Freshman Residence Hall",
       image: "https://images.unsplash.com/photo-1555854877-5b30fa8ad95e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9ybXxlbnwwfHwwfHx8MA%3D%3D&w=800&q=80",
@@ -40,6 +40,11 @@
       distanceToCampus: "0.5 miles from main campus"
     }
   ];
+  
+  // Use university dorms data if available, otherwise use sample data
+  $: dorms = university.dorms && Array.isArray(university.dorms) && university.dorms.length > 0
+    ? university.dorms
+    : sampleDorms;
   
   // Icons for amenities
   const amenityIcons = {

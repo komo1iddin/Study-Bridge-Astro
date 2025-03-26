@@ -1,14 +1,14 @@
 <script lang="ts">
   import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/svelte";
-  import { Plus, Minus } from "lucide-svelte";
-  import type { University } from "@/types/university";
+  import { Plus, Minus, HelpCircle } from "lucide-svelte";
+  import type { University, FAQCategory } from "@/types/university";
   import type { Lang } from "@/i18n/langUtils";
   
   export let university: University;
-  export let lang: Lang;
+  export let lang: Lang = "en";
   
   // Sample FAQ categories and questions - in a real app, these would come from university data
-  const faqCategories = [
+  const sampleFaqCategories: FAQCategory[] = [
     {
       name: "Admissions",
       faqs: [
@@ -62,12 +62,56 @@
     }
   ];
   
+  // Use university faqs data if available, otherwise use sample data
+  $: faqCategories = university.faqs && Array.isArray(university.faqs) && university.faqs.length > 0 
+    ? university.faqs
+    : sampleFaqCategories;
+  
   // Set all FAQs to be collapsed initially
   let expandedFaqs = {}; 
   
   function toggleFaq(categoryIndex, faqIndex) {
     const key = `${categoryIndex}-${faqIndex}`;
     expandedFaqs = {...expandedFaqs, [key]: !expandedFaqs[key]};
+  }
+
+  // Translations
+  const texts = {
+    faq: {
+      en: "Frequently Asked Questions",
+      ru: "Часто задаваемые вопросы",
+      uz: "Ko'p so'raladigan savollar"
+    },
+    findAnswers: {
+      en: `Find answers to common questions about ${university.name}. If you don't see your question here, please contact our admissions office for more information.`,
+      ru: `Найдите ответы на часто задаваемые вопросы о ${university.name}. Если вы не нашли свой вопрос здесь, пожалуйста, обратитесь в приемную комиссию для получения дополнительной информации.`,
+      uz: `${university.name} haqida tez-tez so'raladigan savollarga javoblarni toping. Agar savolingizga javob topa olmasangiz, qabul bo'limiga murojaat qiling.`
+    },
+    stillHaveQuestions: {
+      en: "Still have questions?",
+      ru: "Остались вопросы?",
+      uz: "Savollaringiz bormi?"
+    },
+    contactUs: {
+      en: "If you couldn't find the answer to your question, please contact us directly.",
+      ru: "Если вы не нашли ответ на свой вопрос, пожалуйста, свяжитесь с нами напрямую.",
+      uz: "Savolingizga javob topa olmasangiz, bizga to'g'ridan-to'g'ri murojaat qiling."
+    },
+    admissionsOffice: {
+      en: "Admissions Office",
+      ru: "Приемная комиссия",
+      uz: "Qabul bo'limi"
+    },
+    financialAidOffice: {
+      en: "Financial Aid Office",
+      ru: "Финансовая помощь",
+      uz: "Moliyaviy yordam bo'limi"
+    }
+  };
+
+  // Get text based on language
+  function getText(key: string): string {
+    return texts[key]?.[lang] || texts[key]?.en || key;
   }
 </script>
 
@@ -126,12 +170,11 @@
 
 <Card class="border-none shadow-md">
   <CardHeader>
-    <CardTitle class="text-xl font-bold text-slate-800">Frequently Asked Questions</CardTitle>
+    <CardTitle class="text-xl font-bold text-slate-800">{getText('faq')}</CardTitle>
   </CardHeader>
   <CardContent>
     <p class="text-slate-600 mb-6">
-      Find answers to common questions about {university.name}. If you don't see your question here, 
-      please contact our admissions office for more information.
+      {getText('findAnswers')}
     </p>
     
     <div class="space-y-6">
@@ -171,23 +214,30 @@
     </div>
     
     <div class="mt-8 bg-blue-50 p-4 rounded-lg">
-      <h4 class="font-medium text-slate-800 mb-2">Still have questions?</h4>
-      <p class="text-slate-600 mb-3">
-        If you couldn't find the answer to your question, please contact us directly.
-      </p>
-      <div class="grid sm:grid-cols-2 gap-3">
-        <div class="bg-white p-3 rounded-lg border border-slate-200">
-          <h5 class="font-medium text-slate-800 text-sm mb-1">Admissions Office</h5>
-          <div class="text-sm text-slate-600">
-            <p>Email: admissions@{university.name.toLowerCase().replace(/\s+/g, '')}.edu</p>
-            <p>Phone: (123) 456-7890</p>
-          </div>
+      <div class="flex items-start gap-3">
+        <div class="flex-shrink-0 mt-1">
+          <HelpCircle class="h-5 w-5 text-blue-600" />
         </div>
-        <div class="bg-white p-3 rounded-lg border border-slate-200">
-          <h5 class="font-medium text-slate-800 text-sm mb-1">Financial Aid Office</h5>
-          <div class="text-sm text-slate-600">
-            <p>Email: finaid@{university.name.toLowerCase().replace(/\s+/g, '')}.edu</p>
-            <p>Phone: (123) 456-7891</p>
+        <div>
+          <h4 class="font-medium text-slate-800 mb-2">{getText('stillHaveQuestions')}</h4>
+          <p class="text-slate-600 mb-3">
+            {getText('contactUs')}
+          </p>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div class="bg-white p-3 rounded-lg border border-slate-200">
+              <h5 class="font-medium text-slate-800 text-sm mb-1">{getText('admissionsOffice')}</h5>
+              <div class="text-sm text-slate-600">
+                <p>Email: admissions@{university.name.toLowerCase().replace(/\s+/g, '')}.edu</p>
+                <p>Phone: (123) 456-7890</p>
+              </div>
+            </div>
+            <div class="bg-white p-3 rounded-lg border border-slate-200">
+              <h5 class="font-medium text-slate-800 text-sm mb-1">{getText('financialAidOffice')}</h5>
+              <div class="text-sm text-slate-600">
+                <p>Email: finaid@{university.name.toLowerCase().replace(/\s+/g, '')}.edu</p>
+                <p>Phone: (123) 456-7891</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

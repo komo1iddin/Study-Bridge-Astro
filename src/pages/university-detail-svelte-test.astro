@@ -2,60 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import UniversityDetailPage from "@/components/features/university/UniversityDetailPageSvelte/UniversityDetailPage.astro";
 
-// Test university data
-const university = {
-  id: "1",
-  name: "Harvard University",
-  description: {
-    en: "Harvard University is a private Ivy League research university in Cambridge, Massachusetts. Founded in 1636, it is the oldest institution of higher learning in the United States and is widely regarded as one of the most prestigious universities worldwide. The university is organized into eleven principal academic units—ten faculties and the Radcliffe Institute for Advanced Study—with campuses throughout the Greater Boston area.",
-    es: "Harvard University es una universidad privada de investigación de la Ivy League en Cambridge, Massachusetts. Fundada en 1636, es la institución de educación superior más antigua de los Estados Unidos y es ampliamente considerada como una de las universidades más prestigiosas del mundo. La universidad está organizada en once unidades académicas principales —diez facultades y el Instituto Radcliffe para Estudios Avanzados— con campus en todo el área metropolitana de Boston.",
-    zh: "哈佛大学是位于美国马萨诸塞州剑桥市的私立常春藤盟校研究型大学。成立于1636年，是美国历史最悠久的高等学府，被广泛认为是世界上最负盛名的大学之一。该大学由十一个主要学术单位组成——十个学院和拉德克利夫高级研究所——在大波士顿地区设有多个校区。"
-  },
-  city: "Cambridge, Massachusetts",
-  ranking: 1,
-  students: {
-    en: "20,000+ Students",
-    es: "Más de 20.000 estudiantes",
-    zh: "20,000多名学生"
-  },
-  established: 1636,
-  educationType: ["On-Campus", "Full-Time", "Part-Time"],
-  programs: {
-    en: [
-      "Computer Science", 
-      "Business Administration", 
-      "Medicine", 
-      "Law", 
-      "Arts & Humanities",
-      "Engineering",
-      "Social Sciences",
-      "Physical Sciences",
-      "Life Sciences",
-      "Education"
-    ],
-    es: [
-      "Informática",
-      "Administración de Empresas",
-      "Medicina",
-      "Derecho",
-      "Artes y Humanidades",
-      "Ingeniería",
-      "Ciencias Sociales",
-      "Ciencias Físicas",
-      "Ciencias de la Vida",
-      "Educación"
-    ]
-  },
-  image: "https://images.unsplash.com/photo-1495727034151-8fdc73e332a8?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&w=3600",
-  logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/29/Harvard_shield_wreath.svg/1200px-Harvard_shield_wreath.svg.png",
-  featured: true,
-  hasGrants: true,
-  location: "Cambridge, Massachusetts, USA",
-  rating: 4.9,
-  email: "admissions@harvard.edu",
-  phone: "+1 (617) 495-1000",
-  website: "https://www.harvard.edu"
-};
+
 
 const meta = {
   title: "University Detail Svelte Test",
@@ -64,5 +11,5 @@ const meta = {
 ---
 
 <Layout meta={meta}>
-  <UniversityDetailPage university={university} />
+  <UniversityDetailPage />
 </Layout> 

@@ -1,0 +1,193 @@
+name:
+  uz: 'Test Universiteti'
+  ru: 'Тестовый Университет'
+  en: 'Test University'
+location: 'Shanghai, China'
+rating: 4.8
+ranking: 5
+students:
+  uz: '25,000+ talaba'
+  ru: '25,000+ студентов'
+  en: '25,000+ students'
+fields:
+  uz:
+    - 'Kompyuter fanlari'
+    - 'Iqtisodiyot'
+    - 'Muhandislik'
+  ru:
+    - 'Компьютерные науки'
+    - 'Экономика'
+    - 'Инженерия'
+  en:
+    - 'Computer Science'
+    - 'Economics'
+    - 'Engineering'
+image: 'https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&w=800&q=80'
+logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/f/f4/Peking_University_seal.svg/800px-Peking_University_seal.svg.png'
+foundedYear: 1990
+established: 1990
+featured: true
+hasGrants: true
+city: 'Shanghai'
+educationType:
+  - 'Bachelor'
+  - 'Master'
+  - 'PhD'
+programs:
+  en:
+    - 'Computer Engineering'
+    - 'Software Engineering'
+    - 'Data Science'
+annualFee: 8000
+priceRange: '8,000 - 15,000'
+description:
+  uz: 'Test Universiteti - bu yuqori sifatli talim va ilmiy tadqiqotlar markazi.'
+  ru: 'Тестовый Университет - центр качественного образования и научных исследований.'
+  en: 'Test University is a center for high-quality education and scientific research.'
+
+# Gallery images
+galleryCategories:
+  - name: "Campus"
+    images:
+      - src: "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&w=800&q=80"
+        alt: "University Main Building"
+        caption: "Our iconic main administration building"
+      - src: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?ixlib=rb-4.0.3&w=800&q=80"
+        alt: "Campus Green"
+        caption: "The central campus green, a popular gathering place"
+      - src: "https://images.unsplash.com/photo-1591123120675-6f7f1aae0e5b?ixlib=rb-4.0.3&w=800&q=80"
+        alt: "Campus Entrance"
+        caption: "The grand entrance to our university"
+  - name: "Student Life"
+    images:
+      - src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&w=800&q=80"
+        alt: "Student Study Group"
+        caption: "Collaborative learning is encouraged through study groups"
+      - src: "https://images.unsplash.com/photo-1517486808906-6ca8b3f8e1c1?ixlib=rb-4.0.3&w=800&q=80"
+        alt: "Student Event"
+        caption: "Our annual cultural festival brings together diverse communities"
+      - src: "https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?ixlib=rb-4.0.3&w=800&q=80"
+        alt: "Graduation Ceremony"
+        caption: "Celebrating student success at our graduation ceremony"
+
+# New fields for detail page
+faqs:
+  - name: "Admissions"
+    faqs:
+      - question: "What are the admission requirements for international students?"
+        answer: "International students need to submit their academic transcripts, standardized test scores (SAT/ACT), English proficiency test results (TOEFL/IELTS), letters of recommendation, and a personal statement."
+      - question: "When is the application deadline?"
+        answer: "For fall semester entry, the deadline is May 1. For spring semester entry, the deadline is October 1."
+      - question: "Is there an application fee?"
+        answer: "Yes, there is a non-refundable application fee of $80 for all international applicants."
+  - name: "Scholarships"
+    faqs:
+      - question: "What types of scholarships are available?"
+        answer: "We offer merit-based scholarships, need-based grants, and special scholarships for outstanding achievements in academics, sports, or arts."
+      - question: "How do I apply for scholarships?"
+        answer: "All admitted students are automatically considered for merit scholarships. To apply for need-based grants, complete the International Student Financial Aid Application."
+
+dorms:
+  - name: "International Student Residence"
+    image: "https://images.unsplash.com/photo-1555854877-5b30fa8ad95e?ixlib=rb-4.0.3&w=800&q=80"
+    description: "Modern residence hall designed specifically for international students, featuring private rooms and shared common areas."
+    roomTypes: ["Single (private)", "Double (shared)"]
+    amenities: ["Private Bathroom", "Wi-Fi", "Study Rooms", "Laundry Facilities", "Community Kitchen"]
+    mealPlan: "Optional"
+    yearBuilt: 2018
+    distanceToCampus: "On campus"
+  - name: "Graduate Apartments"
+    image: "https://images.unsplash.com/photo-1520277739336-7bf67edfa768?ixlib=rb-4.0.3&w=800&q=80"
+    description: "Apartment-style housing for graduate students with full kitchens and private spaces."
+    roomTypes: ["Studio", "One-Bedroom"]
+    amenities: ["Full Kitchen", "Private Bathroom", "Living Room", "Wi-Fi", "Parking"]
+    mealPlan: "Not Available"
+    yearBuilt: 2015
+    distanceToCampus: "0.5 miles from main campus"
+
+facilities:
+  - name: "Academic Facilities"
+    description: "State-of-the-art learning resources"
+    facilities:
+      - name: "Main Library"
+        description: "Over 3 million volumes and extensive digital resources"
+        icon: "BookOpen"
+      - name: "Computer Labs"
+        description: "24/7 access to advanced computing equipment"
+        icon: "Monitor"
+      - name: "Research Laboratories"
+        description: "Cutting-edge research facilities across disciplines"
+        icon: "Microscope"
+  - name: "Recreational Facilities"
+    description: "Places to relax and stay active"
+    facilities:
+      - name: "Student Center"
+        description: "Central hub for student activities and relaxation"
+        icon: "Coffee"
+      - name: "Fitness Center"
+        description: "Modern gym equipment and fitness classes"
+        icon: "Dumbbell"
+
+scholarships:
+  - name: "International Excellence Scholarship"
+    description: "Full tuition waiver for outstanding international students"
+    amount: "100% tuition"
+    eligibility:
+      - "GPA of 3.8 or higher"
+      - "Demonstrated leadership"
+      - "Community involvement"
+  - name: "Academic Achievement Scholarship"
+    description: "Partial tuition waiver based on academic merit"
+    amount: "25-50% tuition"
+    eligibility:
+      - "GPA of 3.5 or higher"
+      - "Strong standardized test scores"
+
+careerOpportunities:
+  companies:
+    - "Microsoft, Apple, Google"
+    - "International financial institutions"
+    - "Research organizations"
+  salaryRanges:
+    - "Entry Level: $60,000-80,000/year"
+    - "Mid-Career: $90,000-120,000/year"
+    - "Senior Level: $130,000+/year"
+
+costs:
+  tuition:
+    - "Bachelor's: $25,000-30,000/year"
+    - "Master's: $30,000-35,000/year"
+    - "PhD: $20,000-25,000/year"
+  additional:
+    - "Housing: $8,000-12,000/year"
+    - "Meals: $4,000-6,000/year"
+    - "Books and Supplies: $1,000-2,000/year"
+
+admissionRequirements:
+  - requirement: "High School Diploma or equivalent"
+    required: true
+  - requirement: "Minimum GPA of 3.0"
+    required: true
+  - requirement: "SAT/ACT Scores"
+    required: true
+  - requirement: "English Proficiency (TOEFL/IELTS)"
+    required: true
+  - requirement: "Letters of Recommendation (2)"
+    required: true
+  - requirement: "Personal Statement"
+    required: true
+  - requirement: "Interview"
+    required: false
+  - requirement: "Portfolio (for specific programs)"
+    required: false
+
+admissionDeadlines:
+  - round: "Early Decision"
+    deadline: "November 1, 2023"
+    notification: "December 15, 2023"
+  - round: "Regular Decision"
+    deadline: "January 15, 2024"
+    notification: "April 1, 2024"
+  - round: "Transfer Students"
+    deadline: "March 1, 2024"
+    notification: "May 15, 2024" 
