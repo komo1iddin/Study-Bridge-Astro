@@ -1,0 +1,29 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getCollection } from 'astro:content';
+import { ThemeProvider } from '@/components/features/grants/GrantsDetailPage/styles/ThemeProvider';
+import GrantsDetailPageReact from '@/components/features/grants/GrantsDetailPage/GrantsDetailPage';
+import GrantsDetailPageSvelte from '@/components/features/grants/GrantsDetailPageSvelte/GrantsDetailPage.svelte';
+import { transformGrantData } from '@/lib/transformers/grantTransformer';
+
+// Get test grant data
+const grants = await getCollection('grants');
+const grant = grants[0]; // Just use the first grant for testing
+const lang = getLangFromUrl(Astro.url);
+
+if (!grant) {
+  return Astro.redirect('/404');
+}
+
+const transformedGrantData = transformGrantData({ id: grant.id, ...grant.data }, lang);
+---
+
+<Layout title="Grants Detail Page Comparison">    
+      <div>
+        <div class="border rounded-lg overflow-hidden shadow-lg">
+          <GrantsDetailPageSvelte client:load grant={transformedGrantData} lang={lang} />
+        </div>
+      </div>
+    </div>
+</Layout> 
