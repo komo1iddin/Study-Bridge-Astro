@@ -1,13 +1,12 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/langUtils';
-
-
 import { getCollection } from 'astro:content';
 import { GraduationCap, Clock, Users, CheckCircle, ArrowRight } from 'lucide-astro';
 import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import ContactModal from '@/components/features/contact/ContactModal.astro';
+import { getTranslation } from '@/i18n/translationUtils';
 
 // Get the language from the URL parameter
 const { lang } = Astro.params;
@@ -16,6 +15,10 @@ const { lang } = Astro.params;
 if (!lang || !languages.includes(lang as Lang)) {
   return Astro.redirect('/uz/'); // Redirect to default language if invalid
 }
+
+// Initialize translation function
+const t = (key: string) => getTranslation(lang as Lang, key);
+
 // Get master programs
 const programs = (await getCollection('programs'))
   .filter(p => p.data.type === 'master')
@@ -35,9 +38,6 @@ const breadcrumbItems = [
 
 // Server-side render this page
 export const prerender = false;
-// Use the language parameter to get translations
-import { getTranslation } from '@/i18n/translationUtils';
-const t = (key: string) => getTranslation(lang as Lang, key);
 ---
 
 <Layout title="Magistratura dasturlari | Study in China">

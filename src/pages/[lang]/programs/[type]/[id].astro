@@ -7,8 +7,8 @@ import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
 import ContactModal from '@/components/features/contact/ContactModal.astro';
 import { getTranslation } from '@/i18n/translationUtils';
 
-// Get the language from the URL parameter
-const { lang } = Astro.params;
+// Get the parameters from the URL
+const { lang, type, id } = Astro.params;
 
 // Validate the language parameter
 if (!lang || !languages.includes(lang as Lang)) {
@@ -18,33 +18,61 @@ if (!lang || !languages.includes(lang as Lang)) {
 // Initialize translation function
 const t = (key: string) => getTranslation(lang as Lang, key);
 
-export async function getStaticPaths() {
-  const programsEntries = await getCollection('programs');
-  return programsEntries.map(entry => {
-    const slug = entry.id.replace('.md', '');
-    return {
-      params: { 
-        type: entry.data.type,
-        id: slug 
-      },
-      props: { program: entry.data, slug }
-    };
+// Set prerender to false to enable server-side rendering for all paths
+export const prerender = false;
+
+// Fetch program data directly
+let programData;
+let slug = id || '';
+
+try {
+  console.log(`Fetching program data: type=${type}, id=${id}`);
+  const allPrograms = await getCollection('programs');
+  console.log(`Found ${allPrograms.length} total programs`);
+  
+  const matchedProgram = allPrograms.find(program => {
+    // Clean the ID by removing file extensions
+    const cleanId = program.id.replace(/\.(yaml|md)$/, '');
+    console.log(`Checking program: ${cleanId} vs ${id}, type: ${program.data.type} vs ${type}`);
+    return cleanId === id && program.data.type === type;
   });
+  
+  if (!matchedProgram) {
+    console.error(`No matching program found for type=${type}, id=${id}`);
+    console.log('Available programs:', allPrograms.map(p => ({ id: p.id, type: p.data.type })));
+    return Astro.redirect(`/${lang}/404`);
+  }
+  
+  programData = matchedProgram.data;
+  console.log(`Successfully found program: ${matchedProgram.id}`);
+} catch (error) {
+  console.error('Error fetching program data:', error);
+  return Astro.redirect(`/${lang}/404`);
 }
 
-const { program, slug } = Astro.props;
+// Create type-safe accessors for multilingual content
+const getLocalizedText = (obj: Record<string, any>, lang: string, fallbackLang = 'uz') => {
+  if (!obj) return '';
+  return obj[lang] || obj[fallbackLang] || '';
+};
 
+// Get translated title and description
+const title = getLocalizedText(programData.title, lang);
+const description = getLocalizedText(programData.description, lang);
+
+// Set up breadcrumb items
 const breadcrumbItems = [
   { label: t('nav.home'), href: `/${lang}` },
   { label: t('nav.programs'), href: `/${lang}/programs` },
-  { name: program.title[lang], href: `/${lang}/programs/${program.type}/${slug}` }
+  { label: title || 'Program', href: `/${lang}/programs/${type}/${slug}` }
 ];
 
+// Define program details
 const programDetails = [
   {
     icon: Clock,
     label: 'Davomiyligi',
-    value: program.duration
+    value: programData.duration
   },
   {
     icon: Users,
@@ -54,7 +82,7 @@ const programDetails = [
   {
     icon: GraduationCap,
     label: "O'qitish tili",
-    value: program.language
+    value: programData.language
   },
   {
     icon: BookOpen,
@@ -63,14 +91,22 @@ const programDetails = [
   }
 ];
 
+// Get localized features
+const features = programData.features ? getLocalizedText(programData.features, lang) : [];
+
 // Use requirements from content collection if available, otherwise use defaults
-const requirements = program.requirements?.uz || [
+const defaultRequirements = [
   "O'rta ma'lumot haqidagi hujjat",
   "Xorijiy pasport",
   "Sog'liq haqida ma'lumotnoma",
   "4 dona rasm 3x4",
   "Ingliz yoki xitoy tilini bilish"
 ];
+
+// Safely access potentially missing properties
+const requirements = (programData as any).requirements 
+  ? getLocalizedText((programData as any).requirements, lang) 
+  : defaultRequirements;
 
 // Use documents from content or default to these
 const documents = [
@@ -158,12 +194,12 @@ const testimonials = [
     image: "/images/testimonials/placeholder.jpeg"
   }
 ];
-
-// Server-side render this page
-export const prerender = false;
 ---
 
-<Layout meta={{ title: program.title[lang], description: program.description[lang] }}>
+<Layout meta={{ 
+  title: title || 'Program', 
+  description: description || '' 
+}}>
   <div class="min-h-screen bg-gradient-to-b from-primary-50/50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <Breadcrumbs items={breadcrumbItems} class="mb-8" />
@@ -174,12 +210,12 @@ export const prerender = false;
           <!-- Program Header -->
           <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
             <div class="flex items-center gap-4 mb-6">
-              <div class={`p-3 rounded-lg ${program.bgColor}`}>
+              <div class={`p-3 rounded-lg ${programData.bgColor || 'bg-primary-100'}`}>
                 <GraduationCap class="w-8 h-8 text-primary-600" />
               </div>
               <div>
-                <h1 class="text-2xl font-bold text-gray-900">{program.title[lang]}</h1>
-                <p class="text-gray-600">{program.description[lang]}</p>
+                <h1 class="text-2xl font-bold text-gray-900">{title || 'Program'}</h1>
+                <p class="text-gray-600">{description || ''}</p>
               </div>
             </div>
 
@@ -219,7 +255,7 @@ export const prerender = false;
           <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
             <h2 class="text-xl font-bold text-gray-900 mb-6">Qabul talablari</h2>
             <div class="grid gap-4">
-              {requirements.map(req => (
+              {requirements.map((req: string) => (
                 <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
                   <CheckCircle class="w-5 h-5 text-primary-600 mt-0.5" />
                   <span class="text-gray-700">{req}</span>
@@ -381,11 +417,11 @@ export const prerender = false;
             </div>
 
             <!-- Program Levels -->
-            {program.levels && program.levels.length > 0 && (
+            {(programData as any).levels && Array.isArray((programData as any).levels) && (programData as any).levels.length > 0 && (
               <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
                 <h3 class="font-semibold text-gray-900 mb-4">O'qish darajalari</h3>
                 <div class="space-y-2">
-                  {program.levels.map(level => (
+                  {((programData as any).levels as string[]).map((level: string) => (
                     <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                       <CheckCircle class="w-5 h-5 text-primary-600" />
                       <span class="text-gray-700">{level}</span>
@@ -396,11 +432,11 @@ export const prerender = false;
             )}
 
             <!-- Fields of Study -->
-            {program.fields && program.fields.length > 0 && (
+            {(programData as any).fields && Array.isArray((programData as any).fields) && (programData as any).fields.length > 0 && (
               <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
                 <h3 class="font-semibold text-gray-900 mb-4">Mutaxassisliklar</h3>
                 <div class="space-y-2">
-                  {program.fields.map(field => (
+                  {((programData as any).fields as string[]).map((field: string) => (
                     <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                       <CheckCircle class="w-5 h-5 text-primary-600" />
                       <span class="text-gray-700">{field}</span>
