@@ -232,6 +232,9 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
     if (yamlDirExists) {
       const yamlFiles = await getFilesInDirectory(yamlDirPath, '.yaml');
       
+      console.log('Reading posts from YAML files:', yamlFiles);
+      console.log('First post data sample:', yamlFiles.length > 0 ? await readYamlFile(path.join(yamlDirPath, yamlFiles[0])) : 'No posts found');
+      
       if (yamlFiles.length > 0) {
         const posts = await Promise.all(
           yamlFiles.map(async file => {
@@ -483,5 +486,40 @@ export async function getFeaturedUniversities(lang: Lang, limit = 8): Promise<Un
   } catch (error) {
     console.error("Error fetching universities:", error);
     return [];
+  }
+}
+
+// Get a single post by slug
+export async function getPostBySlug(slug: string, lang: Lang): Promise<Post | null> {
+  console.log(`Getting post with slug: ${slug} for language: ${lang}`);
+  
+  try {
+    const yamlDirPath = path.join(contentDir, 'posts');
+    const filePath = path.join(yamlDirPath, `${slug}.yaml`);
+    
+    // Check if file exists
+    try {
+      await fs.promises.access(filePath);
+      console.log(`Post file exists at: ${filePath}`);
+    } catch (e) {
+      console.error(`Post file does not exist: ${filePath}`);
+      return null;
+    }
+    
+    // Read and parse YAML file
+    const postData = await readYamlFile(filePath);
+    if (!postData) {
+      console.error(`Failed to parse post YAML: ${filePath}`);
+      return null;
+    }
+    
+    console.log(`Successfully loaded post data for: ${slug}`);
+    return {
+      slug,
+      data: postData as PostData
+    };
+  } catch (e) {
+    console.error(`Error getting post by slug ${slug}:`, e);
+    return null;
   }
 }

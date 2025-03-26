@@ -1,8 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import { languages, type Lang } from '@/i18n/langUtils';
+import { type Lang, languages } from '@/i18n/langUtils';
 
-import { createTranslationFunction } from '@/i18n/translationUtils';
 import { getAllPosts, type Post } from '@/lib/fileSystemReader';
 import type { BlogPost } from '@/types/blog';
 
@@ -13,8 +12,20 @@ import BlogHeader from '@/components/features/blog/BlogHeader.astro';
 import BlogCategories from '@/components/features/blog/BlogCategories.astro';
 import BlogSearch from '@/components/features/blog/BlogSearch.astro';
 
-const currentLang = getLangFromUrl(Astro.url);
-const t = createTranslationFunction(currentLang);
+// Get language from URL params
+const { lang } = Astro.params;
+
+// Validate the language parameter
+if (!lang || !languages.includes(lang as Lang)) {
+  return Astro.redirect('/uz/'); // Redirect to default language if invalid
+}
+
+// Function required for dynamic routes in Astro
+export function getStaticPaths() {
+  return languages.map(lang => ({
+    params: { lang }
+  }));
+}
 
 // Initialize posts array
 let allPosts: BlogPost[] = [];
@@ -23,21 +34,22 @@ let regularPosts: BlogPost[] = [];
 
 try {
   // Get posts from our custom file system reader
-  const contentPosts = await getAllPosts('uz');
+  const contentPosts = await getAllPosts(lang as Lang);
   
   if (contentPosts && contentPosts.length > 0) {
     allPosts = contentPosts.map((post: Post) => ({
       slug: post.slug,
-      title: post.data.title.uz,
-      excerpt: post.data.excerpt.uz,
+      title: post.data.title[lang as Lang] || post.data.title.uz,
+      excerpt: post.data.excerpt[lang as Lang] || post.data.excerpt.uz,
       publishedDate: post.data.publishedDate,
       author: post.data.author,
       authorImage: post.data.authorImage,
-      authorRole: post.data.authorRole?.uz || '',
+      authorRole: post.data.authorRole?.[lang as Lang] || post.data.authorRole?.uz || '',
       image: post.data.image,
-      category: post.data.category?.uz || 'Education',
+      category: post.data.category?.[lang as Lang] || post.data.category?.uz || 'Education',
+      content: post.data.content[lang as Lang] || post.data.content.uz || '',
       featured: post.data.featured || false,
-      lang: 'uz' // Add language information
+      lang: lang as Lang // Add language information
     }));
   }
 } catch (e) {
@@ -45,7 +57,11 @@ try {
 }
 
 // Sort posts by date (newest first)
-allPosts.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+allPosts.sort((a, b) => {
+  const dateA = new Date(a.publishedDate || '');
+  const dateB = new Date(b.publishedDate || '');
+  return dateB.getTime() - dateA.getTime();
+});
 
 // Find featured post
 featuredPost = allPosts.find(post => post.featured) || allPosts[0];
@@ -57,7 +73,7 @@ regularPosts = allPosts.filter(post => post !== featuredPost);
 export const prerender = false;
 ---
 
-<Layout title="Xitoyda o'qish - Ta'lim olish imkoniyatlari" description="Xitoyning eng yaxshi universitetlariga o'qishga kirishda yordam beramiz. Til kurslari, bakalavr, magistratura.">
+<Layout meta={{ title: "Xitoyda o'qish - Ta'lim olish imkoniyatlari", description: "Xitoyning eng yaxshi universitetlariga o'qishga kirishda yordam beramiz. Til kurslari, bakalavr, magistratura." }}>
   <div class="bg-white py-12 md:py-16 lg:py-20">
     <div class="container px-4 mx-auto">
       <!-- Blog Header -->

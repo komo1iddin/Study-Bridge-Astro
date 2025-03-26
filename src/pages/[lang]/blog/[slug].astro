@@ -2,10 +2,10 @@
 import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/langUtils';
  
-
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
-import { getAllPosts, type Post } from '@/lib/fileSystemReader';
+import { getAllPosts, getPostBySlug } from '@/lib/fileSystemReader';
 import type { BlogPost } from '@/types/blog';
+import type { PostData } from '@/lib/fileSystemReader';
 
 // Import blog components
 import RelatedPosts from '@/components/features/blog/RelatedPosts.astro';
@@ -15,101 +15,199 @@ import PostNavigation from '@/components/features/blog/PostNavigation.astro';
 
 export async function getStaticPaths() {
   try {
-    const posts = await getAllPosts('uz');
-    return posts.map((post) => ({
-      params: { slug: post.slug },
-      props: { post },
-    }));
+    console.log('Creating static paths for blog posts');
+    const allPosts = await getAllPosts('uz');
+    console.log(`Found ${allPosts.length} posts`);
+    
+    if (allPosts.length === 0) {
+      console.error('No posts found to generate static paths');
+      return [];
+    }
+    
+    // Log the first post for debugging
+    if (allPosts.length > 0) {
+      console.log('First post sample:', {
+        slug: allPosts[0].slug,
+        title: allPosts[0].data.title,
+        excerpt: allPosts[0].data.excerpt?.uz
+      });
+    }
+    
+    // Create paths for each language and post combination
+    const paths = [];
+    
+    for (const lang of languages) {
+      for (const post of allPosts) {
+        // Ensure the post slug is valid
+        if (!post.slug) {
+          console.error('Post without slug found:', post);
+          continue;
+        }
+        
+        console.log(`Creating path for lang=${lang}, slug=${post.slug}`);
+        paths.push({
+          params: { 
+            lang,
+            slug: post.slug 
+          },
+          props: { slug: post.slug }  // Only pass the slug, we'll fetch the post in the component
+        });
+      }
+    }
+    
+    console.log(`Generated ${paths.length} static paths for blog posts`);
+    return paths;
   } catch (e) {
     console.error('Failed to generate static paths:', e);
     return [];
   }
 }
 
-const { post: rawPost } = Astro.props;
-// Get the language from the URL parameter
-const { lang } = Astro.params;
+// Get the language and slug from the URL parameter
+const { lang, slug } = Astro.params;
+
+// Validate the slug
+if (!slug) {
+  console.error('No slug parameter found');
+  return Astro.redirect(`/${lang || 'uz'}/404`);
+}
 
 // Validate the language parameter
 if (!lang || !languages.includes(lang as Lang)) {
   return Astro.redirect('/uz/'); // Redirect to default language if invalid
 }
+
 // Initialize variables
-let post: BlogPost;
+let post: BlogPost | undefined;
 let allBlogPosts: BlogPost[] = [];
 let relatedPosts: BlogPost[] = [];
-let prevPost: BlogPost | null = null;
-let nextPost: BlogPost | null = null;
+let prevPost: BlogPost | undefined = undefined;
+let nextPost: BlogPost | undefined = undefined;
 
 try {
-  // Format date
-  const formattedDate = new Date(rawPost.data.publishedDate).toLocaleDateString('uz-UZ', {
+  console.log(`Fetching post with slug: ${slug} for language: ${lang}`);
+  
+  // Get the post directly by slug
+  const rawPost = await getPostBySlug(slug, lang as Lang);
+  
+  if (!rawPost) {
+    console.error(`Post not found for slug: ${slug}`);
+    return Astro.redirect(`/${lang}/404`);
+  }
+  
+  // Get current language or fallback to uz
+  const currentLang = lang as Lang;
+  
+  // Format date with proper locale
+  const locale = currentLang === 'ru' ? 'ru-RU' : (currentLang === 'en' ? 'en-US' : 'uz-UZ');
+  const formattedDate = new Date(rawPost.data.publishedDate).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
 
-  // Convert current post to BlogPost format
+  // Convert current post to BlogPost format with language-specific content
   post = {
     slug: rawPost.slug,
-    title: rawPost.data.title.uz,
-    excerpt: rawPost.data.excerpt.uz,
+    title: rawPost.data.title[currentLang] || rawPost.data.title.uz || '',
+    excerpt: rawPost.data.excerpt[currentLang] || rawPost.data.excerpt.uz || '',
     publishedDate: formattedDate,
-    author: typeof rawPost.data.author === 'string' ? rawPost.data.author : rawPost.data.author.name,
-    authorImage: typeof rawPost.data.author === 'string' ? rawPost.data.authorImage : rawPost.data.author.image,
-    authorRole: typeof rawPost.data.author === 'string' ? 
-      (rawPost.data.authorRole?.uz || '') : 
-      (rawPost.data.author.role || ''),
+    author: '',  // Will be set below
     image: rawPost.data.image || '/images/placeholder.jpg', // Fallback image
-    category: rawPost.data.category?.uz || 'Ta\'lim',
-    content: rawPost.data.content.uz,
-    featured: rawPost.data.featured || false
+    category: rawPost.data.category?.[currentLang] || rawPost.data.category?.uz || 'Ta\'lim',
+    content: rawPost.data.content[currentLang] || rawPost.data.content.uz || '',
+    featured: rawPost.data.featured || false,
+    lang: currentLang // Add language information
   };
 
+  // Handle author data which can be either a string or an object
+  if (typeof rawPost.data.author === 'object' && rawPost.data.author) {
+    post.author = rawPost.data.author as string;
+    if ('name' in rawPost.data.author) {
+      post.author = rawPost.data.author.name;
+      if ('image' in rawPost.data.author) {
+        post.authorImage = rawPost.data.author.image;
+      }
+      if ('role' in rawPost.data.author) {
+        post.authorRole = rawPost.data.author.role;
+      }
+    }
+  } else {
+    post.author = rawPost.data.author as string;
+    post.authorImage = rawPost.data.authorImage;
+    post.authorRole = rawPost.data.authorRole?.[currentLang] || rawPost.data.authorRole?.uz || '';
+  }
+
   // Get all posts for related posts and navigation
-  const allPosts = await getAllPosts('uz');
+  const allPosts = await getAllPosts(currentLang);
   if (allPosts && allPosts.length > 0) {
     // Convert to BlogPost format
     allBlogPosts = allPosts.map(p => {
-      const pDate = new Date(p.data.publishedDate).toLocaleDateString('uz-UZ', {
+      const pDate = new Date(p.data.publishedDate).toLocaleDateString(locale, {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
       });
       
-      return {
+      const blogPost: BlogPost = {
         slug: p.slug,
-        title: p.data.title.uz,
-        excerpt: p.data.excerpt.uz,
+        title: p.data.title[currentLang] || p.data.title.uz || '',
+        excerpt: p.data.excerpt[currentLang] || p.data.excerpt.uz || '',
         publishedDate: pDate,
-        author: typeof p.data.author === 'string' ? p.data.author : p.data.author.name,
-        authorImage: typeof p.data.author === 'string' ? p.data.authorImage : p.data.author.image,
-        authorRole: typeof p.data.author === 'string' ? 
-          (p.data.authorRole?.uz || '') : 
-          (p.data.author.role || ''),
+        author: '',  // Will be set below
         image: p.data.image || '/images/placeholder.jpg', // Fallback image
-        category: p.data.category?.uz || 'Ta\'lim',
-        content: p.data.content.uz,
-        featured: p.data.featured || false
+        category: p.data.category?.[currentLang] || p.data.category?.uz || 'Ta\'lim',
+        content: p.data.content[currentLang] || p.data.content.uz || '',
+        featured: p.data.featured || false,
+        lang: currentLang
       };
+
+      // Handle author data which can be either a string or an object
+      if (typeof p.data.author === 'object' && p.data.author) {
+        blogPost.author = p.data.author as string;
+        if ('name' in p.data.author) {
+          blogPost.author = p.data.author.name;
+          if ('image' in p.data.author) {
+            blogPost.authorImage = p.data.author.image;
+          }
+          if ('role' in p.data.author) {
+            blogPost.authorRole = p.data.author.role;
+          }
+        }
+      } else {
+        blogPost.author = p.data.author as string;
+        blogPost.authorImage = p.data.authorImage;
+        blogPost.authorRole = p.data.authorRole?.[currentLang] || p.data.authorRole?.uz || '';
+      }
+
+      return blogPost;
     });
     
     // Sort posts by date (newest first)
-    allBlogPosts.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
+    allBlogPosts.sort((a, b) => {
+      const dateA = new Date(a.publishedDate || '');
+      const dateB = new Date(b.publishedDate || '');
+      return dateB.getTime() - dateA.getTime();
+    });
     
     // Get related posts (excluding current post)
     relatedPosts = allBlogPosts
-      .filter(p => p.slug !== post.slug)
+      .filter(p => p.slug !== post?.slug)
       .slice(0, 3);
     
     // Get previous and next posts
-    const currentIndex = allBlogPosts.findIndex(p => p.slug === post.slug);
-    prevPost = currentIndex > 0 ? allBlogPosts[currentIndex - 1] : null;
-    nextPost = currentIndex < allBlogPosts.length - 1 ? allBlogPosts[currentIndex + 1] : null;
+    const currentIndex = allBlogPosts.findIndex(p => p.slug === post?.slug);
+    prevPost = currentIndex > 0 ? allBlogPosts[currentIndex - 1] : undefined;
+    nextPost = currentIndex < allBlogPosts.length - 1 ? allBlogPosts[currentIndex + 1] : undefined;
   }
 } catch (e) {
   console.error('Failed to process posts:', e);
-  return Astro.redirect('/404');
+  return Astro.redirect(`/${lang}/404`);
+}
+
+// If no post found, redirect to language-specific 404
+if (!post) {
+  return Astro.redirect(`/${lang}/404`);
 }
 
 // Server-side render this page
@@ -119,21 +217,21 @@ import { getTranslation } from '@/i18n/translationUtils';
 const t = (key: string) => getTranslation(lang as Lang, key);
 ---
 
-<Layout meta={{ title: "Page Title", description: "Page Description" }}>
+<Layout meta={{ title: post.title, description: post.excerpt }}>
   <div class="bg-white py-12 md:py-16 lg:py-20">
     <div class="container px-4 mx-auto">
       <div class="max-w-4xl mx-auto">
-        <!-- Breadcrumbs -->
+        <!-- Breadcrumbs with dynamic language -->
         <Breadcrumbs 
           items={[
-            { label: t('nav.home'), href: '/uz/' },
-            { label: t('nav.blog'), href: '/uz/blog' },
-            { label: post.title, href: '#', current: true }
+            { label: t('nav.home'), href: `/${lang}/` },
+            { label: t('nav.blog'), href: `/${lang}/blog` },
+            { label: post.title, href: '#' }
           ]} 
         />
         
         <!-- Post Header -->
-        <PostHeader post={post} formattedDate={post.publishedDate} />
+        <PostHeader post={post} formattedDate={post.publishedDate || ''} />
         
         <!-- Post Content -->
         <PostContent post={post} />

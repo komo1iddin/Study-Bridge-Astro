@@ -10,6 +10,7 @@ const { post } = Astro.props;
 
 const postImage = post.image || '/images/posts/placeholder/post.jpeg';
 const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
+const postLang = post.lang || 'uz'; // Default to 'uz' if lang is not specified
 ---
 
 <div class="mb-10" data-aos="fade-up" data-aos-duration="1000">
@@ -38,7 +39,7 @@ const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
         </div>
 
         <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
-          <a href={`/uz/blog/${post.slug}`} class="hover:text-primary-600 transition-colors duration-300">
+          <a href={`/${postLang}/blog/${post.slug}`} class="hover:text-primary-600 transition-colors duration-300">
             {post.title}
           </a>
         </h2>
@@ -60,10 +61,10 @@ const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
           </div>
 
           <a 
-            href={`/uz/blog/${post.slug}`} 
+            href={`/${postLang}/blog/${post.slug}`} 
             class="inline-flex items-center text-primary-600 font-medium hover:text-primary-700 transition-colors duration-300"
           >
-            Read More
+            {postLang === 'ru' ? 'Читать далее' : (postLang === 'en' ? 'Read More' : 'Ko\'proq o\'qish')}
             <ChevronRight size={16} class="ml-1" />
           </a>
         </div>

@@ -10,6 +10,7 @@ const { post } = Astro.props;
 
 const postImage = post.image || '/images/posts/placeholder/post.jpeg';
 const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
+const postLang = post.lang || 'uz'; // Default to 'uz' if lang is not specified
 ---
 
 <div class="blog-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
@@ -32,14 +33,14 @@ const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
     <div class="flex items-center space-x-2 text-xs text-gray-600 mb-2">
       <time datetime={post.date || post.publishedDate} class="blog-card-date flex items-center">
         <Clock size={12} class="mr-1" />
-        {new Date(post.date || post.publishedDate).toLocaleDateString(post.lang === 'ru' ? 'ru-RU' : (post.lang === 'en' ? 'en-US' : 'uz-UZ'))}
+        {new Date(post.date || post.publishedDate).toLocaleDateString(postLang === 'ru' ? 'ru-RU' : (postLang === 'en' ? 'en-US' : 'uz-UZ'))}
       </time>
       <span>•</span>
       <span>{post.readTime || "5 min"}</span>
     </div>
     
     <h3 class="blog-card-title text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-      <a href={`/uz/blog/${post.slug}`} class="hover:text-primary-600 transition-colors duration-300">
+      <a href={`/${postLang}/blog/${post.slug}`} class="hover:text-primary-600 transition-colors duration-300">
         {post.title}
       </a>
     </h3>
@@ -60,10 +61,10 @@ const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
       </div>
       
       <a 
-        href={`/uz/blog/${post.slug}`} 
+        href={`/${postLang}/blog/${post.slug}`} 
         class="inline-flex items-center text-xs text-primary-600 font-medium hover:text-primary-700 transition-colors duration-300"
       >
-        {post.lang === 'ru' ? 'Читать' : (post.lang === 'en' ? 'Read' : 'O\'qish')}
+        {postLang === 'ru' ? 'Читать' : (postLang === 'en' ? 'Read' : 'O\'qish')}
         <ChevronRight size={12} class="ml-1" />
       </a>
     </div>
