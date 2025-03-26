@@ -1,0 +1,16 @@
+---
+import UniversityPageSvelte from "./UniversityPage.svelte";
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getAllUniversities, getAllCities } from '@/lib/fileSystemReader';
+
+const lang = getLangFromUrl(Astro.url);
+const universities = await getAllUniversities(lang);
+const cities = await getAllCities(lang);
+---
+
+<UniversityPageSvelte 
+  universities={universities} 
+  cities={cities} 
+  lang={lang}
+  client:load
+/> 
