@@ -3,9 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/langUtils';
 import { Phone, Mail, MessageCircle, MessageSquare } from 'lucide-astro';
 import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
- 
-
-
+import { getTranslation } from '@/i18n/translationUtils';
 
 // Get the language from the URL parameter
 const { lang } = Astro.params;
@@ -15,6 +13,8 @@ if (!lang || !languages.includes(lang as Lang)) {
   return Astro.redirect('/uz/'); // Redirect to default language if invalid
 }
 
+// Use the language parameter to get translations
+const t = (key: string) => getTranslation(lang as Lang, key);
 
 const contactMethods = [
   {
@@ -58,9 +58,6 @@ const officeLocations = [
 
 // Server-side render this page
 export const prerender = false;
-// Use the language parameter to get translations
-import { getTranslation } from '@/i18n/translationUtils';
-const t = (key: string) => getTranslation(lang as Lang, key);
 ---
 
 <Layout meta={{ title: "Page Title", description: "Page Description" }}>
@@ -199,10 +196,13 @@ const t = (key: string) => getTranslation(lang as Lang, key);
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        // Имитация отправки формы
+        // Здесь можно добавить логику для отправки формы
+        // Например, fetch запрос на сервер
+        
+        // Для демонстрации просто меняем текст кнопки
         const submitButton = form.querySelector('button[type="submit"]');
-        if (submitButton) {
-          const originalText = submitButton.textContent;
+        if (submitButton && submitButton instanceof HTMLButtonElement) {
+          const originalText = submitButton.textContent || '';
           submitButton.textContent = 'Отправлено!';
           submitButton.disabled = true;
           
