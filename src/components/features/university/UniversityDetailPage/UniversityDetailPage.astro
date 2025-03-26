@@ -1,9 +1,9 @@
 ---
-import UniversityDetailPageComponent from './UniversityDetailPage.tsx';
+import UniversityDetailPageComponent from './UniversityDetailPage.svelte';
 import { getLangFromUrl } from '@/i18n/langUtils';
 
 const { university } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 ---
 
-<UniversityDetailPageComponent university={university} lang={lang} client:only="react" />
+<UniversityDetailPageComponent university={university} lang={lang} client:load /> 
