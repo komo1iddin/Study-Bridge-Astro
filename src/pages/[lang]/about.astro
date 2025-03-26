@@ -34,6 +34,12 @@ const breadcrumbItems = [
   { label: 'Home', href: `/${lang}` },
   { label: 'About Us', href: `/${lang}/about` }
 ];
+
+// Server-side render this page
+export const prerender = false;
+// Use the language parameter to get translations
+import { getTranslation } from '@/i18n/translationUtils';
+const t = (key: string) => getTranslation(lang as Lang, key);
 ---
 
 <Layout meta={meta}>

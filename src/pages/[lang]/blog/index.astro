@@ -52,6 +52,9 @@ featuredPost = allPosts.find(post => post.featured) || allPosts[0];
 
 // Get regular posts (excluding featured post)
 regularPosts = allPosts.filter(post => post !== featuredPost);
+
+// Server-side render this page
+export const prerender = false;
 ---
 
 <Layout title="Xitoyda o'qish - Ta'lim olish imkoniyatlari" description="Xitoyning eng yaxshi universitetlariga o'qishga kirishda yordam beramiz. Til kurslari, bakalavr, magistratura.">
