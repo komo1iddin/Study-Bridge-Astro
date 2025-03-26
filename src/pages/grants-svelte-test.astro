@@ -2,9 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import { getLangFromUrl } from '@/i18n/langUtils';
 import { getCollection } from 'astro:content';
-import { ThemeProvider } from '@/components/features/grants/GrantsDetailPage/styles/ThemeProvider';
-import GrantsDetailPageReact from '@/components/features/grants/GrantsDetailPage/GrantsDetailPage';
-import GrantsDetailPageSvelte from '@/components/features/grants/GrantsDetailPageSvelte/GrantsDetailPage.svelte';
+import GrantsDetailPage from '@/components/features/grants/GrantsDetailPage/GrantsDetailPage.svelte';
 import { transformGrantData } from '@/lib/transformers/grantTransformer';
 
 // Get test grant data
@@ -17,13 +15,20 @@ if (!grant) {
 }
 
 const transformedGrantData = transformGrantData({ id: grant.id, ...grant.data }, lang);
+
+// Define meta information for the page
+const meta = {
+  title: "Grants Detail Page Svelte",
+  description: "Svelte implementation of the Grants Detail Page"
+};
 ---
 
-<Layout title="Grants Detail Page Comparison">    
-      <div>
-        <div class="border rounded-lg overflow-hidden shadow-lg">
-          <GrantsDetailPageSvelte client:load grant={transformedGrantData} lang={lang} />
-        </div>
-      </div>
+<Layout meta={meta}>
+  <div class="container mx-auto py-8 px-4">
+    <h1 class="text-2xl font-bold mb-6">Grants Detail Page (Svelte Version)</h1>
+    
+    <div class="border rounded-lg overflow-hidden shadow-lg">
+      <GrantsDetailPage client:load grant={transformedGrantData} lang={lang} />
     </div>
+  </div>
 </Layout> 

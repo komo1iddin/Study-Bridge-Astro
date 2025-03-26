@@ -2,8 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import { getLangFromUrl } from '@/i18n/langUtils';
 import { getCollection } from 'astro:content';
-import { ThemeProvider } from '@/components/features/grants/GrantsDetailPage/styles/ThemeProvider';
-import GrantsDetailPageReact from '@/components/features/grants/GrantsDetailPage/GrantsDetailPage';
+import GrantsDetailPage from '@/components/features/grants/GrantsDetailPage/GrantsDetailPage.svelte';
 import { transformGrantData } from '@/lib/transformers/grantTransformer';
 
 export async function getStaticPaths() {
@@ -26,10 +25,16 @@ if (!grant) {
 
 // Ma'lumotlarni transformatsiya qilish
 const transformedGrantData = transformGrantData({ id: grant.id, ...grant.data }, lang);
+
+// Prepare meta information for the layout
+const meta = {
+  title: grant.data.title[lang],
+  description: grant.data.description[lang]
+};
 ---
 
-<Layout title={grant.data.title[lang]}>
-  <GrantsDetailPageReact 
+<Layout meta={meta}>
+  <GrantsDetailPage
     client:load
     grant={transformedGrantData} 
     lang={lang} 
