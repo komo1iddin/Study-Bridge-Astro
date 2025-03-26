@@ -72,6 +72,11 @@ export const ruTranslations: TranslationSchema = {
     universities: 'Universitetlar',
     grants: 'Grantlar',
     blog: 'Blog',
+    menu: "Меню",
+    openMenu: "Открыть меню",
+    closeMenu: "Закрыть меню",
+    selectLanguage: "Выбрать язык",
+    submitApplication: "Подать заявку"
   },
   languages: {
     ru: 'Русский',

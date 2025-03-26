@@ -92,6 +92,11 @@ export const uzTranslations: TranslationSchema = {
     universities: 'Universitetlar',
     grants: "Stipendiyalar va imkoniyatlar",
     blog: "Yangiliklar",
+    menu: "Menu",
+    openMenu: "Menuni ochish",
+    closeMenu: "Menuni yopish",
+    selectLanguage: "Tilni tanlang",
+    submitApplication: "Ariza topshirish"
   },
   languages: {
     ru: 'Русский',

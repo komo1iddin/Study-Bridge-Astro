@@ -62,6 +62,11 @@ export interface TranslationSchema {
     universities: string;
     grants: string;
     blog: string;
+    menu: string;
+    openMenu: string;
+    closeMenu: string;
+    selectLanguage: string;
+    submitApplication: string;
   };
   languages: {
     ru: string;

@@ -1,7 +1,7 @@
 ---
 import { Globe, Phone } from 'lucide-astro';
 import DesktopNav from './DesktopNav.astro';
-import MobileNav from './MobileNav.tsx';
+import MobileNav from './MobileNav.svelte';
 import LanguageSelector from '@/components/shared/LanguageSelector/LanguageSelector.astro';
 
 const currentPath = Astro.url.pathname;
@@ -62,13 +62,13 @@ const currentLang = currentPath.split('/')[1] || 'uz';
 </header>
 
 <script>
-  const header = document.getElementById('main-header');
+  // Add event listener for body class changes to update header transparency
+  const header = document.querySelector('header');
   const headerInner = header?.querySelector('div');
   
-  // Watch for mobile menu state changes
-  const observer = new MutationObserver(() => {
-    const mobileMenu = document.querySelector('.mobile-menu-container');
-    const isMenuOpen = mobileMenu?.classList.contains('active');
+  // Function to check and update header style
+  function updateHeaderStyle() {
+    const isMenuOpen = document.body.classList.contains('mobile-menu-open');
     
     if (header && headerInner) {
       if (isMenuOpen) {
@@ -79,11 +79,17 @@ const currentLang = currentPath.split('/')[1] || 'uz';
         headerInner.style.background = '';
       }
     }
-  });
+  }
 
-  // Start observing the body for class changes
+  // Setup MutationObserver to watch for class changes
+  const observer = new MutationObserver(updateHeaderStyle);
+  
+  // Start observing
   observer.observe(document.body, { 
     attributes: true,
     attributeFilter: ['class']
   });
+
+  // Initial check in case the menu is already open
+  updateHeaderStyle();
 </script>

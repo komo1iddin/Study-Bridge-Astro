@@ -72,6 +72,11 @@ export const enTranslations: TranslationSchema = {
     universities: 'Universitetlar',
     grants: 'Grantlar',
     blog: 'Blog',
+    menu: "Menu",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
+    selectLanguage: "Select language",
+    submitApplication: "Submit application"
   },
   languages: {
     ru: 'Русский',
