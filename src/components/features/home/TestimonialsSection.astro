@@ -1,5 +1,5 @@
 ---
-import { getAllTestimonials } from '@/lib/fileSystemReader';
+import { getAllTestimonials, type Testimonial } from '@/lib/fileSystemReader';
 import { getLangFromUrl } from '@/i18n/langUtils';
 import { useTranslations } from '@/i18n/utils';
 import { Star } from 'lucide-astro';
@@ -7,7 +7,7 @@ import SectionHeader from '@/components/ui/SectionHeader.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const testimonials = await getAllTestimonials(lang);
+const testimonials: Testimonial[] = await getAllTestimonials(lang);
 console.log('Loaded testimonials:', testimonials);
 
 const featuredTestimonials = testimonials.filter(testimonial => testimonial.data.featured);

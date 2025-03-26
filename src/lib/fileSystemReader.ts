@@ -165,6 +165,21 @@ export interface Post {
   data: PostData;
 }
 
+// Define interface for testimonial data
+export interface TestimonialData {
+  name: string;
+  university: string;
+  quote: Record<Lang, string>;
+  image: string;
+  rating: number;
+  featured: boolean;
+}
+
+export interface Testimonial {
+  slug: string;
+  data: TestimonialData;
+}
+
 // Define interfaces for FAQ and Features data
 export interface FAQData {
   question: Record<Lang, string>;
@@ -295,7 +310,8 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
   });
 }
 
-export async function getAllTestimonials(lang: Lang) {
+// Get all testimonials
+export async function getAllTestimonials(lang: Lang): Promise<Testimonial[]> {
   return getCachedData(`testimonials-all-${lang}`, async () => {
     // First try MD files
     const mdDirPath = path.join(contentDir, 'testimonials-md');

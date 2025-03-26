@@ -1,0 +1,694 @@
+---
+// Basic imports
+import { languages, type Lang } from '@/i18n/langUtils';
+
+// Component props
+interface Props {
+  sourceLang?: Lang;
+  targetLang?: Lang;
+}
+
+// Default to Uzbek as source and Russian as target
+const { 
+  sourceLang = 'uz' as Lang, 
+  targetLang = 'ru' as Lang 
+} = Astro.props;
+---
+
+<div class="translation-editor">
+  <div class="translation-editor-header">
+    <h2>Translation Management</h2>
+    <p class="text-gray-600">Manage and update translations for your multilingual content</p>
+  </div>
+  
+  <div class="language-selection">
+    <div class="language-pair">
+      <div class="source-language">
+        <label for="source-lang">Source Language:</label>
+        <select id="source-lang" class="language-select">
+          {languages.map(lang => (
+            <option value={lang} selected={lang === sourceLang}>{lang.toUpperCase()}</option>
+          ))}
+        </select>
+      </div>
+      
+      <div class="direction-arrow">→</div>
+      
+      <div class="target-language">
+        <label for="target-lang">Target Language:</label>
+        <select id="target-lang" class="language-select">
+          {languages.map(lang => (
+            <option value={lang} selected={lang === targetLang}>{lang.toUpperCase()}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+    
+    <button id="load-missing" class="primary-button">
+      Load Missing Translations
+    </button>
+  </div>
+  
+  <!-- New statistics section -->
+  <div class="translation-stats" id="translation-stats">
+    <div class="stats-item">
+      <span class="stats-label">Total translations:</span>
+      <span class="stats-value" id="total-translations">-</span>
+    </div>
+    
+    <div class="stats-item">
+      <span class="stats-label">Missing translations:</span>
+      <span class="stats-value stats-missing" id="missing-translations">-</span>
+    </div>
+    
+    <div class="stats-item">
+      <span class="stats-label">Completion:</span>
+      <span class="stats-value" id="completion-percentage">-</span>
+    </div>
+  </div>
+  
+  <!-- Status message area -->
+  <div id="status-message" class="status-message hidden"></div>
+  
+  <div id="translation-list" class="translation-list">
+    <div class="loading-placeholder">
+      <p>Select languages and click "Load Missing Translations" to get started</p>
+    </div>
+    
+    <!-- Template for translation items (hidden by default) -->
+    <template id="translation-item-template">
+      <div class="translation-item">
+        <div class="translation-path"></div>
+        
+        <div class="translation-content">
+          <div class="source-text">
+            <label>Source Text:</label>
+            <div class="text-content"></div>
+          </div>
+          
+          <div class="target-text">
+            <label>Translation:</label>
+            <textarea class="translation-input" rows="3"></textarea>
+            
+            <div class="suggestion-controls">
+              <button class="use-suggestion-btn">Use Suggestion</button>
+              <button class="edit-suggestion-btn">Edit</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="item-actions">
+          <button class="save-btn">Save</button>
+          <button class="skip-btn">Skip</button>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+
+<style>
+  .translation-editor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  .translation-editor-header {
+    margin-bottom: 2rem;
+  }
+  
+  .translation-editor-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .language-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .language-pair {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .source-language, .target-language {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .language-select {
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    min-width: 100px;
+  }
+  
+  .direction-arrow {
+    font-size: 1.25rem;
+    color: #6b7280;
+  }
+  
+  .primary-button {
+    padding: 0.5rem 1rem;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .primary-button:hover {
+    background-color: #2563eb;
+  }
+  
+  .translation-list {
+    min-height: 200px;
+  }
+  
+  .loading-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    background-color: #f9fafb;
+    border-radius: 0.375rem;
+    color: #6b7280;
+  }
+  
+  /* Translation item styles */
+  .translation-item {
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background-color: #f9fafb;
+  }
+  
+  .translation-path {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: #4b5563;
+    padding: 0.25rem 0.5rem;
+    background-color: #f3f4f6;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+  }
+  
+  .translation-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .translation-content {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .source-text, .target-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .source-text label, .target-text label {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #374151;
+  }
+  
+  .text-content {
+    padding: 0.75rem;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    min-height: 5rem;
+  }
+  
+  .translation-input {
+    padding: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  
+  .translation-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  }
+  
+  .suggestion-controls {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .use-suggestion-btn, .edit-suggestion-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .use-suggestion-btn:hover, .edit-suggestion-btn:hover {
+    background-color: #e5e7eb;
+  }
+  
+  .item-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  
+  .save-btn, .skip-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .save-btn {
+    background-color: #10b981;
+    color: white;
+    border: none;
+  }
+  
+  .save-btn:hover {
+    background-color: #059669;
+  }
+  
+  .skip-btn {
+    background-color: white;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .skip-btn:hover {
+    background-color: #f3f4f6;
+  }
+  
+  /* Statistics section */
+  .translation-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 1rem;
+    background-color: #f3f4f6;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .stats-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .stats-label {
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+  
+  .stats-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .stats-missing {
+    color: #ef4444;
+  }
+  
+  /* Status message */
+  .status-message {
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .status-message.success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+  }
+  
+  .status-message.error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+  }
+  
+  .status-message.info {
+    background-color: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+  }
+  
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  // Types for our JavaScript
+  interface TranslationSuggestion {
+    path: string;
+    sourceLang: string;
+    targetLang: string;
+    sourceText: string;
+    suggestedText: string;
+  }
+  
+  // Wait for the DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', setupTranslationEditor);
+  
+  function setupTranslationEditor() {
+    // Get DOM elements
+    const sourceLangSelect = document.getElementById('source-lang') as HTMLSelectElement;
+    const targetLangSelect = document.getElementById('target-lang') as HTMLSelectElement;
+    const loadMissingBtn = document.getElementById('load-missing') as HTMLButtonElement;
+    const translationList = document.getElementById('translation-list') as HTMLDivElement;
+    const statusMessage = document.getElementById('status-message') as HTMLDivElement;
+    
+    // Stats elements
+    const totalTranslations = document.getElementById('total-translations') as HTMLSpanElement;
+    const missingTranslations = document.getElementById('missing-translations') as HTMLSpanElement;
+    const completionPercentage = document.getElementById('completion-percentage') as HTMLSpanElement;
+    
+    // Event listeners
+    loadMissingBtn.addEventListener('click', loadMissingTranslations);
+    sourceLangSelect.addEventListener('change', handleLanguageChange);
+    targetLangSelect.addEventListener('change', handleLanguageChange);
+    
+    // Handle language selections (prevent same language for source and target)
+    function handleLanguageChange(event: Event) {
+      const select = event.target as HTMLSelectElement;
+      const otherSelect = select === sourceLangSelect ? targetLangSelect : sourceLangSelect;
+      
+      if (select.value === otherSelect.value) {
+        // Find another language to select
+        const availableLanguages = Array.from(select.options)
+          .map(option => option.value)
+          .filter(lang => lang !== select.value);
+        
+        if (availableLanguages.length > 0) {
+          otherSelect.value = availableLanguages[0];
+        }
+      }
+    }
+    
+    // Show a status message to the user
+    function showStatus(message: string, type: 'info' | 'success' | 'error' = 'info') {
+      statusMessage.textContent = message;
+      statusMessage.className = `status-message ${type}`;
+      
+      // Hide after 5 seconds if it's a success message
+      if (type === 'success') {
+        setTimeout(() => {
+          statusMessage.classList.add('hidden');
+        }, 5000);
+      }
+    }
+    
+    // Clear the translation list
+    function clearTranslationList() {
+      // Keep the template but remove other children
+      const template = document.getElementById('translation-item-template');
+      translationList.innerHTML = '';
+      if (template) translationList.appendChild(template);
+    }
+    
+    // Show loading state
+    function showLoading() {
+      clearTranslationList();
+      const loadingElement = document.createElement('div');
+      loadingElement.className = 'loading-placeholder';
+      loadingElement.innerHTML = `
+        <p>Loading translation suggestions...</p>
+      `;
+      translationList.appendChild(loadingElement);
+    }
+    
+    // Load missing translations
+    async function loadMissingTranslations() {
+      const sourceLang = sourceLangSelect.value;
+      const targetLang = targetLangSelect.value;
+      
+      if (sourceLang === targetLang) {
+        showStatus('Source and target languages must be different', 'error');
+        return;
+      }
+      
+      showLoading();
+      showStatus('Loading missing translations...', 'info');
+      
+      try {
+        // In a real app, this would be an API call
+        // For now, we'll simulate it
+        const suggestions = await simulateLoadingTranslations(sourceLang, targetLang);
+        displayTranslationSuggestions(suggestions);
+        
+        // Update stats (in a real app, these would come from the API)
+        updateStats({
+          total: 100,
+          missing: suggestions.length,
+          completion: 100 - suggestions.length
+        });
+        
+        showStatus(`Loaded ${suggestions.length} missing translations`, 'success');
+      } catch (error) {
+        console.error('Failed to load translations:', error);
+        showStatus('Failed to load translations. Please try again.', 'error');
+      }
+    }
+    
+    // Update the stats display
+    function updateStats({ total, missing, completion }: { 
+      total: number, 
+      missing: number, 
+      completion: number 
+    }) {
+      totalTranslations.textContent = total.toString();
+      missingTranslations.textContent = missing.toString();
+      completionPercentage.textContent = `${completion}%`;
+    }
+    
+    // Simulate loading translations (this would be an API call in production)
+    async function simulateLoadingTranslations(
+      sourceLang: string, 
+      targetLang: string
+    ): Promise<TranslationSuggestion[]> {
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Sample data - in a real app, this would come from an API
+      return [
+        {
+          path: 'common.header.welcome',
+          sourceLang,
+          targetLang,
+          sourceText: 'Welcome to our platform',
+          suggestedText: targetLang === 'ru' ? 'Добро пожаловать на нашу платформу' : 
+                        targetLang === 'en' ? 'Welcome to our platform' : 
+                        'Platformamizga xush kelibsiz'
+        },
+        {
+          path: 'common.footer.copyright',
+          sourceLang,
+          targetLang,
+          sourceText: '© 2023 AstroStudy. All rights reserved.',
+          suggestedText: targetLang === 'ru' ? '© 2023 AstroStudy. Все права защищены.' : 
+                        targetLang === 'en' ? '© 2023 AstroStudy. All rights reserved.' : 
+                        '© 2023 AstroStudy. Barcha huquqlar himoyalangan.'
+        }
+      ];
+    }
+    
+    // Display the translation suggestions
+    function displayTranslationSuggestions(suggestions: TranslationSuggestion[]) {
+      clearTranslationList();
+      
+      if (suggestions.length === 0) {
+        const noItemsElement = document.createElement('div');
+        noItemsElement.className = 'loading-placeholder';
+        noItemsElement.innerHTML = `
+          <p>No missing translations found! All content is translated.</p>
+        `;
+        translationList.appendChild(noItemsElement);
+        return;
+      }
+      
+      // Get the template
+      const template = document.getElementById('translation-item-template') as HTMLTemplateElement;
+      
+      // Create and append each translation item
+      suggestions.forEach((suggestion, index) => {
+        const { path, sourceText, suggestedText } = suggestion;
+        
+        // Clone the template
+        const itemNode = template.content.cloneNode(true) as DocumentFragment;
+        const translationItem = itemNode.querySelector('.translation-item') as HTMLDivElement;
+        
+        // Set a data attribute for referencing later
+        translationItem.dataset.index = index.toString();
+        translationItem.dataset.path = path;
+        
+        // Set the path
+        const pathElement = translationItem.querySelector('.translation-path') as HTMLDivElement;
+        pathElement.textContent = path;
+        
+        // Set the source text
+        const sourceTextElement = translationItem.querySelector('.text-content') as HTMLDivElement;
+        sourceTextElement.textContent = sourceText;
+        
+        // Set the suggested translation
+        const translationInput = translationItem.querySelector('.translation-input') as HTMLTextAreaElement;
+        translationInput.value = suggestedText;
+        translationInput.dataset.suggested = suggestedText;
+        
+        // Event listeners for the buttons
+        const useSuggestionBtn = translationItem.querySelector('.use-suggestion-btn') as HTMLButtonElement;
+        const editSuggestionBtn = translationItem.querySelector('.edit-suggestion-btn') as HTMLButtonElement;
+        const saveBtn = translationItem.querySelector('.save-btn') as HTMLButtonElement;
+        const skipBtn = translationItem.querySelector('.skip-btn') as HTMLButtonElement;
+        
+        // Use suggestion button
+        useSuggestionBtn.addEventListener('click', () => {
+          translationInput.value = suggestedText;
+        });
+        
+        // Edit suggestion button - simply focus the textarea
+        editSuggestionBtn.addEventListener('click', () => {
+          translationInput.focus();
+        });
+        
+        // Save button
+        saveBtn.addEventListener('click', () => {
+          saveTranslation(index, translationInput.value);
+        });
+        
+        // Skip button - remove this item
+        skipBtn.addEventListener('click', () => {
+          translationItem.remove();
+          
+          // If no items left, show the "all done" message
+          if (translationList.querySelectorAll('.translation-item').length === 0) {
+            showStatus('All translations processed!', 'success');
+            
+            const doneElement = document.createElement('div');
+            doneElement.className = 'loading-placeholder';
+            doneElement.innerHTML = `<p>All translations have been processed!</p>`;
+            translationList.appendChild(doneElement);
+          }
+        });
+        
+        // Append to the list
+        translationList.appendChild(itemNode);
+      });
+    }
+
+    // Save a translation
+    async function saveTranslation(index: number, translatedText: string) {
+      const sourceLang = sourceLangSelect.value;
+      const targetLang = targetLangSelect.value;
+      
+      // Find the translation item
+      const translationItem = translationList.querySelector(`.translation-item[data-index="${index}"]`) as HTMLDivElement;
+      if (!translationItem) return;
+      
+      const path = translationItem.dataset.path;
+      if (!path) return;
+      
+      // Show loading state
+      const saveBtn = translationItem.querySelector('.save-btn') as HTMLButtonElement;
+      const originalText = saveBtn.textContent;
+      saveBtn.textContent = 'Saving...';
+      saveBtn.disabled = true;
+      
+      try {
+        // In a real app, this would be an API call
+        // For now, we'll simulate it
+        await simulateSavingTranslation({
+          path,
+          sourceLang,
+          targetLang,
+          translatedText
+        });
+        
+        // Success! Remove this item
+        translationItem.remove();
+        
+        // If no items left, show the "all done" message
+        if (translationList.querySelectorAll('.translation-item').length === 0) {
+          showStatus('All translations saved!', 'success');
+          
+          const doneElement = document.createElement('div');
+          doneElement.className = 'loading-placeholder';
+          doneElement.innerHTML = `<p>All translations have been processed!</p>`;
+          translationList.appendChild(doneElement);
+          
+          // Update stats - one less missing translation
+          const missing = parseInt(missingTranslations.textContent || '0', 10) - 1;
+          const total = parseInt(totalTranslations.textContent || '0', 10);
+          const completion = total > 0 ? Math.round(((total - missing) / total) * 100) : 0;
+          
+          updateStats({ total, missing, completion });
+        }
+      } catch (error) {
+        console.error('Failed to save translation:', error);
+        showStatus(`Failed to save translation for: ${path}`, 'error');
+        
+        // Reset the button
+        saveBtn.textContent = originalText;
+        saveBtn.disabled = false;
+      }
+    }
+
+    // Simulate saving a translation
+    async function simulateSavingTranslation(data: {
+      path: string;
+      sourceLang: string;
+      targetLang: string;
+      translatedText: string;
+    }): Promise<void> {
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // In a real app, this would send data to the server
+      console.log('Translation saved:', data);
+      
+      // Simulate success (or could throw an error to test error handling)
+      return Promise.resolve();
+    }
+  }
+</script> 

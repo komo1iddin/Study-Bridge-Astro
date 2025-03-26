@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { Menu, X, ChevronDown, Globe, Phone, Mail } from "lucide-svelte";
   import { slide, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
@@ -31,6 +31,13 @@
   let isOpen = false;
   let expandedItem: string | null = null;
   let showLanguages = false;
+  let browser = false;
+  
+  // Store original body styles to restore them later
+  let originalBodyStyles = {
+    overflow: '',
+    paddingRight: ''
+  };
   
   // Extract language from path
   let lang = (currentPath.split("/")[1] || defaultLang) as Lang;
@@ -44,26 +51,57 @@
   // Client-side rendering check
   onMount(() => {
     isClient = true;
+    browser = typeof window !== 'undefined';
     
-    // Clean up when component is destroyed
-    return () => {
-      if (isOpen) {
-        document.body.style.overflow = '';
-        document.body.classList.remove("mobile-menu-open");
-      }
-    };
+    // Store original body styles
+    if (typeof document !== 'undefined') {
+      originalBodyStyles = {
+        overflow: document.body.style.overflow,
+        paddingRight: document.body.style.paddingRight
+      };
+    }
+  });
+  
+  // Clean up when component is destroyed
+  onDestroy(() => {
+    // Reset body styles when component is destroyed
+    resetBodyStyles();
   });
 
   // Handle menu state changes
   function openMenu() {
+    if (!isClient) return;
+    
     isOpen = true;
+    
+    // Calculate scrollbar width to prevent content shift
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
+    // Save original styles if not already saved
+    originalBodyStyles = {
+      overflow: document.body.style.overflow,
+      paddingRight: document.body.style.paddingRight
+    };
+    
+    // Apply styles to prevent scrolling
     document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
     document.body.classList.add("mobile-menu-open");
   }
   
   function closeMenu() {
+    if (!isClient) return;
+    
     isOpen = false;
-    document.body.style.overflow = "";
+    resetBodyStyles();
+  }
+  
+  function resetBodyStyles() {
+    if (typeof document === 'undefined') return;
+    
+    // Restore original body styles
+    document.body.style.overflow = originalBodyStyles.overflow;
+    document.body.style.paddingRight = originalBodyStyles.paddingRight;
     document.body.classList.remove("mobile-menu-open");
   }
 
@@ -91,12 +129,17 @@
 
   // Make showOfferPopup available safely
   function showApplicationForm() {
-    // @ts-ignore
-    if (window.showOfferPopup) {
-      // @ts-ignore
-      window.showOfferPopup();
-    }
+    // Close menu first to prevent any issues
     closeMenu();
+    
+    // Small timeout to ensure menu is closed properly before showing popup
+    setTimeout(() => {
+      // @ts-ignore
+      if (window.showOfferPopup) {
+        // @ts-ignore
+        window.showOfferPopup();
+      }
+    }, 10);
   }
 </script>
 
@@ -114,13 +157,13 @@
     <div
       class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[51]"
       on:click={closeMenu}
-      transition:fly={{ duration: 180, opacity: 0, easing: quintOut }}
+      transition:fly|local={{ duration: 180, opacity: 0, easing: quintOut }}
     ></div>
     
-    <!-- Menu container -->
+    <!-- Menu container with optimized transitions -->
     <div
       class="mobile-menu-container fixed inset-y-0 right-0 w-[85%] max-w-[400px] bg-white z-[52] flex flex-col shadow-xl h-[100dvh]"
-      transition:fly={{ duration: 250, x: 400, opacity: 1, easing: quintOut }}
+      transition:fly|local={{ duration: 200, x: 300, opacity: 1, easing: quintOut }}
     >
       <div class="flex items-center justify-between p-4 border-b">
         <h2 class="text-xl font-medium">{t("nav.menu")}</h2>
@@ -154,7 +197,7 @@
                     </button>
                     
                     {#if expandedItem === item.name}
-                      <ul class="pl-4 space-y-1 py-2" transition:slide={{ duration: 200, easing: quintOut }}>
+                      <ul class="pl-4 space-y-1 py-2" transition:slide|local={{ duration: 200, easing: quintOut }}>
                         {#each item.items as subItem (subItem.name)}
                           <li>
                             <a
@@ -219,7 +262,7 @@
           </button>
           
           {#if showLanguages}
-            <div class="mt-2 space-y-1 px-3" transition:slide={{ duration: 200, easing: quintOut }}>
+            <div class="mt-2 space-y-1 px-3" transition:slide|local={{ duration: 200, easing: quintOut }}>
               {#each languagesList as language (language.code)}
                 <a
                   href={`/${language.code}${currentPath.substring(3)}`}

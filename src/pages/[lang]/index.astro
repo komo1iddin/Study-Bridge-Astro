@@ -1,0 +1,170 @@
+---
+import { languages, type Lang } from '@/i18n/langUtils';
+import { getTranslation } from '@/i18n/translationUtils';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// Get the language from the URL parameter
+const { lang } = Astro.params;
+
+// Validate the language parameter
+if (!lang || !languages.includes(lang as Lang)) {
+  return Astro.redirect('/uz/'); // Redirect to default language if invalid
+}
+
+// Use the language parameter to get translations
+const t = (key: string) => getTranslation(lang as Lang, key);
+
+// Page metadata
+const title = t('common.home.title');
+const description = t('common.home.description');
+---
+
+<BaseLayout title={title} description={description} lang={lang as Lang}>
+  <section class="hero">
+    <div class="container">
+      <h1>{t('home.hero.title')}</h1>
+      <p class="subtitle">{t('home.hero.subtitle')}</p>
+      
+      <div class="cta-buttons">
+        <a href={`/${lang}/about`} class="primary-button">
+          {t('home.hero.aboutButton')}
+        </a>
+        <a href={`/${lang}/programs`} class="secondary-button">
+          {t('home.hero.programsButton')}
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">{t('home.features.title')}</h2>
+      
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card">
+          <h3>{t('home.features.feature1.title')}</h3>
+          <p>{t('home.features.feature1.description')}</p>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="feature-card">
+          <h3>{t('home.features.feature2.title')}</h3>
+          <p>{t('home.features.feature2.description')}</p>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="feature-card">
+          <h3>{t('home.features.feature3.title')}</h3>
+          <p>{t('home.features.feature3.description')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: 4rem 0;
+    background-color: var(--light-gray);
+    text-align: center;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+  }
+  
+  .subtitle {
+    font-size: 1.25rem;
+    color: #4b5563;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+  
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .primary-button, .secondary-button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  
+  .primary-button {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .primary-button:hover {
+    background-color: #2563eb;
+  }
+  
+  .secondary-button {
+    background-color: white;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+  }
+  
+  .secondary-button:hover {
+    background-color: #f0f9ff;
+  }
+  
+  .features {
+    padding: 4rem 0;
+  }
+  
+  .section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    color: var(--secondary-color);
+  }
+  
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .feature-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--secondary-color);
+  }
+  
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.25rem;
+    }
+    
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .feature-card {
+      padding: 1.25rem;
+    }
+  }
+</style> 

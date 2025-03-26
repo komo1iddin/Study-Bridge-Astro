@@ -1,0 +1,148 @@
+---
+import { languages, type Lang } from '@/i18n/langUtils';
+import { getTranslation } from '@/i18n/translationUtils';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// Get the language from the URL parameter
+const { lang } = Astro.params;
+
+// Validate the language parameter
+if (!lang || !languages.includes(lang as Lang)) {
+  return Astro.redirect('/uz/about'); // Redirect to default language if invalid
+}
+
+// Use the language parameter to get translations
+const t = (key: string) => getTranslation(lang as Lang, key);
+
+// Page metadata
+const title = t('about.title');
+const description = t('about.description');
+---
+
+<BaseLayout title={title} description={description} lang={lang as Lang}>
+  <section class="page-header">
+    <div class="container">
+      <h1>{title}</h1>
+      <p class="lead">{t('about.subtitle')}</p>
+    </div>
+  </section>
+  
+  <section class="content-section">
+    <div class="container">
+      <div class="mission-vision">
+        <div class="card mission">
+          <h2>{t('about.mission.title')}</h2>
+          <p>{t('about.mission.description')}</p>
+        </div>
+        
+        <div class="card vision">
+          <h2>{t('about.vision.title')}</h2>
+          <p>{t('about.vision.description')}</p>
+        </div>
+      </div>
+      
+      <div class="values-section">
+        <h2 class="section-title">{t('about.values.title')}</h2>
+        
+        <div class="values-grid">
+          <div class="value-card">
+            <h3>{t('about.values.value1.title')}</h3>
+            <p>{t('about.values.value1.description')}</p>
+          </div>
+          
+          <div class="value-card">
+            <h3>{t('about.values.value2.title')}</h3>
+            <p>{t('about.values.value2.description')}</p>
+          </div>
+          
+          <div class="value-card">
+            <h3>{t('about.values.value3.title')}</h3>
+            <p>{t('about.values.value3.description')}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    background-color: var(--light-gray);
+    padding: 4rem 0;
+    text-align: center;
+  }
+  
+  .page-header h1 {
+    font-size: 2.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+  }
+  
+  .lead {
+    font-size: 1.25rem;
+    color: #4b5563;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .content-section {
+    padding: 4rem 0;
+  }
+  
+  .mission-vision {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  
+  .card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+  }
+  
+  .card h2 {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  
+  .section-title {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-size: 2rem;
+    color: var(--secondary-color);
+  }
+  
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .value-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    border-top: 4px solid var(--primary-color);
+  }
+  
+  .value-card h3 {
+    color: var(--secondary-color);
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+  }
+  
+  @media (max-width: 768px) {
+    .mission-vision {
+      grid-template-columns: 1fr;
+    }
+    
+    .page-header h1 {
+      font-size: 2rem;
+    }
+  }
+</style> 

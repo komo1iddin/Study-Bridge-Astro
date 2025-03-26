@@ -44,13 +44,13 @@
   <div 
     class="fixed inset-0 z-50 bg-black/50" 
     on:click={toggleSheet}
-    transition:fade={{ duration: 200, easing: cubicOut }}
+    transition:fade|local={{ duration: 200, easing: cubicOut }}
   ></div>
   
   <!-- Sidebar -->
   <div 
     class="fixed left-0 top-0 z-50 h-full w-[300px] sm:w-[350px] bg-white shadow-lg"
-    transition:fly={{ x: -350, duration: 300, opacity: 1, easing: cubicOut }}
+    transition:fly|local={{ x: -350, duration: 300, opacity: 1, easing: cubicOut }}
   >
     <div class="flex items-center justify-between p-4 border-b">
       <h2 class="font-semibold">Filters</h2>

@@ -1,0 +1,32 @@
+---
+import type { Lang } from '@/i18n/langUtils';
+
+interface Props {
+  href: string;
+  lang: Lang;
+  class?: string;
+  activeClass?: string;
+}
+
+const { href, lang, class: className = '', activeClass = 'active' } = Astro.props;
+const { pathname } = Astro.url;
+
+// Add language prefix if not already present
+const fullHref = href.startsWith('/') 
+  ? (href === '/' ? `/${lang}/` : `/${lang}${href}`) 
+  : href;
+
+// Check if this link is active
+const isActive = pathname === fullHref || 
+  (href !== '/' && pathname.startsWith(fullHref));
+
+// Build the classes
+const classes = [
+  className,
+  isActive ? activeClass : '',
+].filter(Boolean).join(' ');
+---
+
+<a href={fullHref} class={classes}>
+  <slot />
+</a> 

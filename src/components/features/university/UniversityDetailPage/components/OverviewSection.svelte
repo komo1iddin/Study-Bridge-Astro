@@ -28,7 +28,9 @@
       <Avatar class="h-24 w-24 border-2 border-white shadow-md">
         <AvatarImage 
           src={university.logo} 
-          alt={university.name} 
+          alt={university.name}
+          loading="lazy"
+          decoding="async"
         />
         <AvatarFallback>{university.name.substring(0, 2)}</AvatarFallback>
       </Avatar>

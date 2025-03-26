@@ -1,0 +1,127 @@
+/* Lazy loading transitions and animations */
+
+/* Base styles for lazy-loaded elements */
+.lazy-loaded {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Staggered animations for lists of items */
+.lazy-loaded > *:nth-child(1) { animation-delay: 0.05s; }
+.lazy-loaded > *:nth-child(2) { animation-delay: 0.1s; }
+.lazy-loaded > *:nth-child(3) { animation-delay: 0.15s; }
+.lazy-loaded > *:nth-child(4) { animation-delay: 0.2s; }
+.lazy-loaded > *:nth-child(5) { animation-delay: 0.25s; }
+.lazy-loaded > *:nth-child(6) { animation-delay: 0.3s; }
+.lazy-loaded > *:nth-child(7) { animation-delay: 0.35s; }
+.lazy-loaded > *:nth-child(8) { animation-delay: 0.4s; }
+.lazy-loaded > *:nth-child(9) { animation-delay: 0.45s; }
+.lazy-loaded > *:nth-child(10) { animation-delay: 0.5s; }
+
+/* Slide-in animation from bottom */
+.lazy-loaded.slide-up {
+  animation: slideUp 0.6s ease forwards;
+}
+
+/* Slide-in animation from left */
+.lazy-loaded.slide-right {
+  animation: slideRight 0.6s ease forwards;
+}
+
+/* Slide-in animation from right */
+.lazy-loaded.slide-left {
+  animation: slideLeft 0.6s ease forwards;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide-up animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide-right animation */
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide-left animation */
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Blur-in animation */
+.lazy-loaded.blur-in {
+  animation: blurIn 0.8s ease forwards;
+}
+
+@keyframes blurIn {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Scale-in animation */
+.lazy-loaded.scale-in {
+  animation: scaleIn 0.6s ease forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Placeholder styles during lazy loading */
+.lazy-placeholder {
+  background: linear-gradient(90deg, #f0f0f0, #f8f8f8, #f0f0f0);
+  background-size: 200% 100%;
+  animation: placeholderShimmer 1.5s infinite;
+}
+
+@keyframes placeholderShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+} 

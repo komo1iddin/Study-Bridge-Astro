@@ -22,9 +22,10 @@
   let mounted = false;
   let mobileFiltersOpen = false;
   
-  onMount(() => {
+  // Set mounted flag synchronously if we're in browser environment
+  if (typeof window !== 'undefined') {
     mounted = true;
-  });
+  }
   
   function handleFilterChange(event: CustomEvent<{key: keyof Filters, value: string}>) {
     const { key, value } = event.detail;
