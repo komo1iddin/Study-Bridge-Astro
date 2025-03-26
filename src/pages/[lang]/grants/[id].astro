@@ -6,44 +6,113 @@ import { getCollection } from 'astro:content';
 import GrantsDetailPage from '@/components/features/grants/GrantsDetailPage/GrantsDetailPage.svelte';
 import { transformGrantData } from '@/lib/transformers/grantTransformer';
 
-export async function getStaticPaths() {
-  const grants = await getCollection('grants');
-  
-  return grants.map((grant) => {
-    return {
-      params: { id: grant.id },
-      props: { grant },
-    };
-  });
-}
-
-const { grant } = Astro.props;
-const lang = getLangFromUrl(Astro.url);
-
-if (!grant) {
-  return Astro.redirect('/404');
-}
-
-// Ma'lumotlarni transformatsiya qilish
-const transformedGrantData = transformGrantData({ id: grant.id, ...grant.data }, lang);
-
-// Prepare meta information for the layout
-const meta = {
-  title: grant.data.title[lang],
-  description: grant.data.description[lang]
-};
-
 // Server-side render this page
 export const prerender = false;
-// Use the language parameter to get translations
-import { getTranslation } from '@/i18n/translationUtils';
-const t = (key: string) => getTranslation(lang as Lang, key);
+
+export async function getStaticPaths() {
+  try {
+    console.log('Creating static paths for grants');
+    const grants = await getCollection('grants');
+    console.log(`Found ${grants.length} grants`);
+    
+    if (grants.length === 0) {
+      console.error('No grants found to generate static paths');
+      return [];
+    }
+    
+    // Log the first grant for debugging
+    if (grants.length > 0) {
+      console.log('First grant sample:', {
+        id: grants[0].id,
+        title: grants[0].data.title,
+      });
+    }
+    
+    // Create paths for each language and grant combination
+    const paths = [];
+    
+    for (const lang of languages) {
+      for (const grant of grants) {
+        // Ensure the grant id is valid
+        if (!grant.id) {
+          console.error('Grant without id found:', grant);
+          continue;
+        }
+        
+        console.log(`Creating path for lang=${lang}, id=${grant.id}`);
+        paths.push({
+          params: { 
+            lang, 
+            id: grant.id 
+          },
+          props: { id: grant.id }  // Only pass the ID, we'll fetch the grant in the component
+        });
+      }
+    }
+    
+    console.log(`Generated ${paths.length} static paths for grants`);
+    return paths;
+  } catch (e) {
+    console.error('Failed to generate static paths:', e);
+    return [];
+  }
+}
+
+// Get the language and ID from the URL parameter
+const { lang, id } = Astro.params;
+
+// Validate the ID
+if (!id) {
+  console.error('No ID parameter found');
+  return Astro.redirect(`/${lang || 'uz'}/404`);
+}
+
+// Validate the language parameter
+if (!lang || !languages.includes(lang as Lang)) {
+  return Astro.redirect('/uz/'); // Redirect to default language if invalid
+}
+
+// Initialize variable
+let transformedGrantData;
+let metaTitle = '';
+let metaDescription = '';
+
+try {
+  console.log(`Fetching grant with ID: ${id} for language: ${lang}`);
+  
+  // Fetch all grants
+  const grantsCollection = await getCollection('grants');
+  
+  // Find the grant with the matching ID
+  const grant = grantsCollection.find(g => g.id === id);
+  
+  if (!grant) {
+    console.error(`Grant not found with ID: ${id}`);
+    return Astro.redirect(`/${lang}/404`);
+  }
+  
+  // Transform the grant data
+  transformedGrantData = transformGrantData({ id: grant.id, ...grant.data }, lang as Lang);
+  console.log(`Successfully transformed grant data for: ${id}`);
+  
+  // Set meta information for the layout
+  metaTitle = grant.data.title[lang as Lang] || '';
+  metaDescription = grant.data.description[lang as Lang] || '';
+} catch (e) {
+  console.error(`Error processing grant with ID ${id}:`, e);
+  return Astro.redirect(`/${lang}/404`);
+}
+
+// If no grant found, redirect to language-specific 404
+if (!transformedGrantData) {
+  return Astro.redirect(`/${lang}/404`);
+}
 ---
 
-<Layout meta={meta}>
+<Layout meta={{ title: metaTitle, description: metaDescription }}>
   <GrantsDetailPage
     client:visible
     grant={transformedGrantData} 
-    lang={lang} 
+    lang={lang as Lang} 
   />
 </Layout>
