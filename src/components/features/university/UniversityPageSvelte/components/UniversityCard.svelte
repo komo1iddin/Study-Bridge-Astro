@@ -20,6 +20,9 @@
     const currentPath = window.location.pathname;
     const langMatch = currentPath.match(/^\/(uz|ru|en)/);
     const lang = langMatch ? langMatch[1] : 'uz';
+    
+    // Ensure we're using the correct ID format from the data source
+    // This ensures the link points to the same ID format used in src/content
     const detailUrl = `/${lang}/universities/${university.id}`;
     
     // Navigate to the detail page
@@ -60,18 +63,25 @@
     gap: 0.5rem;
   }
   
-  .arrow-icon {
+  .university-card {
     transition: all 0.2s ease-in-out;
-    opacity: 0.7;
+  }
+  
+  .university-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+  
+  .arrow-icon {
+    transition: transform 0.2s ease-in-out;
   }
   
   :global(.btn-details:hover) .arrow-icon {
     transform: translateX(3px);
-    opacity: 1;
   }
 </style>
 
-<div class="w-full border rounded-lg shadow-sm overflow-hidden bg-card">
+<div class="w-full border rounded-lg shadow-sm overflow-hidden bg-card university-card">
   <div class="flex flex-col md:flex-row md:min-h-[260px]">
     <!-- Left side: University logo -->
     <div class="relative md:w-1/3 h-48 md:h-auto flex items-center justify-center p-3 bg-white">
