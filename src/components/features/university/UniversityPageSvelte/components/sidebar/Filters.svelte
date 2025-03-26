@@ -1,8 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { Label } from "../../../../../../components/ui/svelte";
   import type { Filters } from '../../lib/data';
   import { educationTypes, rankingRanges } from '../../lib/data';
+  import { ChevronDown } from 'lucide-svelte';
   
   export let filters: Filters;
   export let cities: string[] = [];
@@ -14,162 +14,192 @@
   function handleChange(key: keyof Filters, value: string) {
     dispatch('change', { key, value });
   }
+
+  // Accordion state - all expanded by default
+  let expandedSections = {
+    education: true,
+    city: true,
+    grants: true,
+    ranking: true,
+    featured: true
+  };
+
+  function toggleSection(section: string) {
+    expandedSections[section] = !expandedSections[section];
+  }
 </script>
 
-<div class="space-y-6">
+<style>
+  .accordion-content {
+    padding: 0 1rem 1rem 1rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+</style>
+
+<div class="space-y-4">
   <!-- Education Types -->
-  <div class="space-y-3">
-    <h3 class="text-sm font-medium">Education Type</h3>
-    <div class="space-y-2">
-      <div class="flex items-center space-x-2">
-        <input
-          type="radio"
-          id="education-all"
-          value="all"
-          checked={filters.educationType === "all"}
-          on:change={() => handleChange("educationType", "all")}
-          class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-        />
-        <Label for="education-all">All</Label>
-      </div>
-      
-      {#each educationTypes as type}
-        <div class="flex items-center space-x-2">
-          <input
-            type="radio"
-            id={`education-${type.value}`}
-            value={type.value}
-            checked={filters.educationType === type.value}
-            on:change={() => handleChange("educationType", type.value)}
-            class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-          />
-          <Label for={`education-${type.value}`}>{type.label}</Label>
+  <div class="border rounded-lg overflow-hidden shadow-sm bg-white">
+    <button 
+      type="button" 
+      class="w-full flex items-center justify-between p-4 text-left font-medium bg-white hover:bg-gray-50"
+      on:click={() => toggleSection('education')}
+      aria-expanded={expandedSections.education}
+    >
+      <span>Ta'lim turi</span>
+      <ChevronDown 
+        class={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${expandedSections.education ? 'rotate-180' : ''}`}
+      />
+    </button>
+
+    {#if expandedSections.education}
+      <div class="accordion-content">
+        <div class="relative w-full">
+          <select 
+            class="w-full p-2 pr-8 border border-input rounded-md bg-transparent text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary"
+            value={filters.educationType}
+            on:change={(e) => handleChange("educationType", e.currentTarget.value)}
+          >
+            <option value="all">Barcha turlar</option>
+            {#each educationTypes as type}
+              <option value={type.value}>{type.label}</option>
+            {/each}
+          </select>
+          <ChevronDown class="h-4 w-4 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
         </div>
-      {/each}
-    </div>
+      </div>
+    {/if}
   </div>
   
   <!-- Cities -->
-  <div class="space-y-3">
-    <h3 class="text-sm font-medium">City</h3>
-    <div class="space-y-2">
-      <div class="flex items-center space-x-2">
-        <input
-          type="radio"
-          id="city-all"
-          value="all"
-          checked={filters.city === "all"}
-          on:change={() => handleChange("city", "all")}
-          class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-        />
-        <Label for="city-all">All</Label>
-      </div>
-      
-      {#each cities as city}
-        <div class="flex items-center space-x-2">
-          <input
-            type="radio"
-            id={`city-${city}`}
-            value={city}
-            checked={filters.city === city}
-            on:change={() => handleChange("city", city)}
-            class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-          />
-          <Label for={`city-${city}`}>{city}</Label>
+  <div class="border rounded-lg overflow-hidden shadow-sm bg-white">
+    <button 
+      type="button" 
+      class="w-full flex items-center justify-between p-4 text-left font-medium bg-white hover:bg-gray-50"
+      on:click={() => toggleSection('city')}
+      aria-expanded={expandedSections.city}
+    >
+      <span>Joylahuv</span>
+      <ChevronDown 
+        class={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${expandedSections.city ? 'rotate-180' : ''}`}
+      />
+    </button>
+
+    {#if expandedSections.city}
+      <div class="accordion-content">
+        <div class="relative w-full">
+          <select 
+            class="w-full p-2 pr-8 border border-input rounded-md bg-transparent text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary"
+            value={filters.city}
+            on:change={(e) => handleChange("city", e.currentTarget.value)}
+          >
+            <option value="all">Barcha shaharlar</option>
+            {#each cities as city}
+              <option value={city}>{city}</option>
+            {/each}
+          </select>
+          <ChevronDown class="h-4 w-4 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
         </div>
-      {/each}
-    </div>
+      </div>
+    {/if}
+  </div>
+  
+  <!-- University ranking -->
+  <div class="border rounded-lg overflow-hidden shadow-sm bg-white">
+    <button 
+      type="button" 
+      class="w-full flex items-center justify-between p-4 text-left font-medium bg-white hover:bg-gray-50"
+      on:click={() => toggleSection('ranking')}
+      aria-expanded={expandedSections.ranking}
+    >
+      <span>Universitet reytingi</span>
+      <ChevronDown 
+        class={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${expandedSections.ranking ? 'rotate-180' : ''}`}
+      />
+    </button>
+
+    {#if expandedSections.ranking}
+      <div class="accordion-content">
+        <div class="relative w-full">
+          <select 
+            class="w-full p-2 pr-8 border border-input rounded-md bg-transparent text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary"
+            value={filters.ranking}
+            on:change={(e) => handleChange("ranking", e.currentTarget.value)}
+          >
+            <option value="all">Barcha reytinglar</option>
+            {#each rankingRanges as range}
+              <option value={range.value}>{range.label}</option>
+            {/each}
+          </select>
+          <ChevronDown class="h-4 w-4 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
+        </div>
+      </div>
+    {/if}
   </div>
   
   <!-- Has Grants -->
-  <div class="space-y-3">
-    <h3 class="text-sm font-medium">Grants</h3>
-    <div class="space-y-2">
-      <div class="flex items-center space-x-2">
-        <input
-          type="radio"
-          id="grants-all"
-          value="all"
-          checked={filters.hasGrants === "all"}
-          on:change={() => handleChange("hasGrants", "all")}
-          class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-        />
-        <Label for="grants-all">All</Label>
-      </div>
-      
-      <div class="flex items-center space-x-2">
-        <input
-          type="radio"
-          id="grants-true"
-          value="true"
-          checked={filters.hasGrants === "true"}
-          on:change={() => handleChange("hasGrants", "true")}
-          class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-        />
-        <Label for="grants-true">With Grants</Label>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Ranking -->
-  <div class="space-y-3">
-    <h3 class="text-sm font-medium">Ranking</h3>
-    <div class="space-y-2">
-      <div class="flex items-center space-x-2">
-        <input
-          type="radio"
-          id="ranking-all"
-          value="all"
-          checked={filters.ranking === "all"}
-          on:change={() => handleChange("ranking", "all")}
-          class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-        />
-        <Label for="ranking-all">All</Label>
-      </div>
-      
-      {#each rankingRanges as range}
-        <div class="flex items-center space-x-2">
-          <input
-            type="radio"
-            id={`ranking-${range.value}`}
-            value={range.value}
-            checked={filters.ranking === range.value}
-            on:change={() => handleChange("ranking", range.value)}
-            class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-          />
-          <Label for={`ranking-${range.value}`}>{range.label}</Label>
+  <div class="border rounded-lg overflow-hidden shadow-sm bg-white">
+    <button 
+      type="button" 
+      class="w-full flex items-center justify-between p-4 text-left font-medium bg-white hover:bg-gray-50"
+      on:click={() => toggleSection('grants')}
+      aria-expanded={expandedSections.grants}
+    >
+      <span>Grant imkoniyatlari</span>
+      <ChevronDown 
+        class={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${expandedSections.grants ? 'rotate-180' : ''}`}
+      />
+    </button>
+
+    {#if expandedSections.grants}
+      <div class="accordion-content">
+        <div class="relative w-full">
+          <select 
+            class="w-full p-2 pr-8 border border-input rounded-md bg-transparent text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary"
+            value={filters.hasGrants}
+            on:change={(e) => handleChange("hasGrants", e.currentTarget.value)}
+          >
+            <option value="all">Barchasi</option>
+            <option value="true">With Grants</option>
+            <option value="false">Without Grants</option>
+          </select>
+          <ChevronDown class="h-4 w-4 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
         </div>
-      {/each}
-    </div>
+      </div>
+    {/if}
   </div>
   
   <!-- Featured -->
-  <div class="space-y-3">
-    <h3 class="text-sm font-medium">Featured</h3>
-    <div class="space-y-2">
-      <div class="flex items-center space-x-2">
-        <input
-          type="radio"
-          id="featured-all"
-          value="all"
-          checked={filters.featured === "all"}
-          on:change={() => handleChange("featured", "all")}
-          class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-        />
-        <Label for="featured-all">All</Label>
+  <div class="border rounded-lg overflow-hidden shadow-sm bg-white">
+    <button 
+      type="button" 
+      class="w-full flex items-center justify-between p-4 text-left font-medium bg-white hover:bg-gray-50"
+      on:click={() => toggleSection('featured')}
+      aria-expanded={expandedSections.featured}
+    >
+      <span>Tezkor filterlar</span>
+      <ChevronDown 
+        class={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${expandedSections.featured ? 'rotate-180' : ''}`}
+      />
+    </button>
+
+    {#if expandedSections.featured}
+      <div class="accordion-content">
+        <div class="py-2 flex items-center space-x-2">
+          <div class="flex items-center space-x-2">
+            <input 
+              type="checkbox" 
+              id="featured-checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              checked={filters.featured === "true"}
+              on:change={(e) => handleChange("featured", e.currentTarget.checked ? "true" : "all")}
+            />
+            <label for="featured-checkbox" class="text-sm text-gray-700">
+              Faqat tavsiya etilgan universitetlar
+            </label>
+          </div>
+        </div>
       </div>
-      
-      <div class="flex items-center space-x-2">
-        <input
-          type="radio"
-          id="featured-true"
-          value="true"
-          checked={filters.featured === "true"}
-          on:change={() => handleChange("featured", "true")}
-          class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-        />
-        <Label for="featured-true">Featured Only</Label>
-      </div>
-    </div>
+    {/if}
   </div>
 </div> 

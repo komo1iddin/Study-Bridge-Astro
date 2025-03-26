@@ -20,6 +20,7 @@
   
   let filters: Filters = DEFAULT_FILTERS;
   let mounted = false;
+  let mobileFiltersOpen = false;
   
   onMount(() => {
     mounted = true;
@@ -68,6 +69,8 @@
         <div class="lg:hidden mb-6">
           <MobileFilters
             filters={filters}
+            cities={cities}
+            sheetOpen={mobileFiltersOpen}
             on:change={handleFilterChange}
             on:reset={resetFilters}
           />
@@ -75,7 +78,7 @@
         
         <div class="flex flex-col lg:flex-row gap-8">
           <!-- Sidebar -->
-          <aside class="hidden md:block sticky top-8 h-fit md:w-64 lg:w-72 xl:w-80">
+          <aside class="hidden lg:block sticky top-8 h-fit md:w-64 lg:w-72 xl:w-80">
             <Sidebar
               filters={filters}
               cities={cities}

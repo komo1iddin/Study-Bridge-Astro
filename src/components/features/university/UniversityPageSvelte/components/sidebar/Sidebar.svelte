@@ -23,21 +23,22 @@
 </script>
 
 <div class="space-y-6">
-  <div class="rounded-lg border shadow-sm">
-    <div class="p-5 border-b">
+  <div class="rounded-lg border shadow-sm bg-white">
+    <div class="p-4 border-b">
       <div class="flex items-center justify-between">
-        <h2 class="text-lg font-medium">Filters</h2>
+        <h2 class="text-lg font-medium">Filterlar</h2>
         <Button 
           variant="ghost" 
           size="sm" 
           on:click={handleReset}
+          class="h-8 px-2 text-xs"
         >
-          Reset All
+          Qayta o'rnatish
         </Button>
       </div>
     </div>
     
-    <div class="p-5">
+    <div class="p-4">
       <Filters 
         {filters} 
         {cities} 
