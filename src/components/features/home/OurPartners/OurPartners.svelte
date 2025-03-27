@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { Hand, ChevronRight } from 'lucide-svelte';
   import { createEmblaCarousel } from './components/emblaCarouselUtils.js';
@@ -8,10 +8,12 @@
   import PartnerCardItem from './components/PartnerCardItem.svelte';
   import BackgroundDecoration from './components/BackgroundDecoration.svelte';
   import { partners } from './data/partners.js';
+  import type { PartnersTranslations } from '@/i18n/features/home/partners';
+  import type { Lang } from '@/i18n/langUtils';
   
   // Props
-  export let lang;
-  export let translations;
+  export let lang: Lang;
+  export let translations: PartnersTranslations;
   
   // State
   let isMobile = false;
@@ -87,8 +89,8 @@
   <BackgroundDecoration />
   <div class="w-full max-w-[1920px] mx-auto px-4 relative z-10">
     <SectionHeader 
-      title={translations.partnersTitle || "Our Partners"}
-      subtitle={translations.partnersDescription || ""}
+      title={translations.title}
+      subtitle={translations.description}
     />
 
     <div class="flex justify-end mb-4">
@@ -97,7 +99,7 @@
       }`}>
         <Hand class="w-5 h-5 text-primary" />
         <span class="text-sm font-semibold">
-          {translations.swipeToSlide || "Swipe to slide"}
+          {translations.swipeToSlide}
         </span>
       </div>
     </div>
@@ -136,13 +138,13 @@
     <div class="text-center mt-12">
       <ButtonView
         href={`/${lang}/partners`} 
-        text={translations.viewAllPartners || "View All Partners"} 
+        text={translations.viewAllPartners} 
         variant="desktop" 
         showOnMobile={false}
       />
       <ButtonView
         href={`/${lang}/partners`} 
-        text={translations.viewAllPartners || "View All Partners"} 
+        text={translations.viewAllPartners} 
         variant="mobile" 
         showOnDesktop={false}
       />

@@ -1,6 +1,6 @@
 ---
 import OurPartnersComponent from './OurPartners.svelte';
-import { useTranslations } from '@/i18n/utils';
+import { getPartnersTranslations } from '@/i18n/features/home/partners';
 import type { Lang } from '@/i18n/langUtils';
 
 interface Props {
@@ -8,15 +8,9 @@ interface Props {
 }
 
 const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
 
-// Подготовьте все необходимые переводы
-const translations = {
-  partnersTitle: t('partners.title'),
-  partnersDescription: t('partners.description'),
-  swipeToSlide: t('partners.swipeToSlide'),
-  viewAllPartners: t('partners.viewAllPartners')
-};
+// Get all translations for this component directly using the new system
+const translations = getPartnersTranslations(lang);
 ---
 
 <OurPartnersComponent lang={lang} translations={translations} client:visible />

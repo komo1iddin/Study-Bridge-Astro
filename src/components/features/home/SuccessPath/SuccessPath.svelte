@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { steps } from './data/steps';
-  import SectionHeader from '../../../../components/ui/svelte/SectionHeader.svelte';
-  import ButtonView from '../../../../components/ui/svelte/ButtonView.svelte';
+  import SectionHeader from '@/components/ui/svelte/SectionHeader.svelte';
+  import ButtonView from '@/components/ui/svelte/ButtonView.svelte';
   import { fade, fly } from 'svelte/transition';
   import { onMount } from 'svelte';
   import type { Lang } from '@/i18n/langUtils';
+  import type { SuccessPathTranslations } from '@/i18n/features/home/successPath';
   import { CheckCircle2 } from 'lucide-svelte';
   
   export let lang: Lang;
+  export let translations: SuccessPathTranslations;
   
   let visibleSteps: number[] = [];
   
@@ -37,6 +38,16 @@
       observer.disconnect();
     };
   });
+
+  // Colors for steps - could be moved to a constants file if needed
+  const stepColors = [
+    "#2563eb", // Blue
+    "#C82220", // Red
+    "#16a34a", // Green
+    "#003c91", // Dark Blue
+    "#1e293b", // Slate
+    "#0051df"  // Primary Blue
+  ];
 </script>
 
 <section class="relative bg-gradient-to-b from-white via-blue-50/30 to-white py-20 overflow-hidden">
@@ -48,15 +59,15 @@
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <!-- Section Header -->
+    <!-- Section Header with translations -->
     <SectionHeader
-      title="Xitoyda o'qishga olti bosqichli yo'l"
-      subtitle="O'zbekistondan Xitoyga o'qishga ketish uchun eng ishonchli va samarali yo'l"
+      title={translations.title}
+      subtitle={translations.subtitle}
     />
 
-    <!-- Steps Timeline -->
+    <!-- Steps Timeline using translations.steps -->
     <div class="max-w-4xl mx-auto mt-16">
-      {#each steps as step, index}
+      {#each translations.steps as step, index}
         <div 
           class="relative step-item" 
           data-step-id={step.id}
@@ -70,11 +81,11 @@
               <div class="hidden md:flex flex-col items-center">
                 <div 
                   class="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white"
-                  style="background-color: {step.color}"
+                  style="background-color: {stepColors[index % stepColors.length]}"
                 >
                   {step.id}
                 </div>
-                {#if index < steps.length - 1}
+                {#if index < translations.steps.length - 1}
                   <div class="w-0.5 h-32 bg-gray-200"></div>
                 {/if}
               </div>
@@ -83,10 +94,10 @@
               <div class="flex-1">
                 <div 
                   class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
-                  style="border-left-color: {step.color}; border-left-width: 4px;"
+                  style="border-left-color: {stepColors[index % stepColors.length]}; border-left-width: 4px;"
                 >
                   <div class="flex items-center gap-4 mb-4">
-                    <div class="md:hidden w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-bold" style="background-color: {step.color}">
+                    <div class="md:hidden w-10 h-10 rounded-full flex items-center justify-center text-white text-lg font-bold" style="background-color: {stepColors[index % stepColors.length]}">
                       {step.id}
                     </div>
                     <div>
@@ -96,7 +107,7 @@
                   </div>
 
                   <div class="grid md:grid-cols-2 gap-4 mt-6">
-                    {#each step.benefits as benefit, idx}
+                    {#each step.benefits as benefit}
                       <div 
                         class="flex items-start gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
                       >
@@ -112,7 +123,7 @@
             <div class="flex items-start gap-8 mb-12 opacity-0">
               <div class="hidden md:flex flex-col items-center">
                 <div class="w-12 h-12 rounded-full"></div>
-                {#if index < steps.length - 1}
+                {#if index < translations.steps.length - 1}
                   <div class="w-0.5 h-32"></div>
                 {/if}
               </div>
@@ -131,13 +142,13 @@
     <div class="text-center mt-16">
       <ButtonView
         href={`/${lang}/student-path`}
-        text="Batafsil ma'lumot"
+        text={translations.detailsButtonText}
         variant="desktop"
         showOnMobile={false}
       />
       <ButtonView
         href={`/${lang}/student-path`}
-        text="Batafsil ma'lumot"
+        text={translations.detailsButtonText}
         variant="mobile"
         showOnDesktop={false}
       />

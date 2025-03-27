@@ -1,8 +1,16 @@
 ---
 import SuccessPathComponent from './SuccessPath.svelte';
-import { getLangFromUrl } from '@/i18n/langUtils';
+import { getSuccessPathTranslations } from '@/i18n/features/home/successPath';
+import type { Lang } from '@/i18n/langUtils';
 
-const lang = getLangFromUrl(Astro.url);
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+
+// Get all translations for this component using the new system
+const translations = getSuccessPathTranslations(lang);
 ---
 
-<SuccessPathComponent lang={lang} client:visible />
+<SuccessPathComponent lang={lang} translations={translations} client:visible />
