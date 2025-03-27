@@ -1,52 +1,65 @@
 ---
 // OfferPopup.astro
+import { getTranslation } from '@/i18n/translationUtils';
+import type { Lang } from '@/i18n/langUtils';
+import { X } from 'lucide-astro';
+
+interface Props {
+  lang: Lang;
+  autoShow?: boolean;
+}
+
+const { lang, autoShow = true } = Astro.props;
+const t = (key: string) => getTranslation(lang, key);
+
+type InputType = 'text' | 'tel';
+
+interface FormField {
+  id: string;
+  type: InputType;
+  required: boolean;
+  defaultPlaceholder: string;
+}
+
+const formFields: FormField[] = [
+  { id: 'name', type: 'text', required: true, defaultPlaceholder: 'Your full name' },
+  { id: 'phone', type: 'tel', required: true, defaultPlaceholder: 'Your phone number' }
+];
 ---
 
-<div id="offerPopup" class="popup-overlay fixed inset-0 bg-gray-900/50 z-50 flex items-center justify-center p-4">
-  <div class="popup-content bg-white rounded-xl shadow-lg w-full max-w-md mx-auto relative overflow-y-auto max-h-[90vh]">
-    <!-- Кнопка закрытия -->
-    <button id="closePopup" class="popup-close absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-500 hover:text-gray-700 transition-transform duration-300 z-10 bg-white/80 rounded-full p-1">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
+<div id="offerPopup" class="popup-overlay">
+  <div class="popup-content">
+    <button id="closePopup" class="popup-close" aria-label="Close popup">
+      <X class="h-5 w-5" />
     </button>
     
-    <!-- Содержимое попапа -->
-    <div class="p-4 sm:p-6">
-      <div class="text-center mb-4 sm:mb-6">
-        <span class="inline-block px-3 py-1 sm:px-4 sm:py-1 bg-primary-50 text-primary-700 rounded-full text-xs sm:text-sm font-medium mb-2 sm:mb-3">
-          Специальное предложение
-        </span>
-        <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
-          Получите бесплатную консультацию
-        </h3>
-        <p class="text-sm sm:text-base text-gray-600">
-          Оставьте заявку сейчас и получите персональную консультацию по образованию за рубежом
-        </p>
+    <div class="popup-body">
+      <div class="popup-header">
+        <h3 class="text-2xl font-extrabold mb-3 text-gray-800">{t('popup.title') || 'Get a Free Consultation'}</h3>
+        <p class="text-gray-600 text-base leading-relaxed">{t('popup.description') || 'Just leave your contact details and we\'ll help you find the perfect educational opportunity abroad'}</p>
       </div>
       
-      <!-- Форма -->
-      <form class="space-y-3 sm:space-y-4">
-        <div>
-          <label for="name" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Имя</label>
-          <input type="text" id="name" name="name" class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm sm:text-base">
-        </div>
-        <div>
-          <label for="phone" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Телефон</label>
-          <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm sm:text-base">
-        </div>
-        <div>
-          <label for="email" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input type="email" id="email" name="email" class="w-full px-3 py-2 sm:px-4 sm:py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm sm:text-base">
-        </div>
+      <form id="popupForm">
+        {formFields.map(field => (
+          <div class="form-group">
+            <label for={field.id} class="form-label">{t(`contact.form.${field.id}._value`) || field.id.charAt(0).toUpperCase() + field.id.slice(1)}</label>
+            <input
+              type={field.type}
+              id={field.id}
+              name={field.id}
+              placeholder={t(`contact.form.${field.id}.placeholder`) || field.defaultPlaceholder}
+              required={field.required}
+              class="form-input"
+            />
+          </div>
+        ))}
         
-        <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:-translate-y-1 text-sm sm:text-base">
-          Получить консультацию
-        </button>
+        <button type="submit" class="submit-btn">{t('contact.form.submit') || 'Get My Free Consultation'}</button>
       </form>
       
-      <p class="text-xxs sm:text-xs text-gray-500 mt-3 sm:mt-4 text-center">
-        Нажимая на кнопку, вы соглашаетесь с нашей политикой конфиденциальности
+      <p class="privacy-text">
+        {t('contact.form.privacy.text') || 'By submitting this form, you agree to our'}{' '}
+        <a href="/privacy-policy">{t('contact.form.privacy.link') || 'privacy policy'}</a>
       </p>
     </div>
   </div>
@@ -54,145 +67,262 @@
 
 <style>
   .popup-overlay {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    @apply fixed inset-0 bg-gray-900/50 z-50 flex items-center justify-center p-4 opacity-0 invisible;
+    backdrop-filter: blur(3px);
+    transition: 0.3s ease;
   }
   
   .popup-overlay.active {
-    opacity: 1;
-    visibility: visible;
+    @apply opacity-100 visible;
   }
   
   .popup-content {
+    @apply bg-white rounded-xl shadow-xl w-full max-w-md mx-auto relative overflow-y-auto max-h-[90vh];
     transform: translateY(20px);
-    transition: transform 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
   .popup-overlay.active .popup-content {
     transform: translateY(0);
   }
   
-  .popup-close:hover {
-    transform: rotate(90deg);
+  .popup-close {
+    @apply absolute top-3 right-3 text-gray-500 hover:text-gray-700 transition-all duration-300 
+           bg-white/80 rounded-full p-1.5 hover:bg-gray-100;
   }
   
-  /* Добавляем стиль для очень маленького текста */
-  .text-xxs {
-    font-size: 0.65rem;
-    line-height: 1rem;
+  .popup-body {
+    @apply p-6 sm:p-8;
   }
   
-  /* Предотвращаем скролл на основной странице при открытом попапе */
-  :global(body.popup-active) {
-    overflow: hidden;
+  .popup-header {
+    @apply text-center mb-8;
   }
   
-  /* Медиа-запрос для очень маленьких экранов */
-  @media (max-width: 360px) {
-    .popup-content {
-      margin: 0 8px;
-    }
+  .popup-header h3 {
+    @apply text-2xl font-extrabold mb-3 text-gray-800;
+    letter-spacing: -0.01em;
+  }
+  
+  .popup-header p {
+    @apply text-gray-600 text-base leading-relaxed;
+  }
+  
+  .form-group {
+    @apply mb-6;
+  }
+  
+  .form-label {
+    @apply block text-sm font-semibold text-gray-700 mb-2;
+    letter-spacing: 0.01em;
+  }
+  
+  .form-input {
+    @apply w-full px-4 py-3.5 border-2 border-gray-300 rounded-lg focus:ring-2 
+           focus:ring-primary-500 focus:border-primary-500 outline-none transition-all
+           text-gray-800 shadow-sm;
+    letter-spacing: 0.01em;
+  }
+  
+  .form-input::placeholder {
+    @apply text-gray-400;
+  }
+  
+  .form-input:hover {
+    @apply border-primary-400 shadow-md;
+  }
+  
+  .submit-btn {
+    @apply w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-4 rounded-lg 
+           font-bold transition-all duration-300 hover:shadow-lg mt-4 text-base;
+    letter-spacing: 0.02em;
+  }
+  
+  .privacy-text {
+    @apply text-xs text-gray-500 text-center mt-5;
+  }
+  
+  .privacy-text a {
+    @apply text-primary-600 hover:underline font-medium;
   }
 </style>
 
-<script>
-  // Функция для отображения попапа при прокрутке
-  document.addEventListener('DOMContentLoaded', function() {
-    const popup = document.getElementById('offerPopup');
-    const closeBtn = document.getElementById('closePopup');
-    let popupShown = false;
+<script define:vars={{ autoShow }}>
+  // Initialize popup on load
+  function initPopup() {
+    // Storage keys
+    const SESSION_KEY = 'offer_popup_session';
+    const INTERACTION_KEY = 'user_has_interacted';
     
-    // Функция для определения типа устройства
-    function isMobileDevice() {
-      return (window.innerWidth <= 768) || 
-             ('ontouchstart' in window) || 
-             (navigator.maxTouchPoints > 0) || 
-             (navigator.msMaxTouchPoints > 0);
-    }
-    
-    // Функция для показа попапа
-    function showPopup() {
-      if (!popupShown) {
-        popup.classList.add('active');
-        document.body.classList.add('popup-active');
-        popupShown = true;
-        
-        // Удаляем сохранение в localStorage, чтобы попап появлялся при каждой загрузке
-        // localStorage.setItem('popupShown', 'true');
-        // localStorage.setItem('popupShownDate', new Date().toISOString());
+    // Check if popup was shown in this session
+    const wasShownInSession = () => {
+      try {
+        return sessionStorage.getItem(SESSION_KEY) === 'true';
+      } catch (e) {
+        return false;
       }
-    }
+    };
     
-    // Функция для скрытия попапа
-    function hidePopup() {
-      popup.classList.remove('active');
-      document.body.classList.remove('popup-active');
-    }
+    // Mark popup as shown in this session
+    const markShownInSession = () => {
+      try {
+        sessionStorage.setItem(SESSION_KEY, 'true');
+      } catch (e) {
+        // Ignore storage errors
+      }
+    };
     
-    // Показываем попап при прокрутке на определенную высоту
-    window.addEventListener('scroll', function() {
-      // Показываем попап, когда пользователь прокрутил определенный процент высоты страницы
-      const scrollHeight = window.scrollY;
-      const pageHeight = document.body.scrollHeight;
-      const viewportHeight = window.innerHeight;
-      const scrollPercentage = (scrollHeight / (pageHeight - viewportHeight)) * 100;
+    // Check if user has interacted with the page
+    const hasUserInteracted = () => {
+      try {
+        return sessionStorage.getItem(INTERACTION_KEY) === 'true';
+      } catch (e) {
+        return false;
+      }
+    };
+    
+    // Mark that user has interacted with the page
+    const markUserInteracted = () => {
+      try {
+        sessionStorage.setItem(INTERACTION_KEY, 'true');
+      } catch (e) {
+        // Ignore storage errors
+      }
+    };
+    
+    // Setup interaction tracking
+    const setupInteractionTracking = () => {
+      const interactionEvents = ['click', 'touchstart', 'keydown', 'mousemove'];
+      const trackInteraction = () => {
+        markUserInteracted();
+        // Remove event listeners once interaction is detected
+        interactionEvents.forEach(event => {
+          document.removeEventListener(event, trackInteraction);
+        });
+      };
       
-      // Для мобильных устройств можно установить меньший процент прокрутки
-      const threshold = isMobileDevice() ? 20 : 30;
-      
-      if (scrollPercentage > threshold && !popupShown) {
-        showPopup();
-      }
-    });
-    
-    // Для мобильных устройств также добавляем таймер
-    if (isMobileDevice()) {
-      // Показываем попап через 15 секунд после загрузки страницы
-      setTimeout(function() {
-        if (!popupShown) {
-          showPopup();
-        }
-      }, 15000); // 15 секунд
-    } else {
-      // Для десктопов можно установить другое время
-      setTimeout(function() {
-        if (!popupShown) {
-          showPopup();
-        }
-      }, 30000); // 30 секунд
-    }
-    
-    // Закрытие попапа
-    closeBtn.addEventListener('click', function() {
-      hidePopup();
-    });
-    
-    // Закрытие попапа при клике вне его области
-    popup.addEventListener('click', function(e) {
-      if (e.target === popup) {
-        hidePopup();
-      }
-    });
-    
-    // Удалено: проверка localStorage
-    // Теперь попап будет показываться при каждой загрузке страницы
-    
-    // Обработка отправки формы
-    const form = popup.querySelector('form');
-    if (form) {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Здесь можно добавить код для отправки данных формы
-        // Например, через fetch API
-        
-        // После успешной отправки закрываем попап
-        hidePopup();
-        
-        // Показываем сообщение об успешной отправке
-        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.');
+      interactionEvents.forEach(event => {
+        document.addEventListener(event, trackInteraction);
       });
-    }
-  });
+    };
+    
+    const popup = {
+      el: document.getElementById('offerPopup'),
+      form: document.getElementById('popupForm'),
+      closeBtn: document.getElementById('closePopup'),
+      shown: false,
+      
+      init() {
+        if (!this.el) return;
+        
+        this.setupEventListeners();
+        
+        // Only setup automatic triggers if autoShow is true and popup wasn't already shown
+        if (autoShow && !wasShownInSession()) {
+          setupInteractionTracking();
+          this.setupAutoTriggers();
+        }
+      },
+      
+      show() {
+        if (!this.shown && this.el) {
+          this.el.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          this.shown = true;
+          markShownInSession();
+        }
+      },
+      
+      hide() {
+        if (this.el) {
+          this.el.classList.remove('active');
+          document.body.style.overflow = '';
+          this.shown = false;
+        }
+      },
+      
+      setupEventListeners() {
+        // Close button and overlay click
+        if (this.closeBtn) {
+          this.closeBtn.addEventListener('click', () => this.hide());
+        }
+        
+        this.el.addEventListener('click', (e) => {
+          if (e.target === this.el) this.hide();
+        });
+        
+        // Escape key to close
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.shown) {
+            this.hide();
+          }
+        });
+        
+        // Form submission
+        if (this.form) {
+          this.form.addEventListener('submit', this.handleSubmit.bind(this));
+        }
+      },
+      
+      setupAutoTriggers() {
+        // Only show popup if user scrolls to the middle of the page
+        const handleScroll = () => {
+          // Show popup when user scrolls to 50% of the page height
+          const scrollPercentage = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+          if (!this.shown && scrollPercentage > 40) {
+            this.show();
+            window.removeEventListener('scroll', handleScroll);
+          }
+        };
+        
+        window.addEventListener('scroll', handleScroll);
+        
+        // Show popup after a delay if user hasn't interacted
+        const isMobile = window.innerWidth < 768;
+        const delayTime = isMobile ? 45000 : 60000; // 45 seconds on mobile, 60 seconds on desktop
+        
+        setTimeout(() => {
+          if (!this.shown && !hasUserInteracted()) {
+            this.show();
+          }
+        }, delayTime);
+      },
+      
+      async handleSubmit(e) {
+        e.preventDefault();
+        const form = e.target;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        
+        try {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sending...';
+          
+          // Simulate API call
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          alert('Thank you! Our China education specialist will call you shortly.');
+          form.reset();
+          this.hide();
+        } catch (error) {
+          alert('An error occurred. Please try again.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = t('contact.form.submit') || 'Get My Free Consultation';
+        }
+      }
+    };
+    
+    // Initialize the popup
+    popup.init();
+    
+    // Expose to global scope
+    window.showOfferPopup = () => popup.show();
+  }
+  
+  // Handle initialization timing
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPopup);
+  } else {
+    initPopup();
+  }
 </script>

@@ -501,4 +501,9 @@ export const ruTranslations: TranslationSchema = {
       },
     },
   },
+  popup: {
+    offer_badge: "Специальное предложение",
+    title: "Хотите учиться в Китае?",
+    description: "Оставьте заявку сегодня, чтобы получить бесплатную консультацию"
+  },
 };

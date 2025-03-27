@@ -633,5 +633,10 @@ export const uzTranslations: TranslationSchema = {
       subtitle: "Bepul maslahat olish va o'qish imkoniyatlari haqida ko'proq bilish uchun biz bilan bog'laning",
       button: "Biz bilan bog'laning"
     }
-  }
+  },
+  popup: {
+    offer_badge: "Maxsus taklif",
+    title: "Xitoyda ta'lim olishni xohlaysizmi?",
+    description: "Bepul maslahat olish uchun bugun ariza qoldiring"
+  },
 };

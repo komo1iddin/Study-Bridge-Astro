@@ -501,4 +501,9 @@ export const enTranslations: TranslationSchema = {
       },
     },
   },
+  popup: {
+    offer_badge: "Special Offer",
+    title: "Want to study in China?",
+    description: "Apply today to get your free consultation"
+  },
 };
