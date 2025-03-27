@@ -59,12 +59,20 @@
   
   .card-footer {
     margin-top: auto;
-    padding-top: 0.5rem;
+    padding-top: 0.75rem;
     border-top: 1px solid #e5e7eb;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: 1rem;
+  }
+  
+  .stat-item {
+    text-align: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: rgba(59, 130, 246, 0.05);
+    min-width: 5rem;
   }
   
   .university-card {
@@ -146,17 +154,17 @@
         
         <!-- Stats and action button -->
         <div class="card-footer">
-          <div class="flex gap-4">
+          <div class="flex gap-3">
             {#if university.foundedYear}
-              <div class="text-center">
-                <p class="text-xs text-muted-foreground">{t.card.founded}</p>
+              <div class="stat-item">
+                <p class="text-xs text-blue-600">{t.card.founded}</p>
                 <p class="text-sm font-semibold">{university.foundedYear}</p>
               </div>
             {/if}
             
             {#if university.studentsCount}
-              <div class="text-center">
-                <p class="text-xs text-muted-foreground">{t.card.students}</p>
+              <div class="stat-item">
+                <p class="text-xs text-blue-600">{t.card.students}</p>
                 <p class="text-sm font-semibold">{formatNumber(university.studentsCount)}</p>
               </div>
             {/if}
@@ -164,7 +172,7 @@
           
           <Button 
             variant="default" 
-            class="whitespace-nowrap btn-details flex items-center gap-2"
+            class="whitespace-nowrap btn-details flex items-center gap-2 bg-blue-600 hover:bg-blue-700 transition-colors"
             on:click={handleViewDetails}
           >
             {t.card.viewDetails}
