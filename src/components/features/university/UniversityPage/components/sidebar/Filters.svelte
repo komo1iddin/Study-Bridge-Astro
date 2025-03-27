@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import { slide } from 'svelte/transition';
   import { Accordion } from '../../../../../../components/ui/svelte';
   import { Switch } from '../../../../../../components/ui/svelte';
@@ -17,6 +17,14 @@
   export let t: UniversityPageTranslations;
   export let lang: Lang;
   
+  // Set default sections before any translations are available
+  let expandedSections = ['education', 'location', 'ranking', 'grants'];
+  let isMounted = false;
+  
+  onMount(() => {
+    isMounted = true;
+  });
+  
   const dispatch = createEventDispatcher<{
     change: { key: keyof Filters; value: string };
   }>();
@@ -26,72 +34,179 @@
   }
 
   // Filter sections configuration - uses translations
-  $: FILTER_SECTIONS = [
-    {
-      id: "education",
-      title: t.filters.educationType.title,
-      placeholder: t.filters.educationType.placeholder,
-      options: [
-        { value: "all", label: t.filters.educationType.all },
-        { value: "bachelor", label: t.filters.educationType.bachelor },
-        { value: "master", label: t.filters.educationType.master },
-        { value: "language", label: t.filters.educationType.language },
-        { value: "1+2", label: t.filters.educationType.program }
-      ],
-      filterKey: "educationType" as keyof Filters
-    },
-    {
-      id: "location",
-      title: t.filters.location.title,
-      placeholder: t.filters.location.placeholder,
-      options: [
-        { value: "all", label: t.filters.location.all },
-        ...(Array.isArray(cities) ? cities.map(city => ({ value: city, label: city })) : [])
-      ],
-      filterKey: "city" as keyof Filters
-    },
-    {
-      id: "ranking",
-      title: t.filters.ranking.title,
-      placeholder: t.filters.ranking.placeholder,
-      options: [
-        { value: "all", label: t.filters.ranking.all },
-        { value: "1-5", label: t.filters.ranking.top5 },
-        { value: "6-10", label: t.filters.ranking.top10 },
-        { value: "11-20", label: t.filters.ranking.top20 },
-        { value: "21+", label: t.filters.ranking.other }
-      ],
-      filterKey: "ranking" as keyof Filters
-    },
-    {
-      id: "grants",
-      title: t.filters.grants.title,
-      placeholder: t.filters.grants.placeholder,
-      options: [
-        { value: "all", label: t.filters.grants.all },
-        { value: "true", label: t.filters.grants.available },
-        { value: "false", label: t.filters.grants.notAvailable }
-      ],
-      filterKey: "hasGrants" as keyof Filters
+  $: if (t && t.filters) {
+    // Only update filter sections when translations are available
+    const FILTER_SECTIONS = [
+      {
+        id: "education",
+        title: t.filters.educationType.title,
+        placeholder: t.filters.educationType.placeholder,
+        options: [
+          { value: "all", label: t.filters.educationType.all },
+          { value: "bachelor", label: t.filters.educationType.bachelor },
+          { value: "master", label: t.filters.educationType.master },
+          { value: "language", label: t.filters.educationType.language },
+          { value: "1+2", label: t.filters.educationType.program }
+        ],
+        filterKey: "educationType" as keyof Filters
+      },
+      {
+        id: "location",
+        title: t.filters.location.title,
+        placeholder: t.filters.location.placeholder,
+        options: [
+          { value: "all", label: t.filters.location.all },
+          ...(Array.isArray(cities) ? cities.map(city => ({ value: city, label: city })) : [])
+        ],
+        filterKey: "city" as keyof Filters
+      },
+      {
+        id: "ranking",
+        title: t.filters.ranking.title,
+        placeholder: t.filters.ranking.placeholder,
+        options: [
+          { value: "all", label: t.filters.ranking.all },
+          { value: "1-5", label: t.filters.ranking.top5 },
+          { value: "6-10", label: t.filters.ranking.top10 },
+          { value: "11-20", label: t.filters.ranking.top20 },
+          { value: "21+", label: t.filters.ranking.other }
+        ],
+        filterKey: "ranking" as keyof Filters
+      },
+      {
+        id: "grants",
+        title: t.filters.grants.title,
+        placeholder: t.filters.grants.placeholder,
+        options: [
+          { value: "all", label: t.filters.grants.all },
+          { value: "true", label: t.filters.grants.available },
+          { value: "false", label: t.filters.grants.notAvailable }
+        ],
+        filterKey: "hasGrants" as keyof Filters
+      }
+    ];
+    
+    // Update expanded sections only when mounted
+    if (isMounted && !expandedSections.length) {
+      expandedSections = FILTER_SECTIONS.map(section => section.id);
     }
-  ];
-  
-  // Default to all sections open
-  let expandedSections = FILTER_SECTIONS.map(section => section.id);
+  }
   
   // Handle filter select change
   function handleFilterChange(filterKey: keyof Filters, event: Event) {
     const select = event.target as HTMLSelectElement;
     handleChange(filterKey, select.value);
   }
+  
+  // Safe access to translations
+  function getFilterTitle() {
+    return t && t.filters ? t.filters.title : 'Filters';
+  }
+  
+  function getFilterReset() {
+    return t && t.filters ? t.filters.reset : 'Reset';
+  }
+  
+  function getQuickFilters() {
+    return t && t.filters ? t.filters.quickFilters : 'Quick Filters';
+  }
+  
+  function getFeatured() {
+    return t && t.filters ? t.filters.featured : 'Featured universities only';
+  }
+  
+  // Default filter sections for initial render
+  const DEFAULT_SECTIONS = [
+    {
+      id: "education",
+      title: "Education Type",
+      options: [{ value: "all", label: "All types" }],
+      filterKey: "educationType" as keyof Filters
+    },
+    {
+      id: "location",
+      title: "Location",
+      options: [{ value: "all", label: "All cities" }],
+      filterKey: "city" as keyof Filters
+    },
+    {
+      id: "ranking",
+      title: "University Ranking",
+      options: [{ value: "all", label: "All rankings" }],
+      filterKey: "ranking" as keyof Filters
+    },
+    {
+      id: "grants",
+      title: "Grant Opportunities",
+      options: [{ value: "all", label: "All" }],
+      filterKey: "hasGrants" as keyof Filters
+    }
+  ];
+  
+  // Use default sections when translations aren't available
+  $: FILTER_SECTIONS = t && t.filters ? getFilterSections() : DEFAULT_SECTIONS;
+  
+  function getFilterSections() {
+    if (!t || !t.filters) return DEFAULT_SECTIONS;
+    
+    return [
+      {
+        id: "education",
+        title: t.filters.educationType.title,
+        placeholder: t.filters.educationType.placeholder,
+        options: [
+          { value: "all", label: t.filters.educationType.all },
+          { value: "bachelor", label: t.filters.educationType.bachelor },
+          { value: "master", label: t.filters.educationType.master },
+          { value: "language", label: t.filters.educationType.language },
+          { value: "1+2", label: t.filters.educationType.program }
+        ],
+        filterKey: "educationType" as keyof Filters
+      },
+      {
+        id: "location",
+        title: t.filters.location.title,
+        placeholder: t.filters.location.placeholder,
+        options: [
+          { value: "all", label: t.filters.location.all },
+          ...(Array.isArray(cities) ? cities.map(city => ({ value: city, label: city })) : [])
+        ],
+        filterKey: "city" as keyof Filters
+      },
+      {
+        id: "ranking",
+        title: t.filters.ranking.title,
+        placeholder: t.filters.ranking.placeholder,
+        options: [
+          { value: "all", label: t.filters.ranking.all },
+          { value: "1-5", label: t.filters.ranking.top5 },
+          { value: "6-10", label: t.filters.ranking.top10 },
+          { value: "11-20", label: t.filters.ranking.top20 },
+          { value: "21+", label: t.filters.ranking.other }
+        ],
+        filterKey: "ranking" as keyof Filters
+      },
+      {
+        id: "grants",
+        title: t.filters.grants.title,
+        placeholder: t.filters.grants.placeholder,
+        options: [
+          { value: "all", label: t.filters.grants.all },
+          { value: "true", label: t.filters.grants.available },
+          { value: "false", label: t.filters.grants.notAvailable }
+        ],
+        filterKey: "hasGrants" as keyof Filters
+      }
+    ];
+  }
 </script>
 
 <div class="space-y-6">
   <div class="flex items-center justify-between">
-    <h3 class="text-lg font-medium">{t.filters.title}</h3>
+    <h3 class="text-lg font-medium">{getFilterTitle()}</h3>
     <Button variant="ghost" size="sm" on:click={onReset} class="h-8 px-2 text-xs">
       <RotateCcw class="mr-1 h-3 w-3" />
-      {t.filters.reset}
+      {getFilterReset()}
     </Button>
   </div>
 
@@ -148,10 +263,10 @@
   </div>
 
   <div class="space-y-4 rounded-lg border bg-card p-4">
-    <h3 class="text-sm font-medium">{t.filters.quickFilters}</h3>
+    <h3 class="text-sm font-medium">{getQuickFilters()}</h3>
     <div class="flex items-center justify-between">
       <Label for="featured" class="text-sm">
-        {t.filters.featured}
+        {getFeatured()}
       </Label>
       <Switch
         id="featured"

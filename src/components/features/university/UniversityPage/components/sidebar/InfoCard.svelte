@@ -6,15 +6,37 @@
   
   export let t: UniversityPageTranslations;
   export let lang: Lang = 'uz';
+  
+  // Default values in case translations aren't available
+  $: title = t?.infoCard?.title || 'Education in China';
+  $: description = t?.infoCard?.description || 'Information about education in China';
+  $: stats = t?.infoCard?.stats || {
+    universities: {
+      value: '2,900+ Universities',
+      description: 'Across all provinces'
+    },
+    programs: {
+      value: '500,000+ Programs',
+      description: 'From Bachelor\'s to Doctoral degrees'
+    },
+    students: {
+      value: '500,000+ International students',
+      description: 'From 200+ countries'
+    },
+    scholarships: {
+      value: '30,000+ Scholarships',
+      description: 'Government and university-funded'
+    }
+  };
 </script>
 
 <Card class="bg-gradient-to-br from-blue-50 to-indigo-50">
   <CardHeader class="pb-2">
-    <CardTitle class="text-base">{t.infoCard.title}</CardTitle>
+    <CardTitle class="text-base">{title}</CardTitle>
   </CardHeader>
   <CardContent class="space-y-4 text-sm">
     <p>
-      {t.infoCard.description}
+      {description}
     </p>
 
     <div class="space-y-2">
@@ -23,8 +45,8 @@
           <School class="h-4 w-4 text-blue-700" />
         </div>
         <div>
-          <p class="font-medium">{t.infoCard.stats.universities.value}</p>
-          <p class="text-xs text-muted-foreground">{t.infoCard.stats.universities.description}</p>
+          <p class="font-medium">{stats.universities.value}</p>
+          <p class="text-xs text-muted-foreground">{stats.universities.description}</p>
         </div>
       </div>
 
@@ -33,8 +55,8 @@
           <GraduationCap class="h-4 w-4 text-indigo-700" />
         </div>
         <div>
-          <p class="font-medium">{t.infoCard.stats.programs.value}</p>
-          <p class="text-xs text-muted-foreground">{t.infoCard.stats.programs.description}</p>
+          <p class="font-medium">{stats.programs.value}</p>
+          <p class="text-xs text-muted-foreground">{stats.programs.description}</p>
         </div>
       </div>
 
@@ -43,8 +65,8 @@
           <Users class="h-4 w-4 text-purple-700" />
         </div>
         <div>
-          <p class="font-medium">{t.infoCard.stats.students.value}</p>
-          <p class="text-xs text-muted-foreground">{t.infoCard.stats.students.description}</p>
+          <p class="font-medium">{stats.students.value}</p>
+          <p class="text-xs text-muted-foreground">{stats.students.description}</p>
         </div>
       </div>
 
@@ -53,8 +75,8 @@
           <Award class="h-4 w-4 text-green-700" />
         </div>
         <div>
-          <p class="font-medium">{t.infoCard.stats.scholarships.value}</p>
-          <p class="text-xs text-muted-foreground">{t.infoCard.stats.scholarships.description}</p>
+          <p class="font-medium">{stats.scholarships.value}</p>
+          <p class="text-xs text-muted-foreground">{stats.scholarships.description}</p>
         </div>
       </div>
     </div>

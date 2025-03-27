@@ -3,6 +3,8 @@
   import { Home } from 'lucide-svelte';
   import type { University } from './lib/data';
   import type { Lang } from '../../../../i18n/langUtils';
+  import { getUniversityPageTranslations } from '../../../../i18n/features/university/universityPage';
+  import type { UniversityPageTranslations } from '../../../../i18n/features/university/universityPage';
   import { DEFAULT_FILTERS } from './lib/constants';
   import type { Filters } from './lib/data';
   
@@ -16,7 +18,11 @@
   
   export let universities: University[] = [];
   export let cities: string[] = [];
-  export let lang: Lang = 'en';
+  export let lang: Lang = 'uz';
+  
+  // Get translations
+  $: t = getUniversityPageTranslations(lang);
+  $: translationsReady = Boolean(t && t.filters && t.list && t.card);
   
   let filters: Filters = DEFAULT_FILTERS;
   let mounted = false;
@@ -61,6 +67,20 @@
       </div>
     </div>
   </div>
+{:else if !translationsReady}
+  <!-- Loading Translations -->
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative">
+    <div class="container mx-auto py-8 px-4 md:px-6 relative z-10">
+      <div class="flex items-center justify-center h-64">
+        <div class="animate-pulse flex flex-col items-center gap-4">
+          <div class="h-12 w-12 rounded-full bg-blue-200"></div>
+          <div class="h-4 w-48 bg-blue-200 rounded"></div>
+          <div class="h-3 w-32 bg-blue-100 rounded"></div>
+          <p class="text-sm text-blue-700">Loading translations...</p>
+        </div>
+      </div>
+    </div>
+  </div>
 {:else}
   <!-- Main Layout -->
   <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative overflow-hidden">
@@ -71,7 +91,7 @@
         <div class="flex items-center gap-2 text-sm text-slate-500 mb-6">
           <Home class="h-3.5 w-3.5" />
           <span>/</span>
-          <span class="text-slate-900 font-medium">Universitetlar</span>
+          <span class="text-slate-900 font-medium">{t.breadcrumb.universities}</span>
         </div>
         
         <!-- Mobile filters -->
@@ -80,6 +100,8 @@
             filters={filters}
             cities={cities}
             isOpen={mobileFiltersOpen}
+            {t}
+            {lang}
             on:change={handleFilterChange}
             on:reset={resetFilters}
             on:openStateChange={handleMobileFiltersOpenChange}
@@ -92,6 +114,8 @@
             <Sidebar
               filters={filters}
               cities={cities}
+              {t}
+              {lang}
               on:change={handleFilterChange}
               on:reset={resetFilters}
             />
@@ -102,6 +126,8 @@
             <UniversityList
               universities={universities}
               filters={filters}
+              {t}
+              {lang}
             />
           </main>
         </div>

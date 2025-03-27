@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import Filters from './Filters.svelte';
   import InfoCard from './InfoCard.svelte';
   import type { Filters as FiltersType } from '../../lib/data';
   import type { Lang } from '../../../../../../i18n/langUtils';
   import type { UniversityPageTranslations } from '../../../../../../i18n/features/university/universityPage';
-  import { onMount } from 'svelte';
   
   export let filters: FiltersType;
   export let cities: string[] = [];
@@ -14,6 +13,13 @@
   
   // Ensure cities is valid during hydration
   $: validCities = Array.isArray(cities) ? cities : [];
+  
+  // Component mounted flag
+  let isMounted = false;
+  
+  onMount(() => {
+    isMounted = true;
+  });
 
   const dispatch = createEventDispatcher<{
     change: { key: keyof FiltersType; value: string };
@@ -30,19 +36,27 @@
 </script>
 
 <div class="w-full flex flex-col gap-5">
-  <Filters 
-    filters={filters}
-    cities={validCities}
-    onReset={handleReset}
-    t={t}
-    lang={lang}
-    on:change={handleChange}
-  />
-  
-  <InfoCard
-    t={t}
-    lang={lang}
-  />
+  {#if t && t.filters}
+    <Filters 
+      filters={filters}
+      cities={validCities}
+      onReset={handleReset}
+      t={t}
+      lang={lang}
+      on:change={handleChange}
+    />
+    
+    <InfoCard
+      t={t}
+      lang={lang}
+    />
+  {:else}
+    <div class="animate-pulse space-y-4">
+      <div class="h-8 w-40 bg-gray-200 rounded"></div>
+      <div class="h-24 w-full bg-gray-200 rounded"></div>
+      <div class="h-24 w-full bg-gray-200 rounded"></div>
+    </div>
+  {/if}
 
   <div class="hidden sm:block">
     <div class="rounded-lg border bg-card p-4 shadow-sm">
