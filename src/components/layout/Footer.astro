@@ -2,6 +2,11 @@
 import Container from '../core/Card/Container.astro';
 import { Mail, Phone, MapPin, Send, Instagram, MessageCircle } from 'lucide-astro';
 import { navigationSchema, type Navigation } from '@/types/navigation';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getFooterTranslations } from '@/i18n/features/layout/footer';
+
+const lang = getLangFromUrl(Astro.url);
+const t = getFooterTranslations(lang);
 
 const navigation: Navigation = {
   main: [
@@ -49,7 +54,7 @@ const validatedNavigation = navigationSchema.parse(navigation);
           </div>
           
           <p class="text-gray-600 leading-relaxed">
-            Xitoy ta'limi dunyosiga ishonchli yo'lboshchingiz. 2022 yildan beri talabalarga Xitoyning eng yaxshi universitetlariga kirish uchun yordam beramiz.
+            {t.company.description}
           </p>
           
           <div class="pt-2">
@@ -75,12 +80,12 @@ const validatedNavigation = navigationSchema.parse(navigation);
 
         <!-- Navigation Columns (8 cols total) -->
         <div class="md:col-span-2">
-          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">Navigatsiya</h3>
+          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">{t.navigation.title}</h3>
           <ul class="space-y-3">
-            {validatedNavigation.main.map((item, index) => (
+            {validatedNavigation.main.map((item) => (
               <li>
                 <a
-                  href={item.href}
+                  href={`/${lang}${item.href}`}
                   class="text-gray-600 hover:text-primary-600 transition-colors duration-300 flex items-center group"
                 >
                   <span class="w-0 group-hover:w-2 h-0.5 bg-primary-600 mr-0 group-hover:mr-2 transition-all duration-300"></span>
@@ -92,12 +97,12 @@ const validatedNavigation = navigationSchema.parse(navigation);
         </div>
 
         <div class="md:col-span-2">
-          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">Resurslar</h3>
+          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">{t.resources.title}</h3>
           <ul class="space-y-3">
-            {validatedNavigation.resources.map((item, index) => (
+            {validatedNavigation.resources.map((item) => (
               <li>
                 <a
-                  href={item.href}
+                  href={`/${lang}${item.href}`}
                   class="text-gray-600 hover:text-primary-600 transition-colors duration-300 flex items-center group"
                 >
                   <span class="w-0 group-hover:w-2 h-0.5 bg-primary-600 mr-0 group-hover:mr-2 transition-all duration-300"></span>
@@ -110,7 +115,7 @@ const validatedNavigation = navigationSchema.parse(navigation);
 
         <!-- Contact Column -->
         <div class="md:col-span-4">
-          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">Biz bilan bog'lanish</h3>
+          <h3 class="text-base font-semibold text-gray-900 pb-2 mb-4 border-b border-gray-200">{t.contact.title}</h3>
           
           <ul class="space-y-4">
             <li class="text-gray-600 flex items-start">
@@ -123,29 +128,29 @@ const validatedNavigation = navigationSchema.parse(navigation);
             </li>
             <li class="text-gray-600 flex items-start">
               <MapPin class="h-5 w-5 text-primary-600 mr-3 flex-shrink-0 mt-0.5" />
-              <span>Hangzhou, Zhejiang, Xitoy</span>
+              <span>{t.contact.address}</span>
             </li>
           </ul>
           
           <!-- Newsletter -->
           <div class="mt-6 pt-6 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-800 mb-3">Yangiliklarimizga obuna bo'ling</h4>
+            <h4 class="text-sm font-semibold text-gray-800 mb-3">{t.newsletter.title}</h4>
             <form class="relative">
               <input
                 type="email"
                 required
-                placeholder="Email manzilingiz"
+                placeholder={t.newsletter.placeholder}
                 class="block w-full rounded-full border border-gray-300 bg-white px-4 py-3 pr-12 shadow-sm focus:border-primary-500 focus:ring-2 focus:ring-primary-200 focus:ring-offset-2 text-sm transition-all duration-300"
               />
               <button
                 type="submit"
                 class="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-full bg-primary-600 p-2.5 text-white hover:bg-primary-700 transition-all duration-300 shadow-sm hover:shadow-md"
-                aria-label="Obuna bo'lish"
+                aria-label={t.newsletter.subscribe}
               >
                 <Send class="h-4 w-4" />
               </button>
             </form>
-            <p class="mt-2 text-xs text-gray-500">Dolzarb yangiliklar va takliflarni oling</p>
+            <p class="mt-2 text-xs text-gray-500">{t.newsletter.description}</p>
           </div>
         </div>
       </div>
@@ -155,12 +160,12 @@ const validatedNavigation = navigationSchema.parse(navigation);
       <div class="mt-12 pt-8 border-t border-gray-200">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <p class="text-sm text-gray-500 mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Study Bridge. Barcha huquqlar himoyalangan.
+            &copy; {new Date().getFullYear()} Study Bridge. {t.copyright.rights}
           </p>
           <div class="flex space-x-6 text-xs text-gray-500">
-            <a href="/privacy" class="hover:text-primary-600 transition-colors duration-300">Maxfiylik siyosati</a>
-            <a href="/terms" class="hover:text-primary-600 transition-colors duration-300">Foydalanish shartlari</a>
-            <a href="/sitemap" class="hover:text-primary-600 transition-colors duration-300">Sayt xaritasi</a>
+            <a href={`/${lang}/privacy`} class="hover:text-primary-600 transition-colors duration-300">{t.copyright.privacy}</a>
+            <a href={`/${lang}/terms`} class="hover:text-primary-600 transition-colors duration-300">{t.copyright.terms}</a>
+            <a href={`/${lang}/sitemap`} class="hover:text-primary-600 transition-colors duration-300">{t.copyright.sitemap}</a>
           </div>
         </div>
       </div>
