@@ -639,4 +639,10 @@ export const uzTranslations: TranslationSchema = {
     title: "Xitoyda ta'lim olishni xohlaysizmi?",
     description: "Bepul maslahat olish uchun bugun ariza qoldiring"
   },
+  cta: {
+    title: "KELAJAGINGIZNI KUTIB O'TIRMANG - UNI YARATING!",
+    description: "Xitoyda o'qish orqali kelajagingizni bugundan boshlab o'zgartiring. Biz sizga yordam berishga tayyormiz!",
+    button: "Formani to'ldiring",
+    phone: "+998 90 123-45-67"
+  },
 };

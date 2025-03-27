@@ -509,6 +509,18 @@ export interface TranslationSchema {
       };
     };
   };
+  // Popup translations
+  popup: {
+    offer_badge: string;
+    title: string;
+    description: string;
+  };
+  cta: {
+    title: string;
+    description: string;
+    button: string;
+    phone: string;
+  };
 }
 
 // Define the complete translations object type

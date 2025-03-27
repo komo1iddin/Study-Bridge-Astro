@@ -243,6 +243,12 @@ export const ruTranslations: TranslationSchema = {
     subtitle:
       "Xitoyda o'qish - bu nafaqat sifatli ta'lim, balki kelajagingiz uchun keng imkoniyatlar eshigini ochish demakdir",
   },
+  cta: {
+    title: "НЕ ЖДИТЕ СВОЕГО БУДУЩЕГО - СОЗДАЙТЕ ЕГО СЕЙЧАС!",
+    description: "Измените свое будущее сегодня, обучаясь в Китае. Мы готовы вам помочь!",
+    button: "Заполнить форму",
+    phone: "+998 90 123-45-67"
+  },
   success: {
     badge: 'Kelajak sari',
     title: 'Sizning muvaffaqiyatingiz, bizning maqsadimiz',

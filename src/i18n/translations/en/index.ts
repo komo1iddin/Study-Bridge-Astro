@@ -243,6 +243,12 @@ export const enTranslations: TranslationSchema = {
     subtitle:
       "Xitoyda o'qish - bu nafaqat sifatli ta'lim, balki kelajagingiz uchun keng imkoniyatlar eshigini ochish demakdir",
   },
+  cta: {
+    title: "DON'T WAIT FOR YOUR FUTURE - CREATE IT!",
+    description: "Transform your future today by studying in China. We're ready to help you!",
+    button: "Fill out the form",
+    phone: "+998 90 123-45-67"
+  },
   success: {
     badge: 'Kelajak sari',
     title: 'Sizning muvaffaqiyatingiz, bizning maqsadimiz',
