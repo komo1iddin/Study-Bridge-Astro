@@ -1,7 +1,7 @@
 ---
 import { GraduationCap, Brain, DollarSign, Globe, Rocket, BookOpen } from 'lucide-astro';
-import { useTranslations } from '@/i18n/utils';
 import type { Lang } from '@/i18n/langUtils';
+import { getWhyTranslations } from '@/i18n/features/home/whyChina';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import CTA from '@/components/ui/CTA.astro';
 
@@ -10,46 +10,34 @@ interface Props {
 }
 
 const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
+const translations = getWhyTranslations(lang);
 
-const reasons = [
-  {
-    icon: GraduationCap,
-    title: "Yuqori sifatli ta'lim",
-    description: "Xitoy universitetlari jahon reytinglarida TOP-100 ga kiradi va eng zamonaviy ilmiy-texnik bazaga ega",
-    color: "blue"
-  },
-  {
-    icon: Brain,
-    title: "Innovatsiya markazi",
-    description: "Sun'iy intellekt, IT, robototexnika va biznes sohasida dunyoning eng ilg'or davlati",
-    color: "purple"
-  },
-  {
-    icon: DollarSign,
-    title: "Arzon o'qish xarajatlari",
-    description: "Yevropa va AQShga nisbatan 2-3 barobar arzon. Yiliga $2000-4000 dan boshlanadi + grantlar",
-    color: "green"
-  },
-  {
-    icon: Globe,
-    title: "Madaniy rang-baranglik",
-    description: "5000 yillik tarix, zamonaviy texnologiyalar va boy madaniyat – bu nafaqat ta'lim, balki hayot maktabi",
-    color: "orange"
-  },
-  {
-    icon: Rocket,
-    title: "Keng imkoniyatlar",
-    description: "Xitoy tili, xalqaro tajriba va kelajakda yuqori maosh - $2000-5000 dan boshlangan ish o'rinlari",
-    color: "red"
-  },
-  {
-    icon: BookOpen,
-    title: "Zamonaviy infratuzilma",
-    description: "Eng so'nggi texnologiyalar bilan jihozlangan kampus, laboratoriyalar va sport majmualar",
-    color: "indigo"
-  }
+// Define icons to use for each reason
+const icons = [
+  GraduationCap,
+  Brain,
+  DollarSign,
+  Globe,
+  Rocket,
+  BookOpen
 ];
+
+// Define colors for each reason
+const colors = [
+  "blue",
+  "purple",
+  "green",
+  "orange",
+  "red",
+  "indigo"
+];
+
+// Map the icons, colors, and translations together
+const reasons = translations.reasons.map((reason, index) => ({
+  ...reason,
+  icon: icons[index % icons.length],
+  color: colors[index % colors.length]
+}));
 ---
 
 <section class="section-container">
@@ -68,8 +56,8 @@ const reasons = [
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <!-- Section Title -->
     <SectionHeader
-      title={`${t('whyChina.title.main')} <span class="text-blue-600">${t('whyChina.title.highlight')}</span>`}
-      subtitle={t('whyChina.subtitle')}
+      title={`${translations.title.main} <span class="text-blue-600">${translations.title.highlight}</span>`}
+      subtitle={translations.subtitle}
     />
          
     <!-- Reasons Flex Container -->

@@ -1,0 +1,30 @@
+---
+import WhyChina from '@/components/features/home/WhyChina.astro';
+---
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhyChina Component Example</title>
+</head>
+<body>
+  <!-- Testing with Uzbek language (default) -->
+  <div>
+    <h2>Uzbek (Default)</h2>
+    <WhyChina lang="uz" />
+  </div>
+
+  <!-- Testing with English language -->
+  <div class="mt-20">
+    <h2>English</h2>
+    <WhyChina lang="en" />
+  </div>
+
+  <!-- Testing with Russian language -->
+  <div class="mt-20">
+    <h2>Russian</h2>
+    <WhyChina lang="ru" />
+  </div>
+</body>
+</html> 
