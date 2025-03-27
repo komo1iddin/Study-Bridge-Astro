@@ -1,6 +1,6 @@
 ---
-import { useTranslations } from '@/i18n/utils';
 import type { Lang } from '@/i18n/langUtils';
+import { getProgramsTranslations } from '@/i18n/features/programs';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import ButtonView from '@/components/ui/astro/ButtonView.astro';
 import { Calendar, Clock, Users, GraduationCap, CheckCircle } from 'lucide-astro';
@@ -10,57 +10,45 @@ interface Props {
 }
 
 const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
+const t = getProgramsTranslations(lang);
 
 const programs = [
   {
     id: 'bachelor',
-    title: "Bakalavr dasturi",
-    description: "Xalqaro standartlarga mos keladigan professional ta'lim dasturlari",
+    title: t.categories.bachelor.title,
+    description: t.categories.bachelor.description,
     price: {
       original: "$8,900",
       discounted: "$7,200"
     },
-    duration: "4 yil",
-    benefits: [
-      "Kafolatlangan ish bilan ta'minlash",
-      "Stipendiya imkoniyati",
-      "Xalqaro sertifikatlar"
-    ],
+    duration: t.categories.bachelor.duration,
+    benefits: t.categories.bachelor.benefits,
     deadline: "2025-yil 1-may",
     discount: "20%"
   },
   {
     id: 'master',
-    title: "Magistratura dasturi",
-    description: "Yuqori malakali mutaxassislar tayyorlash dasturi",
+    title: t.categories.master.title,
+    description: t.categories.master.description,
     price: {
       original: "$12,500",
       discounted: "$10,800"
     },
-    duration: "2 yil",
-    benefits: [
-      "Ilmiy tadqiqot imkoniyatlari",
-      "Xalqaro konferensiyalarda ishtirok",
-      "Yuqori malakali mutaxassislar"
-    ],
+    duration: t.categories.master.duration,
+    benefits: t.categories.master.benefits,
     deadline: "2025-yil 1-may",
     discount: "20%"
   },
   {
     id: 'language',
-    title: "Til kurslari",
-    description: "HSK darajasini oshirish va Xitoy tilini professional darajada o'rganish",
+    title: t.categories.language.title,
+    description: t.categories.language.description,
     price: {
       original: "$2,400",
       discounted: "$1,920"
     },
-    duration: "6 oy",
-    benefits: [
-      "Kafolatlangan natija",
-      "Kichik guruhlar",
-      "Ona tili sifatida so'zlashuvchi o'qituvchilar"
-    ],
+    duration: t.categories.language.duration,
+    benefits: t.categories.language.benefits,
     deadline: "2025-yil 1-may",
     discount: "20%"
   }
@@ -74,14 +62,14 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
   <div class="container px-4 md:px-6">
     <!-- Header -->
     <SectionHeader
-      title={t('programs.main.title')}
-      subtitle={t('programs.main.subtitle')}
+      title={t.main.title}
+      subtitle={t.main.subtitle}
     />
 
     <!-- Category Selector - Mobile -->
     <div class="md:hidden mb-8">
       <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg">
-        <div class="text-base font-medium">Dasturni tanlang</div>
+        <div class="text-base font-medium">{t.labels.programs}</div>
         <div class="relative w-full">
           <select 
             id="program-select-mobile"
@@ -204,7 +192,7 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
       <div class="text-center mt-12">
         <ButtonView
           href={`/${lang}/programs`} 
-          text={t("Barcha dasturlar")} 
+          text={t.labels.viewAll} 
           variant="mobile" 
           showOnDesktop={false} 
         />
@@ -214,7 +202,7 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
       <div class="text-center mt-12">
         <ButtonView
           href={`/${lang}/programs`} 
-          text={t("Barcha dasturlar")} 
+          text={t.labels.viewAll} 
           variant="desktop" 
           showOnMobile={false} 
         />
@@ -225,49 +213,12 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
 
 <script>
   function updateContent(program) {
-    // Program ma'lumotlari
-    const programs = {
-      bachelor: {
-        title: "Bakalavr dasturlari",
-        price: {
-          original: "$8,900",
-          discounted: "$7,200"
-        },
-        duration: "4 yil",
-        benefits: ["Kafolatlangan ish bilan ta'minlash", "Stipendiya imkoniyati", "Xalqaro sertifikatlar"],
-        description: "Xalqaro standartlarga mos keladigan professional ta'lim dasturlari. Tajribali o'qituvchilar va zamonaviy o'quv materiallari bilan ta'minlanadi."
-      },
-      master: {
-        title: "Magistratura dasturlari",
-        price: {
-          original: "$12,500",
-          discounted: "$10,800"
-        },
-        duration: "2 yil",
-        benefits: ["Ilmiy tadqiqot imkoniyatlari", "Xalqaro konferensiyalarda ishtirok", "Yuqori malakali mutaxassislar"],
-        description: "Yuqori malakali mutaxassislar tayyorlash dasturi. Ilmiy tadqiqot va amaliy ko'nikmalarni rivojlantirish imkoniyatlari."
-      },
-      language: {
-        title: "Til kurslari",
-        price: {
-          original: "$2,400",
-          discounted: "$1,920"
-        },
-        duration: "6 oy",
-        benefits: ["Kafolatlangan natija", "Kichik guruhlar", "Ona tili sifatida so'zlashuvchi o'qituvchilar"],
-        description: "HSK darajasini oshirish va Xitoy tilini professional darajada o'rganish uchun intensiv kurslar."
-      }
-    };
-
-    const activeItem = programs[program];
-    if (!activeItem) return;
-
-    // URL ni yangilash
+    // Update the URL
     const url = new URL(window.location.href);
     url.searchParams.set('program', program);
     history.pushState({}, '', url);
 
-    // Aktiv tabni yangilash
+    // Update the active tab
     document.querySelectorAll('[data-program]').forEach(el => {
       const isActive = el.dataset.program === program;
       if (isActive) {
@@ -279,133 +230,26 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
       }
     });
 
-    // Kontentni yangilash
-    const newContent = `
-      <div class="border-2 rounded-xl shadow-sm overflow-hidden">
-        <div class="bg-muted/10 border-b pb-3 p-6">
-          <div class="flex items-center justify-between">
-            <h3 class="font-medium text-xl">${activeItem.title}</h3>
-            <div class="text-sm text-muted-foreground">Ta'lim dasturi</div>
-          </div>
-        </div>
-
-        <div class="p-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <p class="text-slate-600 mb-6">
-                ${activeItem.description}
-              </p>
-
-              <div class="flex items-end gap-3 mb-6">
-                <div class="text-3xl font-bold text-blue-600">${activeItem.price.discounted}</div>
-                <div class="text-lg text-slate-500 line-through">${activeItem.price.original}</div>
-                <div class="text-sm text-blue-600 font-medium">/yil</div>
-              </div>
-
-              <div class="flex items-center mb-6 text-slate-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2">
-                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>
-                </svg>
-                <span>Davomiyligi: ${activeItem.duration}</span>
-              </div>
-
-              <h4 class="font-semibold text-slate-800 mb-3">Dastur imkoniyatlari:</h4>
-              <ul class="space-y-4 mb-6">
-                ${activeItem.benefits.map(benefit => `
-                  <li class="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mt-0.5 flex-shrink-0">
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                    </svg>
-                    <span class="text-slate-600">${benefit}</span>
-                  </li>
-                `).join('')}
-              </ul>
-
-              <div class="flex flex-col sm:flex-row gap-3">
-                <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 transition-colors">
-                  Ariza topshirish
-                </button>
-                <button class="border border-blue-200 text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-2 transition-colors">
-                  Dastur haqida batafsil
-                </button>
-              </div>
-            </div>
-
-            <div class="relative rounded-xl overflow-hidden h-[300px] md:h-auto">
-              <img
-                src="https://insight.study.csu.edu.au/wp-content/uploads/2018/03/5-Reasons-to-go-to-uni-besides-boosting-your-career-prospects.jpg?height=500&width=500"
-                alt="${activeItem.title}"
-                class="absolute inset-0 w-full h-full object-cover"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <div class="absolute bottom-0 left-0 right-0 p-6">
-                <div class="flex items-center space-x-2">
-                  <span class="bg-blue-600 text-white py-1 px-3 rounded-full text-sm">
-                    ${program === "bachelor" ? "Top dastur" : program === "master" ? "Eng mashhur" : "Tezkor"}
-                  </span>
-                  <span class="bg-green-600 text-white py-1 px-3 rounded-full text-sm">
-                    20% chegirma
-                  </span>
-                </div>
-                <p class="text-white text-sm mt-2">Ro'yxatdan o'tish oxirgi muddati: 1-May, 2025</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
-          Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
-        </div>
-      </div>
-    `;
-
-    document.getElementById('program-content').innerHTML = newContent;
+    // Trigger page reload to update content with new translations
+    window.location.reload();
   }
 
-  // Desktop tablar uchun
-  document.querySelectorAll('[data-program]').forEach(button => {
-    button.addEventListener('click', (e) => {
-      const program = button.dataset.program;
-      if (program) {
-        updateContent(program);
-      }
-    });
-  });
-
-  // Mobil select uchun
-  const programSelect = document.getElementById('program-select-mobile');
-  if (programSelect) {
-    programSelect.addEventListener('change', (e) => {
-      const program = e.target.value;
-      updateContent(program);
-    });
-  }
-
-  // Sahifa yuklanganda
+  // Event listeners
   document.addEventListener('DOMContentLoaded', () => {
-    // URL dan program parametrini olish
-    const urlParams = new URLSearchParams(window.location.search);
-    const program = urlParams.get('program') || 'bachelor';
-    
-    // Mobil select qiymatini o'rnatish
-    const programSelect = document.getElementById('program-select-mobile');
-    if (programSelect) {
-      programSelect.value = program;
-    }
-    
-    // Aktiv tabni belgilash
-    const activeTab = document.querySelector(`[data-program="${program}"]`);
-    if (activeTab) {
-      document.querySelectorAll('[data-program]').forEach(tab => {
-        tab.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-        tab.classList.add('hover:bg-gray-100', 'text-gray-600');
+    // Desktop program buttons
+    document.querySelectorAll('[data-program]').forEach(button => {
+      button.addEventListener('click', () => {
+        const program = button.dataset.program;
+        updateContent(program);
       });
-      
-      activeTab.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-      activeTab.classList.remove('hover:bg-gray-100', 'text-gray-600');
+    });
+
+    // Mobile program select
+    const mobileSelect = document.getElementById('program-select-mobile');
+    if (mobileSelect) {
+      mobileSelect.addEventListener('change', () => {
+        updateContent(mobileSelect.value);
+      });
     }
-    
-    // Kontentni yangilash
-    updateContent(program);
   });
 </script>

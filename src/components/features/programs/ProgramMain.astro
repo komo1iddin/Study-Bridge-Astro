@@ -1,34 +1,50 @@
 ---
-import { GraduationCap, Award, Globe, ArrowRight } from 'lucide-astro';
+import { ArrowRight } from 'lucide-astro';
 import { getLangFromUrl } from '@/i18n/langUtils';
-import { useTranslations } from '@/i18n/utils';
+import { getProgramsTranslations } from '@/i18n/features/programs';
 import ProgramCard from './ProgramCard.astro';
 import { getCollection } from 'astro:content';
+import type { Program, ProgramType } from '@/types/program';
 
 const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const t = getProgramsTranslations(lang);
 
 const programsEntries = await getCollection('programs');
-const programs = programsEntries.map(entry => ({
-  ...entry.data,
-  title: entry.data.title.uz,
-  description: entry.data.description.uz,
-  features: entry.data.features.uz,
-  slug: entry.id.replace('.yaml', '')
-}));
+
+// Manually create Program objects that match the Program type
+const programs = programsEntries.map(entry => {
+  const typeValue = (entry.data.type as ProgramType) || 'bachelor';
+  
+  // Create a valid Program object
+  const program: Program = {
+    id: entry.id,
+    type: typeValue,
+    title: entry.data.title[lang] || entry.data.title.en || entry.data.title.uz,
+    description: entry.data.description[lang] || entry.data.description.en || entry.data.description.uz,
+    features: entry.data.features[lang] || entry.data.features.en || entry.data.features.uz,
+    levels: ['Undergraduate', 'Graduate'], // Default levels if not provided
+    duration: entry.data.duration || '4 years',
+    icon: entry.data.icon || 'graduation-cap',
+    bgColor: entry.data.bgColor || 'bg-blue-50',
+    language: entry.data.language || 'en',
+    slug: entry.id.replace(/\.yaml$/, '')
+  };
+  
+  return program;
+});
 ---
 
 <div class="w-full py-12 md:py-24 bg-gradient-to-b from-slate-50 to-white">
   <div class="container px-4 md:px-6 mx-auto">
     <div class="flex flex-col items-center text-center mb-12">
       <div class="mb-4 bg-blue-50 text-blue-700 border border-blue-200 rounded-full py-1.5 px-4 text-sm">
-        {t('programs.title')}
+        {t.main.title}
       </div>
       <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-        {t('programs.heading')}
+        {t.main.subtitle}
       </h2>
       <p class="text-slate-600 md:text-lg max-w-[700px] mx-auto mb-8">
-        {t('programs.description')}
+        {t.filter.title}
       </p>
     </div>
 
@@ -43,7 +59,7 @@ const programs = programsEntries.map(entry => ({
         href={`/${lang}/programs`}
         class="inline-flex items-center justify-center px-8 py-3 text-base font-medium rounded-xl text-white bg-primary-600 hover:bg-primary-700 transform hover:scale-[1.02] transition-all duration-200"
       >
-        {t('programs.viewAll')}
+        {t.labels.viewAll}
         <ArrowRight class="w-5 h-5 ml-2" />
       </a>
     </div>

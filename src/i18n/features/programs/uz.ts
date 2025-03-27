@@ -55,7 +55,9 @@ export const uz: ProgramsTranslations = {
     viewAll: "Barcha dasturlarni ko'rish",
     applyNow: "Hozir ariza topshirish",
     learnMore: "Batafsil ma'lumot",
-    noResults: "Sizning mezonlaringizga mos keladigan dasturlar topilmadi"
+    noResults: "Sizning mezonlaringizga mos keladigan dasturlar topilmadi",
+    studyLevels: "O'qish darajalari",
+    fields: "Yo'nalishlar"
   },
   common: {
     discount: "Chegirma",

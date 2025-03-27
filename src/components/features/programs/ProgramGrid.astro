@@ -2,6 +2,7 @@
 // ProgramGrid.astro
 import ProgramCard from './ProgramCard.astro';
 import { getLangFromUrl } from '@/i18n/langUtils';
+import { getProgramsTranslations } from '@/i18n/features/programs';
 import { ArrowRight } from 'lucide-astro';
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 const { programs } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
+const t = getProgramsTranslations(lang);
 ---
 
 <!-- Grid Container -->
@@ -26,7 +28,7 @@ const lang = getLangFromUrl(Astro.url);
       ))
     ) : (
       <div class="col-span-full text-center p-4 text-gray-600">
-        Dasturlar topilmadi.
+        {t.labels.noResults}
       </div>
     )}
   </div>
@@ -36,7 +38,7 @@ const lang = getLangFromUrl(Astro.url);
       href={`/${lang}/programs`}
       class="cta-button bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-2.5 rounded-full hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 flex items-center gap-2"
     >
-      Barcha dasturlarni ko'rish
+      {t.labels.viewAll}
       <ArrowRight class="h-4 w-4" />
     </a>
   </div>

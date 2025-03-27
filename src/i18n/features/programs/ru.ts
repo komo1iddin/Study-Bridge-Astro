@@ -55,7 +55,9 @@ export const ru: ProgramsTranslations = {
     viewAll: "Посмотреть все программы",
     applyNow: "Подать заявку",
     learnMore: "Узнать больше",
-    noResults: "Не найдено программ, соответствующих вашим критериям"
+    noResults: "Не найдено программ, соответствующих вашим критериям",
+    studyLevels: "Уровни обучения",
+    fields: "Направления"
   },
   common: {
     discount: "Скидка",

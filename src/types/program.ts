@@ -14,8 +14,11 @@ export const programSchema = z.object({
   levels: z.array(z.string()),
   icon: z.string(),
   bgColor: z.string(),
+  textColor: z.string().optional(),
+  color: z.string().optional(),
   language: z.string(),
-  price: z.string().optional()
+  price: z.string().optional(),
+  slug: z.string().optional()
 });
 
 export type Program = z.infer<typeof programSchema>;

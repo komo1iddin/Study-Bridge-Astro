@@ -8,9 +8,9 @@
   import { cn } from "@/lib/utils";
   import { getNavigation, getLocalizedLanguages } from "@/data/constants/navigation";
   import { getLangFromUrl, type Lang } from "@/i18n/langUtils";
-  import { getHeaderTranslations } from "@/i18n/features/shared/header";
+  import { getHeaderTranslations } from "@/i18n/features/layout/header";
   import { getLanguageSelectorTranslations } from '@/i18n/features/shared/languageSelector';
-  import type { HeaderTranslations } from "@/i18n/features/shared/header/types";
+  import type { HeaderTranslations } from "@/i18n/features/layout/header/types";
 
   // Types
   type NavigationItem = {

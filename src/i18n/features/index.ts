@@ -5,20 +5,17 @@ import { whyTranslations, getWhyTranslations } from './home/whyChina';
 import { missionStatsTranslations, getMissionStatsTranslations } from './home/missionStats';
 import { ourTeamTranslations, getOurTeamTranslations } from './home/ourTeam';
 import { universityDetailTranslations, getUniversityDetailTranslations } from './university/universityDetail';
+import { universityPageTranslations, getUniversityPageTranslations } from './university/universityPage';
+import { getContactTranslations } from './contact';
 import type { PartnersTranslations } from './home/partners';
 import type { SuccessPathTranslations, Step, StepBenefit } from './home/successPath';
 import type { HeroTranslations } from './home/hero';
-import type { WhyTranslations, ReasonItem } from './home/whyChina';
-import type { MissionStatsTranslations, StatItem, AdvantageItem } from './home/missionStats';
-import type { OurTeamTranslations, TeamPosition, TeamValue } from './home/ourTeam';
-import type { 
-  UniversityDetailTranslations, 
-  UniversityTabTranslations,
-  UniversityStatisticsTranslations,
-  UniversityApplicationTranslations,
-  UniversityContactTranslations,
-  UniversityBadgeTranslations 
-} from './university/universityDetail';
+import type { WhyTranslations } from './home/whyChina';
+import type { MissionStatsTranslations } from './home/missionStats';
+import type { OurTeamTranslations } from './home/ourTeam';
+import type { UniversityDetailTranslations } from './university/universityDetail';
+import type { UniversityPageTranslations } from './university/universityPage';
+import type { ContactTranslations } from './contact';
 import type { Lang } from '@/i18n/langUtils';
 
 // Re-export types
@@ -29,19 +26,11 @@ export type {
   StepBenefit,
   HeroTranslations,
   WhyTranslations,
-  ReasonItem,
   MissionStatsTranslations,
-  StatItem,
-  AdvantageItem,
   OurTeamTranslations,
-  TeamPosition,
-  TeamValue,
   UniversityDetailTranslations,
-  UniversityTabTranslations,
-  UniversityStatisticsTranslations,
-  UniversityApplicationTranslations,
-  UniversityContactTranslations,
-  UniversityBadgeTranslations
+  UniversityPageTranslations,
+  ContactTranslations
 };
 
 // Export translations by feature
@@ -52,7 +41,8 @@ export const featureTranslations = {
   whyChina: whyTranslations,
   missionStats: missionStatsTranslations,
   ourTeam: ourTeamTranslations,
-  universityDetail: universityDetailTranslations
+  universityDetail: universityDetailTranslations,
+  universityPage: universityPageTranslations
 };
 
 // Export helper functions to get translations by feature and language
@@ -63,7 +53,9 @@ export const getTranslations = {
   whyChina: getWhyTranslations,
   missionStats: getMissionStatsTranslations,
   ourTeam: getOurTeamTranslations,
-  universityDetail: getUniversityDetailTranslations
+  universityDetail: getUniversityDetailTranslations,
+  universityPage: getUniversityPageTranslations,
+  contact: getContactTranslations
 };
 
 // This can be used to access all translations in a flat structure:

@@ -1,64 +1,67 @@
 ---
 import { programStore, $programFilter } from '@/data/store/programs/programStore';
 import Select from '../../core/Card/Select.astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getProgramsTranslations } from '@/i18n/features/programs';
 
 const currentFilter = $programFilter.get();
+const lang = getLangFromUrl(Astro.url);
+const t = getProgramsTranslations(lang);
 
-interface Props {
+interface Option {
+  value: string;
   label: string;
-  name: string;
-  options: Array<any>;
-  onChange: string;
-  value: string | undefined;
 }
 
-const languages = ['English', 'Chinese', 'Russian'].map(lang => ({
+const languages: Option[] = ['English', 'Chinese', 'Russian'].map(lang => ({
   value: lang,
   label: lang
 }));
-const durations = ['6 months', '1 year', '2 years', '4 years'];
-const priceRanges = [
+
+const durations: Option[] = ['6 months', '1 year', '2 years', '4 years'].map(duration => ({
+  value: duration,
+  label: duration
+}));
+
+const priceRanges: Option[] = [
   { min: 0, max: 5000, label: '$0 - $5,000' },
   { min: 5000, max: 10000, label: '$5,000 - $10,000' },
   { min: 10000, max: 20000, label: '$10,000 - $20,000' },
   { min: 20000, max: Infinity, label: '$20,000+' }
-];
+].map(range => ({
+  value: JSON.stringify(range),
+  label: range.label
+}));
 ---
 
 <div class="program-filters" data-testid="program-filter">
-  <h3>Filter Programs</h3>
+  <h3>{t.filter.title}</h3>
   
   <div class="filters-grid">
     <div class="filter-group">
       <Select
-        label="Language"
+        label={t.filter.language}
         name="language"
         options={languages}
         value={currentFilter.language}
-        onChange="updateFilter('language', this.value)"
       />
     </div>
 
     <div class="filter-group">
       <Select
-        label="Duration"
+        label={t.filter.duration}
         name="duration"
         options={durations}
         value={currentFilter.duration}
-        onChange="updateFilter('duration', this.value)"
       />
     </div>
 
     <div class="filter-group">
       <Select
-        label="Price Range"
+        label={t.filter.priceRange}
         name="priceRange"
-        options={priceRanges.map(range => ({
-          value: JSON.stringify(range),
-          label: range.label
-        }))}
+        options={priceRanges}
         value={JSON.stringify(currentFilter.priceRange)}
-        onChange="updatePriceRange(this.value)"
       />
     </div>
   </div>
@@ -68,46 +71,68 @@ const priceRanges = [
     onclick="clearFilters()"
     disabled={!currentFilter.language && !currentFilter.duration && !(currentFilter.priceRange?.min ?? 0)}
   >
-    Clear Filters
+    {t.filter.clearFilters}
   </button>
 </div>
 
 <script>
-  import { $programFilter, programStore } from '@/data/store/programs/programStore';
-  let isUpdating = false;
-
-  async function updateFilter(key: string, value: string) {
-    if (isUpdating) return;
-    try {
-      isUpdating = true;
-      const filter = $programFilter.get();
-      $programFilter.set({ ...filter, [key]: value });
-      await programStore.loadPrograms($programFilter.get());
-    } catch (error) {
-      console.error('Failed to update filter:', error);
-    } finally {
-      isUpdating = false;
+  function updateFilter(key, value) {
+    if (typeof window !== 'undefined' && window.programStore) {
+      const filter = window.programStore.getFilter();
+      window.programStore.setFilter({ ...filter, [key]: value });
+      window.programStore.loadPrograms();
     }
   }
 
-  async function updatePriceRange(rangeString: string) {
-    if (isUpdating) return;
-    try {
-      isUpdating = true;
+  function updatePriceRange(rangeString) {
+    if (typeof window !== 'undefined' && window.programStore) {
       const range = JSON.parse(rangeString);
-      const filter = $programFilter.get();
-      $programFilter.set({ ...filter, priceRange: range });
-      await programStore.loadPrograms($programFilter.get());
-    } catch (error) {
-      console.error('Failed to update price range:', error);
-    } finally {
-      isUpdating = false;
+      const filter = window.programStore.getFilter();
+      window.programStore.setFilter({ ...filter, priceRange: range });
+      window.programStore.loadPrograms();
     }
   }
 
   function clearFilters() {
-    programStore.clearFilter();
+    if (typeof window !== 'undefined' && window.programStore) {
+      window.programStore.clearFilter();
+    }
   }
+
+  // Add event listeners once the document is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    // Setup language filter change listener
+    const languageSelect = document.querySelector('select[name="language"]');
+    if (languageSelect) {
+      languageSelect.addEventListener('change', (e) => {
+        updateFilter('language', e.target.value);
+      });
+    }
+
+    // Setup duration filter change listener
+    const durationSelect = document.querySelector('select[name="duration"]');
+    if (durationSelect) {
+      durationSelect.addEventListener('change', (e) => {
+        updateFilter('duration', e.target.value);
+      });
+    }
+
+    // Setup price range filter change listener
+    const priceRangeSelect = document.querySelector('select[name="priceRange"]');
+    if (priceRangeSelect) {
+      priceRangeSelect.addEventListener('change', (e) => {
+        updatePriceRange(e.target.value);
+      });
+    }
+
+    // Setup clear filters button listener
+    const clearButton = document.querySelector('.clear-filters');
+    if (clearButton) {
+      clearButton.addEventListener('click', () => {
+        clearFilters();
+      });
+    }
+  });
 </script>
 
 <style>
@@ -125,6 +150,10 @@ const priceRanges = [
 
   .filter-group {
     @apply space-y-2;
+  }
+
+  .clear-filters {
+    @apply mt-6 px-4 py-2 bg-gray-100 text-gray-700 rounded border hover:bg-gray-200 transition-colors;
   }
 
   .clear-filters:disabled {

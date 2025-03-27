@@ -1,22 +1,30 @@
 ---
 // ContactButton.astro
 interface Props {
-  text: string;
+  text?: string;
   variant?: 'mobile' | 'desktop';
   showOnMobile?: boolean;
   showOnDesktop?: boolean;
   className?: string;
+  lang?: string;
 }
 
 import { MessageCircleQuestion } from 'lucide-astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getTranslations } from '@/i18n/features';
 
 const { 
   text, 
   variant = 'desktop', 
   showOnMobile = true,
   showOnDesktop = true,
-  className = ''
+  className = '',
+  lang
 } = Astro.props;
+
+const currentLang = getLangFromUrl(Astro.url);
+const t = getTranslations.contact(currentLang || lang || 'uz');
+const buttonText = text || t.cta.getConsultation;
 
 const baseClasses = "inline-flex items-center font-medium rounded-full text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 shadow-sm";
 
@@ -41,7 +49,7 @@ const buttonId = `contact-button-${Math.random().toString(36).substring(2, 9)}`;
 
 <button id={buttonId} class={finalClasses}>
   <MessageCircleQuestion class={iconClasses[variant]} />
-  {text}
+  {buttonText}
 </button>
 
 <script define:vars={{ buttonId }}>

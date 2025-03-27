@@ -6,10 +6,14 @@
   import { cubicOut } from 'svelte/easing';
   import type { Filters } from '../lib/data';
   import Sidebar from './sidebar/Sidebar.svelte';
+  import type { Lang } from '../../../../../i18n/langUtils';
+  import type { UniversityPageTranslations } from '../../../../../i18n/features/university/universityPage';
 
   export let filters: Filters;
   export let cities: string[] = [];
   export let isOpen = false;
+  export let t: UniversityPageTranslations;
+  export let lang: Lang;
   
   const dispatch = createEventDispatcher<{
     change: { key: keyof Filters; value: string };
@@ -32,10 +36,10 @@
 </script>
 
 <div class="flex items-center justify-between md:hidden">
-  <h1 class="text-2xl font-bold">Universities</h1>
+  <h1 class="text-2xl font-bold">{t.list.title}</h1>
   <Button variant="outline" size="icon" on:click={toggleSheet}>
     <Filter class="h-4 w-4" />
-    <span class="sr-only">Filter</span>
+    <span class="sr-only">{t.mobileFilters.open}</span>
   </Button>
 </div>
 
@@ -53,7 +57,7 @@
     transition:fly|local={{ x: -350, duration: 300, opacity: 1, easing: cubicOut }}
   >
     <div class="flex items-center justify-between p-4 border-b">
-      <h2 class="font-semibold">Filters</h2>
+      <h2 class="font-semibold">{t.mobileFilters.title}</h2>
       <Button variant="ghost" size="icon" on:click={toggleSheet} class="opacity-70 hover:opacity-100">
         <X class="h-4 w-4" />
       </Button>
@@ -62,6 +66,8 @@
       <Sidebar 
         {filters} 
         {cities} 
+        {t}
+        {lang}
         on:change={handleChange} 
         on:reset={handleReset} 
       />

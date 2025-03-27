@@ -55,7 +55,9 @@ export const en: ProgramsTranslations = {
     viewAll: "View All Programs",
     applyNow: "Apply Now",
     learnMore: "Learn More",
-    noResults: "No programs found matching your criteria"
+    noResults: "No programs found matching your criteria",
+    studyLevels: "Study Levels",
+    fields: "Fields"
   },
   common: {
     discount: "Discount",

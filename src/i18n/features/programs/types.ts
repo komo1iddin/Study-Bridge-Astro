@@ -42,6 +42,8 @@ export interface ProgramsTranslations {
     applyNow: string;
     learnMore: string;
     noResults: string;
+    studyLevels: string;
+    fields: string;
   };
   common: {
     discount: string;
