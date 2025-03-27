@@ -115,6 +115,19 @@
     gap: 1rem;
   }
   
+  .card-footer-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .card-footer-stats {
+      display: flex;
+      gap: 0.75rem;
+    }
+  }
+  
   @media (max-width: 767px) {
     .card-footer {
       flex-direction: column;
@@ -124,11 +137,19 @@
     
     .card-footer-stats {
       width: 100%;
-      justify-content: space-between;
     }
     
     .card-footer-button {
       width: 100%;
+    }
+    
+    .stat-item {
+      width: 100%;
+      min-width: unset;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
   }
   
@@ -205,7 +226,7 @@
         
         <!-- Stats and action button -->
         <div class="card-footer">
-          <div class="flex gap-3 card-footer-stats">
+          <div class="card-footer-stats">
             {#if university.foundedYear}
               <div class="stat-item">
                 <p class="text-xs text-muted-foreground">{t.card.founded}</p>
