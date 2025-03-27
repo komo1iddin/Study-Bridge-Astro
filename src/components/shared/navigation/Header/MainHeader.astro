@@ -3,15 +3,18 @@ import { Globe, Phone } from 'lucide-astro';
 import DesktopNav from './DesktopNav.astro';
 import MobileNav from './MobileNav.svelte';
 import LanguageSelector from '@/components/shared/LanguageSelector/LanguageSelector.astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getHeaderTranslations } from '@/i18n/features/layout/header';
 
 const currentPath = Astro.url.pathname;
-const currentLang = currentPath.split('/')[1] || 'uz';
+const currentLang = getLangFromUrl(Astro.url);
+const t = getHeaderTranslations(currentLang);
 ---
 
 <header class="fixed top-0 left-0 right-0 bg-white z-[40] border-b border-gray-200/70">
   <div class="max-w-[1440px] mx-auto px-4 sm:px-6">
     <div class="flex items-center justify-between h-16">
-      {/* Logo va Navigation */}
+      {/* Logo and Navigation */}
       <div class="flex items-center gap-8">
         <a href={`/${currentLang}`} class="flex items-center gap-2">
           <span class="bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent font-bold text-xl tracking-tight">
@@ -35,7 +38,7 @@ const currentLang = currentPath.split('/')[1] || 'uz';
           onclick="window.showOfferPopup()"
           class="bg-[#2463EB] hover:bg-[#1d4fd1] text-white px-6 py-2.5 rounded-full flex items-center gap-2 text-[15px] font-semibold transition-all duration-300 hover:shadow-[0_6px_20px_rgba(36,99,235,0.35)] hover:-translate-y-0.5 active:translate-y-0"
         >
-          <span>Подать заявку</span>
+          <span>{t.cta.applyButton}</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>

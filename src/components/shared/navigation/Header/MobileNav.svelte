@@ -4,19 +4,14 @@
   import { slide, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
 
-  // Import from @/ paths but with a fallback structure
-  // to avoid TS errors during development but still work at runtime
-  // @ts-ignore
+  // Import from @/ paths
   import { cn } from "@/lib/utils";
-  // @ts-ignore
   import { getNavigation, getLocalizedLanguages } from "@/data/constants/navigation";
-  // @ts-ignore
-  import { defaultLang } from "@/i18n/langUtils";
-  // @ts-ignore
-  import { createTranslationFunction } from "@/i18n/translationUtils";
+  import { getLangFromUrl, type Lang } from "@/i18n/langUtils";
+  import { getHeaderTranslations } from "@/i18n/features/layout/header";
+  import type { HeaderTranslations } from "@/i18n/features/layout/header";
 
   // Types
-  type Lang = 'uz' | 'ru' | 'en';
   type NavigationItem = {
     name: string;
     href?: string;
@@ -40,11 +35,11 @@
   };
   
   // Extract language from path
-  let lang = (currentPath.split("/")[1] || defaultLang) as Lang;
+  const lang = currentPath.split("/")[1] as Lang || 'uz';
   let currentLanguage = lang;
   
   // Translations and menu data
-  $: t = createTranslationFunction(lang);
+  let t: HeaderTranslations;
   $: menuItems = getNavigation(lang);
   $: languagesList = getLocalizedLanguages(lang);
 
@@ -52,6 +47,9 @@
   onMount(() => {
     isClient = true;
     browser = typeof window !== 'undefined';
+    
+    // Get translations
+    t = getHeaderTranslations(lang);
     
     // Store original body styles
     if (typeof document !== 'undefined') {
@@ -147,7 +145,7 @@
   <button
     on:click={openMenu}
     class="menu-trigger p-2 text-gray-700 hover:bg-gray-100 rounded-full transition-colors duration-150"
-    aria-label={t("nav.openMenu")}
+    aria-label={t?.mobileMenu.menu || "Menu"}
   >
     <Menu class="h-6 w-6" />
   </button>
@@ -166,11 +164,11 @@
       transition:fly|local={{ duration: 200, x: 300, opacity: 1, easing: quintOut }}
     >
       <div class="flex items-center justify-between p-4 border-b">
-        <h2 class="text-xl font-medium">{t("nav.menu")}</h2>
+        <h2 class="text-xl font-medium">{t?.mobileMenu.menu || "Menu"}</h2>
         <button
           on:click={closeMenu}
           class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-150"
-          aria-label={t("nav.closeMenu")}
+          aria-label={t?.mobileMenu.close || "Close"}
         >
           <X class="h-5 w-5" />
         </button>
@@ -254,7 +252,7 @@
             class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150"
           >
             <Globe class="h-5 w-5 text-gray-500" />
-            <span class="font-medium">{t("nav.selectLanguage")}</span>
+            <span class="font-medium">Select Language</span>
             <ChevronDown class={cn(
               "ml-auto h-5 w-5 text-gray-500 transition-transform duration-200",
               showLanguages && "rotate-180"
@@ -288,7 +286,7 @@
             class="w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-medium hover:bg-blue-700 active:bg-blue-800 transition-all duration-150 hover:shadow-md"
             on:click={showApplicationForm}
           >
-            {t("nav.submitApplication")}
+            {t?.cta.applyButton || "Apply Now"}
           </button>
         </div>
       </div>
