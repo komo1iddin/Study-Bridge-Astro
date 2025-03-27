@@ -2,34 +2,32 @@
 import MissionStats from '@/components/features/home/MissionStats.astro';
 ---
 
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MissionStats Component Example</title>
-  <link rel="stylesheet" href="/styles/global.css">
+  <title>MissionStats Example Usage</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="p-4">
-  <div class="max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold mb-8">MissionStats Component Examples</h1>
-    
-    <div class="mb-12">
-      <h2 class="text-2xl font-bold mb-4">Default (Uzbek)</h2>
-      <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+<body class="bg-gray-100 p-8">
+  <div class="max-w-6xl mx-auto space-y-16">
+    <div>
+      <h2 class="text-2xl font-bold mb-6 text-blue-600">Uzbek (Default)</h2>
+      <div class="bg-white p-8 rounded-xl shadow-md">
         <MissionStats />
       </div>
     </div>
-    
-    <div class="mb-12">
-      <h2 class="text-2xl font-bold mb-4">English</h2>
-      <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+
+    <div>
+      <h2 class="text-2xl font-bold mb-6 text-blue-600">English</h2>
+      <div class="bg-white p-8 rounded-xl shadow-md">
         <MissionStats lang="en" />
       </div>
     </div>
-    
-    <div class="mb-12">
-      <h2 class="text-2xl font-bold mb-4">Russian</h2>
-      <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+
+    <div>
+      <h2 class="text-2xl font-bold mb-6 text-blue-600">Russian</h2>
+      <div class="bg-white p-8 rounded-xl shadow-md">
         <MissionStats lang="ru" />
       </div>
     </div>
