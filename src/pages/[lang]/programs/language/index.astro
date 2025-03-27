@@ -1,13 +1,12 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/langUtils';
-
-
 import { getCollection } from 'astro:content';
-import { BookOpen, Clock, Users, CheckCircle, ArrowRight } from 'lucide-astro';
+import { GraduationCap, Clock, CheckCircle, ArrowRight } from 'lucide-astro';
 import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
 import ContactModal from '@/components/features/contact/ContactModal.astro';
+import { getTranslation } from '@/i18n/translationUtils';
+import { getProgramsTranslations } from '@/i18n/features/programs';
 
 // Get the language from the URL parameter
 const { lang } = Astro.params;
@@ -16,31 +15,40 @@ const { lang } = Astro.params;
 if (!lang || !languages.includes(lang as Lang)) {
   return Astro.redirect('/uz/'); // Redirect to default language if invalid
 }
+
+// Initialize translation functions
+const t = (key: string) => getTranslation(lang as Lang, key);
+const programsT = getProgramsTranslations(lang as Lang);
+
 // Get language programs
 const programs = (await getCollection('programs'))
   .filter(p => p.data.type === 'language')
   .map(program => ({
-    ...program.data,
     id: program.id,
-    title: program.data.title[lang],
-    description: program.data.description[lang],
-    features: program.data.features[lang]
+    title: program.data.title[lang as keyof typeof program.data.title],
+    description: program.data.description[lang as keyof typeof program.data.description],
+    duration: program.data.duration,
+    features: program.data.features[lang as keyof typeof program.data.features]
   }));
 
 const breadcrumbItems = [
   { label: t('common.home'), href: `/${lang}` },
   { label: t('common.programs'), href: `/${lang}/programs` },
-  { label: 'Til kurslari', href: `/${lang}/programs/language` }
+  { label: programsT.categories.language.title, href: `/${lang}/programs/language` }
 ];
+
+// Custom meta data
+const meta = {
+  title: `${programsT.categories.language.title} | Study in China`,
+  description: programsT.categories.language.description,
+  keywords: ['language courses', 'chinese language', 'HSK', 'study in China']
+};
 
 // Server-side render this page
 export const prerender = false;
-// Use the language parameter to get translations
-import { getTranslation } from '@/i18n/translationUtils';
-const t = (key: string) => getTranslation(lang as Lang, key);
 ---
 
-<Layout title="Til kurslari | Study in China">
+<Layout meta={meta}>
   <div class="min-h-screen bg-gradient-to-b from-primary-50/50 to-white">
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-r from-primary-600 to-primary-700 text-white py-20 overflow-hidden">
@@ -53,16 +61,16 @@ const t = (key: string) => getTranslation(lang as Lang, key);
         <Breadcrumbs items={breadcrumbItems} class="mb-8 text-primary-100" />
         
         <div class="max-w-3xl">
-          <h1 class="text-4xl md:text-5xl font-bold mb-6">Xitoy tili kurslari</h1>
+          <h1 class="text-4xl md:text-5xl font-bold mb-6">{programsT.categories.language.title}</h1>
           <p class="text-xl text-primary-100 mb-8">
-            HSK darajasini oshirish va Xitoy tilini professional darajada o'rganish uchun kurslar
+            {programsT.categories.language.description}
           </p>
           <div class="flex flex-wrap gap-4">
             <button
               onclick="window.uiStore.toggleContactModal(true)"
               class="inline-flex items-center px-6 py-3 bg-white text-primary-700 font-medium rounded-lg hover:bg-primary-50 transition-all duration-300"
             >
-              Bepul konsultatsiya
+              {t('common.freeConsultation')}
               <ArrowRight class="ml-2 h-5 w-5" />
             </button>
           </div>
@@ -78,7 +86,7 @@ const t = (key: string) => getTranslation(lang as Lang, key);
             <div class="p-6">
               <div class="flex items-center gap-4 mb-4">
                 <div class="p-3 bg-primary-100 rounded-lg">
-                  <BookOpen class="w-6 h-6 text-primary-600" />
+                  <GraduationCap class="w-6 h-6 text-primary-600" />
                 </div>
                 <div>
                   <h3 class="text-lg font-bold text-gray-900">{program.title}</h3>
@@ -90,11 +98,11 @@ const t = (key: string) => getTranslation(lang as Lang, key);
 
               <div class="flex items-center gap-2 text-sm text-gray-600 mb-4">
                 <Clock class="w-4 h-4 text-primary-500" />
-                <span>Davomiyligi: {program.duration}</span>
+                <span>{programsT.labels.duration}: {program.duration}</span>
               </div>
 
               <div class="space-y-2 mb-6">
-                {program.features.slice(0, 3).map(feature => (
+                {program.features.slice(0, 3).map((feature: string) => (
                   <div class="flex items-start gap-2">
                     <CheckCircle class="w-4 h-4 text-primary-600 mt-1" />
                     <span class="text-sm text-gray-700">{feature}</span>
@@ -106,7 +114,7 @@ const t = (key: string) => getTranslation(lang as Lang, key);
                 href={`/${lang}/programs/language/${program.id}`}
                 class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
               >
-                Batafsil
+                {programsT.labels.learnMore}
                 <ArrowRight class="ml-1 h-4 w-4" />
               </a>
             </div>

@@ -1,12 +1,19 @@
 ---
 // src/components/ui/ErrorMessage.astro
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getTranslations } from '@/i18n/features';
+import type { Lang } from '@/i18n/langUtils';
+
 interface Props {
   message: string;
   error?: Error;
   showRetry?: boolean;
+  lang?: Lang;
 }
 
-const { message, error, showRetry = true } = Astro.props;
+const { message, error, showRetry = true, lang } = Astro.props;
+const currentLang = getLangFromUrl(Astro.url);
+const t = getTranslations.ui(currentLang || lang || 'uz');
 ---
 
 <div class="bg-red-50 border-l-4 border-red-500 p-4 my-4">
@@ -32,7 +39,7 @@ const { message, error, showRetry = true } = Astro.props;
             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             onclick="window.location.reload();"
           >
-            Retry
+            {t.errorMessage.retry}
           </button>
         </div>
       )}

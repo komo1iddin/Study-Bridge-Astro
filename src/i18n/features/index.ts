@@ -7,6 +7,9 @@ import { ourTeamTranslations, getOurTeamTranslations } from './home/ourTeam';
 import { universityDetailTranslations, getUniversityDetailTranslations } from './university/universityDetail';
 import { universityPageTranslations, getUniversityPageTranslations } from './university/universityPage';
 import { getContactTranslations } from './contact';
+import { getUITranslations } from './shared/ui';
+import { testimonialsTranslations, getTestimonialsTranslations } from './shared/testimonials';
+import { getProgramsTranslations } from './programs';
 import type { PartnersTranslations } from './home/partners';
 import type { SuccessPathTranslations, Step, StepBenefit } from './home/successPath';
 import type { HeroTranslations } from './home/hero';
@@ -16,6 +19,9 @@ import type { OurTeamTranslations } from './home/ourTeam';
 import type { UniversityDetailTranslations } from './university/universityDetail';
 import type { UniversityPageTranslations } from './university/universityPage';
 import type { ContactTranslations } from './contact';
+import type { UITranslations } from './shared/ui';
+import type { TestimonialsTranslations } from './shared/testimonials';
+import type { ProgramsTranslations } from './programs';
 import type { Lang } from '@/i18n/langUtils';
 
 // Re-export types
@@ -30,7 +36,10 @@ export type {
   OurTeamTranslations,
   UniversityDetailTranslations,
   UniversityPageTranslations,
-  ContactTranslations
+  ContactTranslations,
+  UITranslations,
+  TestimonialsTranslations,
+  ProgramsTranslations
 };
 
 // Export translations by feature
@@ -42,7 +51,8 @@ export const featureTranslations = {
   missionStats: missionStatsTranslations,
   ourTeam: ourTeamTranslations,
   universityDetail: universityDetailTranslations,
-  universityPage: universityPageTranslations
+  universityPage: universityPageTranslations,
+  testimonials: testimonialsTranslations
 };
 
 // Export helper functions to get translations by feature and language
@@ -55,7 +65,10 @@ export const getTranslations = {
   ourTeam: getOurTeamTranslations,
   universityDetail: getUniversityDetailTranslations,
   universityPage: getUniversityPageTranslations,
-  contact: getContactTranslations
+  contact: getContactTranslations,
+  ui: getUITranslations,
+  testimonials: getTestimonialsTranslations,
+  programs: getProgramsTranslations
 };
 
 // This can be used to access all translations in a flat structure:

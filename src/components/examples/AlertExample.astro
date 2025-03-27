@@ -1,0 +1,105 @@
+---
+import Alert from '@/components/ui/astro/Alert.astro';
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout meta={{ 
+  title: "Alert Component Examples", 
+  description: "Examples of Alert components with internationalization support",
+  keywords: ["alert", "component", "example", "i18n"]
+}}>
+  <div class="container mx-auto py-12 space-y-8">
+    <h1 class="text-3xl font-bold mb-6">Alert Component Examples</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">English Alerts</h2>
+        
+        <Alert type="info" lang="en" title="Information Alert">
+          This is an informational alert with content in English.
+        </Alert>
+        
+        <Alert type="success" lang="en" title="Success Alert">
+          This is a success alert with content in English.
+        </Alert>
+        
+        <Alert type="warning" lang="en" title="Warning Alert" dismissable={true}>
+          This is a warning alert with content in English. It can be dismissed.
+        </Alert>
+        
+        <Alert type="error" lang="en" title="Error Alert">
+          This is an error alert with content in English.
+        </Alert>
+      </div>
+      
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Russian Alerts</h2>
+        
+        <Alert type="info" lang="ru">
+          Это информационное уведомление на русском языке.
+        </Alert>
+        
+        <Alert type="success" lang="ru">
+          Это уведомление об успешном выполнении на русском языке.
+        </Alert>
+        
+        <Alert type="warning" lang="ru" dismissable={true}>
+          Это предупреждающее уведомление на русском языке. Его можно закрыть.
+        </Alert>
+        
+        <Alert type="error" lang="ru">
+          Это уведомление об ошибке на русском языке.
+        </Alert>
+      </div>
+      
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">Uzbek Alerts</h2>
+        
+        <Alert type="info" lang="uz">
+          Bu o'zbekcha ma'lumot xabarnomasi.
+        </Alert>
+        
+        <Alert type="success" lang="uz">
+          Bu o'zbekcha muvaffaqiyat xabarnomasi.
+        </Alert>
+        
+        <Alert type="warning" lang="uz" dismissable={true}>
+          Bu o'zbekcha ogohlantirish xabarnomasi. Uni yopish mumkin.
+        </Alert>
+        
+        <Alert type="error" lang="uz">
+          Bu o'zbekcha xatolik xabarnomasi.
+        </Alert>
+      </div>
+      
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold">With Message Property</h2>
+        
+        <Alert 
+          type="info" 
+          title="Info with Message" 
+          message="This demonstrates using the message property instead of the slot."
+        />
+        
+        <Alert 
+          type="success" 
+          title="Success with Message" 
+          message="This demonstrates using the message property instead of the slot."
+        />
+        
+        <Alert 
+          type="warning" 
+          title="Warning with Message" 
+          message="This demonstrates using the message property instead of the slot."
+          dismissable={true}
+        />
+        
+        <Alert 
+          type="error" 
+          title="Error with Message" 
+          message="This demonstrates using the message property instead of the slot."
+        />
+      </div>
+    </div>
+  </div>
+</Layout> 

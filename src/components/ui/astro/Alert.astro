@@ -1,0 +1,121 @@
+import { Info } from 'lucide-astro';
+import { CheckCircle } from 'lucide-astro';
+import { AlertTriangle } from 'lucide-astro';
+import { XCircle } from 'lucide-astro';
+import { X } from 'lucide-astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getTranslations } from '@/i18n/features';
+import type { Lang } from '@/i18n/langUtils';
+
+export interface Props {
+  type?: 'info' | 'success' | 'warning' | 'error';
+  title?: string;
+  message?: string;
+  dismissable?: boolean;
+  className?: string;
+  lang?: Lang;
+}
+
+const { 
+  type = 'info', 
+  title, 
+  message, 
+  dismissable = false, 
+  className = '',
+  lang
+} = Astro.props;
+
+const currentLang = getLangFromUrl(Astro.url);
+const t = getTranslations.ui(currentLang || lang || 'uz');
+
+const types = {
+  info: {
+    bg: 'bg-blue-50',
+    border: 'border-blue-500',
+    icon: Info,
+    iconColor: 'text-blue-400',
+    title: title || t.alert.info,
+    titleColor: 'text-blue-800',
+    textColor: 'text-blue-700'
+  },
+  success: {
+    bg: 'bg-green-50',
+    border: 'border-green-500',
+    icon: CheckCircle,
+    iconColor: 'text-green-400',
+    title: title || t.alert.success,
+    titleColor: 'text-green-800',
+    textColor: 'text-green-700'
+  },
+  warning: {
+    bg: 'bg-yellow-50',
+    border: 'border-yellow-500',
+    icon: AlertTriangle,
+    iconColor: 'text-yellow-400',
+    title: title || t.alert.warning,
+    titleColor: 'text-yellow-800',
+    textColor: 'text-yellow-700'
+  },
+  error: {
+    bg: 'bg-red-50',
+    border: 'border-red-500',
+    icon: XCircle,
+    iconColor: 'text-red-400',
+    title: title || t.alert.error,
+    titleColor: 'text-red-800',
+    textColor: 'text-red-700'
+  }
+};
+
+const currentType = types[type];
+const IconComponent = currentType.icon;
+const alertId = `alert-${Math.random().toString(36).substring(2, 9)}`;
+
+<div id={alertId} class={`rounded-md border-l-4 p-4 ${currentType.bg} ${currentType.border} ${className}`}>
+  <div class="flex items-start">
+    <div class="flex-shrink-0">
+      <IconComponent class={`h-5 w-5 ${currentType.iconColor}`} />
+    </div>
+    <div class="ml-3 flex-1">
+      <h3 class={`text-sm font-medium ${currentType.titleColor}`}>
+        {title || currentType.title}
+      </h3>
+      {message && (
+        <div class={`mt-2 text-sm ${currentType.textColor}`}>
+          <p>{message}</p>
+        </div>
+      )}
+      <div class={`text-sm ${currentType.textColor}`}>
+        <slot />
+      </div>
+    </div>
+    {dismissable && (
+      <div class="ml-auto pl-3">
+        <div class="-mx-1.5 -my-1.5">
+          <button 
+            type="button" 
+            class={`inline-flex p-1.5 rounded-md ${currentType.bg} hover:bg-opacity-80 transition-colors focus:outline-none`}
+            data-dismiss="alert"
+            aria-label={t.alert.close}
+          >
+            <span class="sr-only">{t.alert.dismiss}</span>
+            <X class="h-5 w-5 text-gray-400" />
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
+<script define:vars={{ alertId }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const alertElement = document.getElementById(alertId);
+    const dismissButton = alertElement?.querySelector('[data-dismiss="alert"]');
+    
+    if (dismissButton) {
+      dismissButton.addEventListener('click', () => {
+        alertElement.remove();
+      });
+    }
+  });
+</script> 
