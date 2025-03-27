@@ -1,36 +1,36 @@
 ---
 import { Star, Heart, Target } from 'lucide-astro';
-import { useTranslations } from '@/i18n/utils';
 import type { Lang } from '@/i18n/langUtils';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { getOurTeamTranslations } from '@/i18n/features/home/ourTeam';
 
 interface Props {
   lang?: Lang;
 }
 
 const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
+const t = getOurTeamTranslations(lang);
 
 // Данные о команде
 const teamMembers = [
   {
     name: "Avaz Nishonboyev",
-    position: t('success.team.position1'),
+    position: t.team.positions.position1,
     image: "/images/team/Avaz_Nishonboyev.jpg"
   },
   {
     name: "Maxmud Maxmudov",
-    position: t('success.team.position2'),
+    position: t.team.positions.position2,
     image: "/images/team/Maxmud_Maxmudov.jpg"
   },
   {
     name: "Shuxrat Usmonov",
-    position: t('success.team.position3'),
+    position: t.team.positions.position3,
     image: "/images/team/Shuxrat_Usmonov.jpg"
   },
   {
     name: "Dilnoza Gulyamova",
-    position: t('success.team.position4'),
+    position: t.team.positions.position4,
     image: "/images/team/Dilnoza_Gulyamova.jpg"
   }
 ];
@@ -39,18 +39,18 @@ const teamMembers = [
 const values = [
   {
     icon: Target,
-    title: t('success.values.title1'),
-    description: t('success.values.desc1')
+    title: t.values.value1.title,
+    description: t.values.value1.description
   },
   {
     icon: Heart,
-    title: t('success.values.title2'),
-    description: t('success.values.desc2')
+    title: t.values.value2.title,
+    description: t.values.value2.description
   },
   {
     icon: Star,
-    title: t('success.values.title3'),
-    description: t('success.values.desc3')
+    title: t.values.value3.title,
+    description: t.values.value3.description
   }
 ];
 ---
@@ -60,10 +60,9 @@ const values = [
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Главный заголовок секции с синей линией -->
     <SectionHeader
-    badge={t('success.badge')}
-    title={t('success.team.title')}
-    subtitle={t('success.team.description')}
-  />
+      title={t.team.title}
+      subtitle={t.team.description}
+    />
 
       <!-- Сетка с фотографиями команды -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -93,10 +92,10 @@ const values = [
     <div class="mt-12 mb-12">
       <div class="text-center mb-10" data-aos="fade-up">
         <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          {t('success.values.mainTitle')}
+          {t.values.mainTitle}
         </h3>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-          {t('success.values.description')}
+          {t.values.description}
         </p>
       </div>
       

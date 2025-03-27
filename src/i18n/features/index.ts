@@ -3,11 +3,13 @@ import { successPathTranslations, getSuccessPathTranslations } from './home/succ
 import { heroTranslations, getHeroTranslations } from './home/hero';
 import { whyTranslations, getWhyTranslations } from './home/whyChina';
 import { missionStatsTranslations, getMissionStatsTranslations } from './home/missionStats';
+import { ourTeamTranslations, getOurTeamTranslations } from './home/ourTeam';
 import type { PartnersTranslations } from './home/partners';
 import type { SuccessPathTranslations, Step, StepBenefit } from './home/successPath';
 import type { HeroTranslations } from './home/hero';
 import type { WhyTranslations, ReasonItem } from './home/whyChina';
 import type { MissionStatsTranslations, StatItem, AdvantageItem } from './home/missionStats';
+import type { OurTeamTranslations, TeamPosition, TeamValue } from './home/ourTeam';
 import type { Lang } from '@/i18n/langUtils';
 
 // Re-export types
@@ -21,7 +23,10 @@ export type {
   ReasonItem,
   MissionStatsTranslations,
   StatItem,
-  AdvantageItem
+  AdvantageItem,
+  OurTeamTranslations,
+  TeamPosition,
+  TeamValue
 };
 
 // Export translations by feature
@@ -30,7 +35,8 @@ export const featureTranslations = {
   successPath: successPathTranslations,
   hero: heroTranslations,
   whyChina: whyTranslations,
-  missionStats: missionStatsTranslations
+  missionStats: missionStatsTranslations,
+  ourTeam: ourTeamTranslations
 };
 
 // Export helper functions to get translations by feature and language
@@ -39,7 +45,8 @@ export const getTranslations = {
   successPath: getSuccessPathTranslations,
   hero: getHeroTranslations,
   whyChina: getWhyTranslations,
-  missionStats: getMissionStatsTranslations
+  missionStats: getMissionStatsTranslations,
+  ourTeam: getOurTeamTranslations
 };
 
 // This can be used to access all translations in a flat structure:
@@ -50,22 +57,29 @@ export function getFeatureTranslation(
   key: string,
   ...args: any[]
 ): string {
-  const translations = featureTranslations[feature][lang];
-  
-  // Use safer type handling
-  if (translations && typeof translations === 'object' && key in translations) {
-    const value = translations[key as keyof typeof translations];
+  try {
+    const translations = featureTranslations[feature][lang];
     
-    if (typeof value === 'string') {
-      // Handle placeholders like {0}, {1}, etc.
-      if (args.length > 0 && value.includes('{')) {
-        return value.replace(/\{(\d+)\}/g, (_, index) => {
-          return args[parseInt(index)] !== undefined ? String(args[parseInt(index)]) : '';
-        });
-      }
-      return value;
+    if (!translations || typeof translations !== 'object' || !(key in translations)) {
+      return key;
     }
+    
+    const value: unknown = translations[key as keyof typeof translations];
+    
+    if (typeof value !== 'string') {
+      return key;
+    }
+    
+    if (args.length > 0) {
+      return value.replace(/\{(\d+)\}/g, (match: string, indexStr: string) => {
+        const index = parseInt(indexStr, 10);
+        return args[index] !== undefined ? String(args[index]) : '';
+      });
+    }
+    
+    return value;
+  } catch (error) {
+    console.error('Error in getFeatureTranslation:', error);
+    return key;
   }
-  
-  return key;
 } 
