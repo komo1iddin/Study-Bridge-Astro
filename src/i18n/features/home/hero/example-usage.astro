@@ -1,0 +1,30 @@
+---
+import Hero from '@/components/features/home/Hero.astro';
+---
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hero Component Example</title>
+</head>
+<body>
+  <!-- Testing with Uzbek language (default) -->
+  <div>
+    <h2>Uzbek (Default)</h2>
+    <Hero lang="uz" />
+  </div>
+
+  <!-- Testing with English language -->
+  <div class="mt-20">
+    <h2>English</h2>
+    <Hero lang="en" />
+  </div>
+
+  <!-- Testing with Russian language -->
+  <div class="mt-20">
+    <h2>Russian</h2>
+    <Hero lang="ru" />
+  </div>
+</body>
+</html> 
