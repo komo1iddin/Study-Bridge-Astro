@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { Menu, X, ChevronDown, Globe, Phone, Mail } from "lucide-svelte";
+  import { Menu, X, ChevronDown, Globe, Phone, Mail, Languages, Check } from "lucide-svelte";
   import { slide, fly } from "svelte/transition";
   import { quintOut } from "svelte/easing";
 
@@ -8,8 +8,9 @@
   import { cn } from "@/lib/utils";
   import { getNavigation, getLocalizedLanguages } from "@/data/constants/navigation";
   import { getLangFromUrl, type Lang } from "@/i18n/langUtils";
-  import { getHeaderTranslations } from "@/i18n/features/layout/header";
-  import type { HeaderTranslations } from "@/i18n/features/layout/header";
+  import { getHeaderTranslations } from "@/i18n/features/shared/header";
+  import { getLanguageSelectorTranslations } from '@/i18n/features/shared/languageSelector';
+  import type { HeaderTranslations } from "@/i18n/features/shared/header/types";
 
   // Types
   type NavigationItem = {
@@ -20,6 +21,8 @@
 
   // Props
   export let currentPath: string;
+  export let currentLang: Lang = 'en';
+  export let pathname: string = '';
 
   // State
   let isClient = false;
@@ -40,6 +43,7 @@
   
   // Translations and menu data
   let t: HeaderTranslations;
+  let languageT = getLanguageSelectorTranslations(currentLang);
   $: menuItems = getNavigation(lang);
   $: languagesList = getLocalizedLanguages(lang);
 
@@ -58,6 +62,26 @@
         paddingRight: document.body.style.paddingRight
       };
     }
+
+    // Add keyboard event handler for language switching
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey) {
+        const key = e.key.toLowerCase();
+        if (key === 'u') { // Uzbek
+          window.location.href = getPathForLang('uz');
+        } else if (key === 'r') { // Russian
+          window.location.href = getPathForLang('ru');
+        } else if (key === 'e') { // English
+          window.location.href = getPathForLang('en');
+        }
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   });
   
   // Clean up when component is destroyed
@@ -138,6 +162,16 @@
         window.showOfferPopup();
       }
     }, 10);
+  }
+
+  function getPathForLang(lang: Lang) {
+    // If we're at the root path of a language, go to the new language root
+    if (pathname === `/${currentLang}` || pathname === `/${currentLang}/`) {
+      return `/${lang}/`;
+    }
+    
+    // Otherwise, replace the language prefix in the path
+    return pathname.replace(new RegExp(`^/${currentLang}`), `/${lang}`);
   }
 </script>
 
@@ -263,7 +297,7 @@
             <div class="mt-2 space-y-1 px-3" transition:slide|local={{ duration: 200, easing: quintOut }}>
               {#each languagesList as language (language.code)}
                 <a
-                  href={`/${language.code}${currentPath.substring(3)}`}
+                  href={getPathForLang(language.code)}
                   class={cn(
                     "flex items-center px-3 py-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150",
                     currentLanguage === language.code ? "bg-gray-100 text-blue-600" : "text-gray-600 hover:text-blue-600"

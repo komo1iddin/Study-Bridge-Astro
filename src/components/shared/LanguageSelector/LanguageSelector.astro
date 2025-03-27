@@ -2,29 +2,31 @@
 // components/LanguageSelector.astro
 import { ChevronDown, Languages } from 'lucide-astro';
 import { getLangFromUrl, type Lang } from '@/i18n/langUtils';
+import { getLanguageSelectorTranslations } from '@/i18n/features/shared/languageSelector';
 
 const { isMobile = false } = Astro.props;
 // Use Astro.locals.lang if available (from middleware), otherwise use getLangFromUrl
 const currentLang = (Astro.locals.lang as Lang) || getLangFromUrl(Astro.url);
 const currentPath = Astro.url.pathname;
+const t = getLanguageSelectorTranslations(currentLang);
 
 const languageOptions = [
   {
     code: 'ru' as Lang,
     name: 'RU',
-    fullName: 'Русский',
+    fullName: t.languageNames.ru,
     shortcut: 'Alt+R'
   },
   {
     code: 'uz' as Lang,
     name: 'UZ',
-    fullName: 'O\'zbekcha',
+    fullName: t.languageNames.uz,
     shortcut: 'Alt+U'
   },
   {
     code: 'en' as Lang,
     name: 'EN',
-    fullName: 'English',
+    fullName: t.languageNames.en,
     shortcut: 'Alt+E'
   }
 ];
@@ -49,7 +51,7 @@ function getPathForLang(lang: Lang) {
       class="flex items-center gap-1.5 text-gray-600 hover:text-blue-600 py-1.5 px-2.5 rounded-lg hover:bg-gray-50 transition-colors duration-200 language-selector-button"
       aria-expanded="false"
       aria-haspopup="true"
-      aria-label="Select language"
+      aria-label={t.selectLanguage}
     >
       <Languages class="w-5 h-5" />
       <span class="text-sm font-medium">{currentLanguage.name}</span>
