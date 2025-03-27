@@ -1,13 +1,15 @@
-<script>
+<script lang="ts">
   import { ChevronRight, GraduationCap, MapPin } from 'lucide-svelte';
   import Card from '@/components/ui/svelte/Card.svelte';
   import Badge from '@/components/ui/svelte/Badge.svelte';
   import Button from '@/components/ui/svelte/Button.svelte';
+  import type { UniversityFeatureTranslations } from '@/i18n/features/university/universityFeature';
+  import type { Lang } from '@/i18n/langUtils';
   
   // Props
-  export let university;
-  export let translations;
-  export let lang;
+  export let university: any;
+  export let t: UniversityFeatureTranslations;
+  export let lang: Lang;
   export let className = '';
   
   // Navigation handler
@@ -78,7 +80,7 @@
         <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
           <GraduationCap class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
         </div>
-        <span>{translations.faculties || 'Fakultetlar'}</span>
+        <span>{t.faculties}</span>
       </div>
       <div class="flex flex-wrap gap-1.5">
         {#each university.faculties as faculty}
@@ -94,7 +96,7 @@
       on:click={handleMoreInfo}
       class="w-full flex items-center justify-center gap-1.5 bg-primary/10 hover:bg-primary/20 text-primary transition-colors rounded-xl py-2 sm:py-2.5 text-xs sm:text-sm font-medium group"
     >
-      {translations?.moreInfo || "Batafsil ma'lumot"}
+      {t.moreInfo}
       <ChevronRight class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-0.5" />
     </button>
   </div>

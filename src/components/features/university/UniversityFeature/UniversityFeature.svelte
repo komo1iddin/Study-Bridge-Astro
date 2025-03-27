@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { Hand, ChevronRight } from 'lucide-svelte';
   import { createEmblaCarousel } from './components/emblaCarouselUtils.js';
@@ -9,9 +9,12 @@
   import UniversityCardItem from './components/UniversityCardItem.svelte';
   import BackgroundDecoration from './components/BackgroundDecoration.svelte';
   
+  import type { UniversityFeatureTranslations } from '@/i18n/features/university/universityFeature';
+  import type { Lang } from '@/i18n/langUtils';
+  
   // Props
-  export let lang;
-  export let translations;
+  export let lang: Lang;
+  export let t: UniversityFeatureTranslations;
   export let universities = [];
   
   // State
@@ -41,7 +44,7 @@
         visibleUniversities = universities || [];
         loading = false;
       } catch (err) {
-        error = 'Маълумотларни юклашда хатолик юз берди';
+        error = t.error || 'Маълумотларни юклашда хатолик юз берди';
         loading = false;
       }
     }, 300);
@@ -100,8 +103,8 @@
   <BackgroundDecoration />
   <div class="w-full max-w-[1920px] mx-auto px-4 relative z-10">
     <SectionHeader 
-      title={translations.leadingUniversities || "Leading universities"}
-      subtitle={translations.discoverText || "Description"}
+      title={t.leadingUniversities}
+      subtitle={t.discoverText}
     />
 
     <div class="flex justify-end mb-4">
@@ -110,7 +113,7 @@
       }`}>
         <Hand class="w-5 h-5 text-primary" />
         <span class="text-sm font-semibold">
-          {translations.swipeToSlide || 'Swipe to Slide'}
+          {t.swipeToSlide}
         </span>
       </div>
     </div>
@@ -133,14 +136,14 @@
               >
                 <UniversityCardItem 
                   university={university} 
-                  translations={translations} 
+                  t={t}
                   {lang} 
                 />
               </div>
             {/each}
           {:else}
             <div class="text-center py-10 w-full">
-              <p class="text-gray-500">No universities found</p>
+              <p class="text-gray-500">{t.error}</p>
             </div>
           {/if}
         </div>
@@ -167,13 +170,13 @@
     <div class="text-center mt-12">
       <ButtonView
         href={`/${lang}/universities`} 
-        text={translations?.viewAll || "Barcha universitetlar"} 
+        text={t.viewAll} 
         variant="desktop" 
         showOnMobile={false}
       />
       <ButtonView
         href={`/${lang}/universities`} 
-        text={translations?.viewAll || "Barcha universitetlar"} 
+        text={t.viewAll} 
         variant="mobile" 
         showOnDesktop={false}
       />
