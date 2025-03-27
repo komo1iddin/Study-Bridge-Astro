@@ -1,15 +1,20 @@
 <script lang="ts">
+  import type { UniversityPageTranslations } from '../../../../../../i18n/features/university/universityPage';
+  import type { Lang } from '../../../../../../i18n/langUtils';
   import { Card, CardContent, CardHeader, CardTitle } from '../../../../../../components/ui/svelte';
   import { GraduationCap, School, Users, Award } from 'lucide-svelte';
+  
+  export let t: UniversityPageTranslations;
+  export let lang: Lang = 'uz';
 </script>
 
 <Card class="bg-gradient-to-br from-blue-50 to-indigo-50">
   <CardHeader class="pb-2">
-    <CardTitle class="text-base">Xitoyda ta'lim</CardTitle>
+    <CardTitle class="text-base">{t.infoCard.title}</CardTitle>
   </CardHeader>
   <CardContent class="space-y-4 text-sm">
     <p>
-      Xitoy xalqaro talabalar uchun eng mashhur ta'lim yo'nalishlaridan biriga aylandi va arzon narxlarda jahon darajasidagi ta'lim taklif etmoqda.
+      {t.infoCard.description}
     </p>
 
     <div class="space-y-2">
@@ -18,8 +23,8 @@
           <School class="h-4 w-4 text-blue-700" />
         </div>
         <div>
-          <p class="font-medium">2,900+ Universitet</p>
-          <p class="text-xs text-muted-foreground">Barcha viloyatlar bo'ylab</p>
+          <p class="font-medium">{t.infoCard.stats.universities.value}</p>
+          <p class="text-xs text-muted-foreground">{t.infoCard.stats.universities.description}</p>
         </div>
       </div>
 
@@ -28,8 +33,8 @@
           <GraduationCap class="h-4 w-4 text-indigo-700" />
         </div>
         <div>
-          <p class="font-medium">500,000+ Dasturlar</p>
-          <p class="text-xs text-muted-foreground">Bakalavr darajasidan doktoranturagacha</p>
+          <p class="font-medium">{t.infoCard.stats.programs.value}</p>
+          <p class="text-xs text-muted-foreground">{t.infoCard.stats.programs.description}</p>
         </div>
       </div>
 
@@ -38,8 +43,8 @@
           <Users class="h-4 w-4 text-purple-700" />
         </div>
         <div>
-          <p class="font-medium">500,000+ Xalqaro talabalar</p>
-          <p class="text-xs text-muted-foreground">200+ mamlakatdan</p>
+          <p class="font-medium">{t.infoCard.stats.students.value}</p>
+          <p class="text-xs text-muted-foreground">{t.infoCard.stats.students.description}</p>
         </div>
       </div>
 
@@ -48,8 +53,8 @@
           <Award class="h-4 w-4 text-green-700" />
         </div>
         <div>
-          <p class="font-medium">30,000+ Stipendiyalar</p>
-          <p class="text-xs text-muted-foreground">Davlat va universitet tomonidan moliyalashtirilgan</p>
+          <p class="font-medium">{t.infoCard.stats.scholarships.value}</p>
+          <p class="text-xs text-muted-foreground">{t.infoCard.stats.scholarships.description}</p>
         </div>
       </div>
     </div>

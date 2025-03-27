@@ -5,9 +5,13 @@
   import type { University, Filters } from "../lib/data";
   import { RANKING_RANGES } from "../lib/data";
   import { ITEMS_PER_PAGE } from "../lib/constants";
+  import type { UniversityPageTranslations } from "../../../../../i18n/features/university/universityPage";
+  import type { Lang } from "../../../../../i18n/langUtils";
   
   export let universities: University[] = [];
   export let filters: Filters;
+  export let t: UniversityPageTranslations;
+  export let lang: Lang = 'uz';
   
   let currentPage = 1;
   
@@ -87,14 +91,14 @@
 <div class="space-y-6">
   {#if filteredUniversities.length === 0}
     <div class="flex h-40 items-center justify-center rounded-lg border border-dashed">
-      <p class="text-muted-foreground">Sizning filterlaringizga mos universitetlar topilmadi</p>
+      <p class="text-muted-foreground">{t.list.noResults}</p>
     </div>
   {:else}
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <h1 class="text-xl sm:text-2xl font-bold hidden sm:block">Universitetlar</h1>
+      <h1 class="text-xl sm:text-2xl font-bold hidden sm:block">{t.list.title}</h1>
       <div class="flex flex-col sm:flex-row sm:items-center gap-4">
         <p class="text-xs sm:text-sm text-muted-foreground">
-          Ko'rsatilmoqda {Math.min((currentPage * ITEMS_PER_PAGE), filteredUniversities.length)} / {universities.length} universitet
+          {t.list.showing.replace('{current}', String(Math.min((currentPage * ITEMS_PER_PAGE), filteredUniversities.length))).replace('{total}', String(universities.length))}
         </p>
         
         {#if totalPages > 1}
@@ -106,6 +110,7 @@
               disabled={currentPage === 1}
             >
               <ChevronLeft class="h-4 w-4" />
+              <span class="sr-only">{t.list.pagination.prev}</span>
             </Button>
             
             {#each Array.from({ length: totalPages }, (_, i) => i + 1) as page}
@@ -126,6 +131,7 @@
               disabled={currentPage === totalPages}
             >
               <ChevronRight class="h-4 w-4" />
+              <span class="sr-only">{t.list.pagination.next}</span>
             </Button>
           </div>
         {/if}
@@ -134,17 +140,17 @@
 
     <div class="space-y-3">
       <h2 class="text-xl font-bold sm:hidden">
-        Universitetlar
+        {t.list.title}
       </h2>
       {#if filters.featured === "true"}
         <h2 class="text-base sm:text-lg lg:text-xl font-medium">
-          Tavsiya etilgan universitetlar
+          {t.list.featuredUniversities}
         </h2>
       {/if}
       <div class="flex flex-col gap-4 sm:gap-6">
         {#each paginatedUniversities as university (university.id)}
           <div class="w-full">
-            <UniversityCard {university} />
+            <UniversityCard {university} {t} {lang} />
           </div>
         {/each}
       </div>

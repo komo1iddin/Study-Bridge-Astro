@@ -3,8 +3,12 @@
   import { Button } from "../../../../../components/ui/svelte";
   import { cn } from "../../../../../lib/utils";
   import { ArrowRight } from "lucide-svelte";
+  import type { UniversityPageTranslations } from "../../../../../i18n/features/university/universityPage";
+  import type { Lang } from "../../../../../i18n/langUtils";
   
   export let university: University;
+  export let t: UniversityPageTranslations;
+  export let lang: Lang = 'uz';
 
   // Default logo if not provided
   const defaultLogo = "https://placehold.co/200x200/e2e8f0/1e293b?text=U";
@@ -97,7 +101,7 @@
       <!-- Featured badge -->
       {#if university.featured}
         <div class="absolute top-3 right-3">
-          <span class="badge badge-primary">Featured</span>
+          <span class="badge badge-primary">{t.card.featured}</span>
         </div>
       {/if}
     </div>
@@ -111,7 +115,7 @@
             <h3 class="text-xl font-bold line-clamp-2">{university.name}</h3>
             {#if university.ranking}
               <span class="badge badge-outline border-blue-300 text-blue-700 whitespace-nowrap">
-                Rank #{university.ranking}
+                {t.card.rank.replace('{rank}', university.ranking.toString())}
               </span>
             {/if}
           </div>
@@ -129,7 +133,7 @@
           <!-- Tags and badges -->
           <div class="flex flex-wrap gap-1.5 mb-3">
             {#if university.hasGrants}
-              <span class="badge badge-green">Grants Available</span>
+              <span class="badge badge-green">{t.card.grantsAvailable}</span>
             {/if}
             
             {#if university.educationType && university.educationType.length > 0}
@@ -145,14 +149,14 @@
           <div class="flex gap-4">
             {#if university.foundedYear}
               <div class="text-center">
-                <p class="text-xs text-muted-foreground">Founded</p>
+                <p class="text-xs text-muted-foreground">{t.card.founded}</p>
                 <p class="text-sm font-semibold">{university.foundedYear}</p>
               </div>
             {/if}
             
             {#if university.studentsCount}
               <div class="text-center">
-                <p class="text-xs text-muted-foreground">Students</p>
+                <p class="text-xs text-muted-foreground">{t.card.students}</p>
                 <p class="text-sm font-semibold">{formatNumber(university.studentsCount)}</p>
               </div>
             {/if}
@@ -163,7 +167,7 @@
             class="whitespace-nowrap btn-details flex items-center gap-2"
             on:click={handleViewDetails}
           >
-            View Details
+            {t.card.viewDetails}
             <ArrowRight class="w-3.5 h-3.5 arrow-icon" />
           </Button>
         </div>

@@ -3,9 +3,13 @@
   import Filters from './Filters.svelte';
   import InfoCard from './InfoCard.svelte';
   import type { Filters as FiltersType } from '../../lib/data';
+  import type { Lang } from '../../../../../../i18n/langUtils';
+  import type { UniversityPageTranslations } from '../../../../../../i18n/features/university/universityPage';
   
   export let filters: FiltersType;
   export let cities: string[] = [];
+  export let t: UniversityPageTranslations;
+  export let lang: Lang = 'uz';
   
   const dispatch = createEventDispatcher<{
     change: { key: keyof FiltersType; value: string };
@@ -21,26 +25,34 @@
   }
 </script>
 
-<div class="w-full space-y-6 md:w-72">
-  <div class="rounded-lg border border-slate-200 bg-white/80 backdrop-blur-sm p-4 shadow-sm">
-    <Filters 
-      {filters} 
-      {cities} 
-      onReset={handleReset}
-      on:change={handleChange} 
-    />
-  </div>
+<div class="w-full flex flex-col gap-5">
+  <Filters 
+    filters={filters}
+    cities={cities}
+    onReset={handleReset}
+    t={t}
+    lang={lang}
+    on:change={handleChange}
+  />
   
-  <InfoCard />
-  
-  <div class="rounded-lg border border-slate-200 bg-white/80 backdrop-blur-sm p-4 shadow-sm">
-    <h3 class="mb-2 text-sm font-medium text-slate-800">Need Help?</h3>
-    <p class="mb-4 text-xs text-slate-600">
-      Our education consultants can help you find the perfect university and program in China.
-    </p>
-    <div class="rounded-md bg-blue-50 p-3 text-center text-sm">
-      <p class="font-medium text-blue-700">Contact Us</p>
-      <p class="mt-1 text-xs text-blue-600">We'll guide you through the application process</p>
+  <InfoCard
+    t={t}
+    lang={lang}
+  />
+
+  <div class="hidden sm:block">
+    <div class="rounded-lg border bg-card p-4 shadow-sm">
+      <h3 class="mb-2 text-sm font-medium">Need Help?</h3>
+      <p class="mb-4 text-xs text-muted-foreground">
+        Our education consultants are here to help you find the perfect university match in China.
+      </p>
+      <div class="flex gap-2">
+        <a href="/contact" class="w-full">
+          <div class="rounded-md bg-primary px-3 py-2 text-center text-xs text-primary-foreground">
+            Contact Us
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </div> 
