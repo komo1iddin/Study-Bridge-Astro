@@ -51,7 +51,7 @@
       lang={lang}
     />
   {:else}
-    <div class="animate-pulse space-y-4">
+    <div class="animate-pulse space-y-4 bg-white/80 backdrop-blur-sm rounded-lg border shadow-sm p-4">
       <div class="h-8 w-40 bg-gray-200 rounded"></div>
       <div class="h-24 w-full bg-gray-200 rounded"></div>
       <div class="h-24 w-full bg-gray-200 rounded"></div>

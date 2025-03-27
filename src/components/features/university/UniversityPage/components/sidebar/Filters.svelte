@@ -201,7 +201,7 @@
   }
 </script>
 
-<div class="space-y-6">
+<div class="space-y-6 bg-white/80 backdrop-blur-sm rounded-lg border shadow-sm p-4">
   <div class="flex items-center justify-between">
     <h3 class="text-lg font-medium">{getFilterTitle()}</h3>
     <Button variant="ghost" size="sm" on:click={onReset} class="h-8 px-2 text-xs">
