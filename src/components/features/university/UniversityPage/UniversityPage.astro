@@ -5,12 +5,12 @@ import { getAllUniversities, getAllCities } from '@/lib/fileSystemReader';
 
 const lang = getLangFromUrl(Astro.url);
 const universities = await getAllUniversities(lang);
-const cities = await getAllCities(lang);
+const cities = await getAllCities(lang) || [];
 ---
 
 <UniversityPageComponent 
   universities={universities} 
   cities={cities} 
   lang={lang}
-  client:load
+  client:only="svelte"
 /> 

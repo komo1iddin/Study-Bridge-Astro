@@ -5,12 +5,16 @@
   import type { Filters as FiltersType } from '../../lib/data';
   import type { Lang } from '../../../../../../i18n/langUtils';
   import type { UniversityPageTranslations } from '../../../../../../i18n/features/university/universityPage';
+  import { onMount } from 'svelte';
   
   export let filters: FiltersType;
   export let cities: string[] = [];
   export let t: UniversityPageTranslations;
   export let lang: Lang = 'uz';
   
+  // Ensure cities is valid during hydration
+  $: validCities = Array.isArray(cities) ? cities : [];
+
   const dispatch = createEventDispatcher<{
     change: { key: keyof FiltersType; value: string };
     reset: void;
@@ -28,7 +32,7 @@
 <div class="w-full flex flex-col gap-5">
   <Filters 
     filters={filters}
-    cities={cities}
+    cities={validCities}
     onReset={handleReset}
     t={t}
     lang={lang}

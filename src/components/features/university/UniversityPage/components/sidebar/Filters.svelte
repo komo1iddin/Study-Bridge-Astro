@@ -8,10 +8,14 @@
   import { RotateCcw } from 'lucide-svelte';
   import type { Filters } from '../../lib/data';
   import { educationTypes, rankingRanges } from '../../lib/data';
+  import type { Lang } from '../../../../../../i18n/langUtils';
+  import type { UniversityPageTranslations } from '../../../../../../i18n/features/university/universityPage';
   
   export let filters: Filters;
   export let cities: string[] = [];
   export let onReset: () => void;
+  export let t: UniversityPageTranslations;
+  export let lang: Lang;
   
   const dispatch = createEventDispatcher<{
     change: { key: keyof Filters; value: string };
@@ -21,46 +25,52 @@
     dispatch('change', { key, value });
   }
 
-  // Filter sections configuration
-  const FILTER_SECTIONS = [
+  // Filter sections configuration - uses translations
+  $: FILTER_SECTIONS = [
     {
       id: "education",
-      title: "Ta'lim turi",
-      placeholder: "Ta'lim turini tanlang",
+      title: t.filters.educationType.title,
+      placeholder: t.filters.educationType.placeholder,
       options: [
-        { value: "all", label: "Barcha turlar" },
-        ...educationTypes
+        { value: "all", label: t.filters.educationType.all },
+        { value: "bachelor", label: t.filters.educationType.bachelor },
+        { value: "master", label: t.filters.educationType.master },
+        { value: "language", label: t.filters.educationType.language },
+        { value: "1+2", label: t.filters.educationType.program }
       ],
       filterKey: "educationType" as keyof Filters
     },
     {
       id: "location",
-      title: "Joylashuv",
-      placeholder: "Shaharni tanlang",
+      title: t.filters.location.title,
+      placeholder: t.filters.location.placeholder,
       options: [
-        { value: "all", label: "Barcha shaharlar" },
-        ...cities.map(city => ({ value: city, label: city }))
+        { value: "all", label: t.filters.location.all },
+        ...(Array.isArray(cities) ? cities.map(city => ({ value: city, label: city })) : [])
       ],
       filterKey: "city" as keyof Filters
     },
     {
       id: "ranking",
-      title: "Universitet reytingi",
-      placeholder: "Reyting oralig'ini tanlang",
+      title: t.filters.ranking.title,
+      placeholder: t.filters.ranking.placeholder,
       options: [
-        { value: "all", label: "Barcha reytinglar" },
-        ...rankingRanges
+        { value: "all", label: t.filters.ranking.all },
+        { value: "1-5", label: t.filters.ranking.top5 },
+        { value: "6-10", label: t.filters.ranking.top10 },
+        { value: "11-20", label: t.filters.ranking.top20 },
+        { value: "21+", label: t.filters.ranking.other }
       ],
       filterKey: "ranking" as keyof Filters
     },
     {
       id: "grants",
-      title: "Grant imkoniyatlari",
-      placeholder: "Grant holatini tanlang",
+      title: t.filters.grants.title,
+      placeholder: t.filters.grants.placeholder,
       options: [
-        { value: "all", label: "Barchasi" },
-        { value: "true", label: "Mavjud" },
-        { value: "false", label: "Mavjud emas" }
+        { value: "all", label: t.filters.grants.all },
+        { value: "true", label: t.filters.grants.available },
+        { value: "false", label: t.filters.grants.notAvailable }
       ],
       filterKey: "hasGrants" as keyof Filters
     }
@@ -78,10 +88,10 @@
 
 <div class="space-y-6">
   <div class="flex items-center justify-between">
-    <h3 class="text-lg font-medium">Filterlar</h3>
+    <h3 class="text-lg font-medium">{t.filters.title}</h3>
     <Button variant="ghost" size="sm" on:click={onReset} class="h-8 px-2 text-xs">
       <RotateCcw class="mr-1 h-3 w-3" />
-      Qayta o'rnatish
+      {t.filters.reset}
     </Button>
   </div>
 
@@ -138,10 +148,10 @@
   </div>
 
   <div class="space-y-4 rounded-lg border bg-card p-4">
-    <h3 class="text-sm font-medium">Tezkor filterlar</h3>
+    <h3 class="text-sm font-medium">{t.filters.quickFilters}</h3>
     <div class="flex items-center justify-between">
       <Label for="featured" class="text-sm">
-        Faqat tavsiya etilgan universitetlar
+        {t.filters.featured}
       </Label>
       <Switch
         id="featured"
