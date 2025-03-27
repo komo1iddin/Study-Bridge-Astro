@@ -4,12 +4,21 @@ import { heroTranslations, getHeroTranslations } from './home/hero';
 import { whyTranslations, getWhyTranslations } from './home/whyChina';
 import { missionStatsTranslations, getMissionStatsTranslations } from './home/missionStats';
 import { ourTeamTranslations, getOurTeamTranslations } from './home/ourTeam';
+import { universityDetailTranslations, getUniversityDetailTranslations } from './university/universityDetail';
 import type { PartnersTranslations } from './home/partners';
 import type { SuccessPathTranslations, Step, StepBenefit } from './home/successPath';
 import type { HeroTranslations } from './home/hero';
 import type { WhyTranslations, ReasonItem } from './home/whyChina';
 import type { MissionStatsTranslations, StatItem, AdvantageItem } from './home/missionStats';
 import type { OurTeamTranslations, TeamPosition, TeamValue } from './home/ourTeam';
+import type { 
+  UniversityDetailTranslations, 
+  UniversityTabTranslations,
+  UniversityStatisticsTranslations,
+  UniversityApplicationTranslations,
+  UniversityContactTranslations,
+  UniversityBadgeTranslations 
+} from './university/universityDetail';
 import type { Lang } from '@/i18n/langUtils';
 
 // Re-export types
@@ -26,7 +35,13 @@ export type {
   AdvantageItem,
   OurTeamTranslations,
   TeamPosition,
-  TeamValue
+  TeamValue,
+  UniversityDetailTranslations,
+  UniversityTabTranslations,
+  UniversityStatisticsTranslations,
+  UniversityApplicationTranslations,
+  UniversityContactTranslations,
+  UniversityBadgeTranslations
 };
 
 // Export translations by feature
@@ -36,7 +51,8 @@ export const featureTranslations = {
   hero: heroTranslations,
   whyChina: whyTranslations,
   missionStats: missionStatsTranslations,
-  ourTeam: ourTeamTranslations
+  ourTeam: ourTeamTranslations,
+  universityDetail: universityDetailTranslations
 };
 
 // Export helper functions to get translations by feature and language
@@ -46,7 +62,8 @@ export const getTranslations = {
   hero: getHeroTranslations,
   whyChina: getWhyTranslations,
   missionStats: getMissionStatsTranslations,
-  ourTeam: getOurTeamTranslations
+  ourTeam: getOurTeamTranslations,
+  universityDetail: getUniversityDetailTranslations
 };
 
 // This can be used to access all translations in a flat structure:

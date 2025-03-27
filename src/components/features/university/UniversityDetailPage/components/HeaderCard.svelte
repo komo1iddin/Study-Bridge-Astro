@@ -3,12 +3,14 @@
   import { MapPin, Users, ChevronDown } from "lucide-svelte";
   import type { University } from "@/types/university";
   import type { Lang } from "@/i18n/langUtils";
+  import type { UniversityDetailTranslations } from "@/i18n/features/university/universityDetail";
   import { onMount, onDestroy } from 'svelte';
 
   export let university: University;
   export let activeTab: string;
   export let onTabChange: (value: string) => void;
   export let lang: Lang;
+  export let t: UniversityDetailTranslations;
 
   // Extract localized content
   $: description = typeof university.description === 'object' 
@@ -19,18 +21,19 @@
     ? university.students[lang] || university.students.en
     : university.students;
 
-  const tabs = [
-    { value: "overview", label: "Overview" },
-    { value: "programs", label: "Programs" },
-    { value: "admission", label: "Admission" },
-    { value: "facilities", label: "Facilities" },
-    { value: "images", label: "Images" },
-    { value: "dorms", label: "Dorms" },
-    { value: "faq", label: "FAQ" }
+  // Define tabs using translations
+  $: tabs = [
+    { value: "overview", label: t.tabs.overview },
+    { value: "programs", label: t.tabs.programs },
+    { value: "admission", label: t.tabs.admission },
+    { value: "facilities", label: t.tabs.facilities },
+    { value: "images", label: t.tabs.images },
+    { value: "dorms", label: t.tabs.dorms },
+    { value: "faq", label: t.tabs.faq }
   ];
 
   // Get active tab label
-  $: activeTabLabel = tabs.find(tab => tab.value === activeTab)?.label || 'Select section';
+  $: activeTabLabel = tabs.find(tab => tab.value === activeTab)?.label || t.selectSection;
 </script>
 
 <Card class="overflow-hidden border-none shadow-lg">
@@ -47,16 +50,16 @@
       <div class="flex flex-wrap gap-2">
         {#if university.featured}
           <span class="inline-flex items-center rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
-            Featured
+            {t.badges.featured}
           </span>
         {/if}
         {#if university.hasGrants}
           <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
-            Grants Available
+            {t.badges.grantsAvailable}
           </span>
         {/if}
         <span class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
-          Rank #{university.ranking || 'N/A'}
+          {t.badges.rank.replace('{rank}', university.ranking || 'N/A')}
         </span>
       </div>
 
@@ -103,7 +106,7 @@
             class="w-full appearance-none bg-white border border-slate-200 rounded-md shadow-sm focus:outline-none text-slate-800 font-medium p-2.5 pr-10"
             value={activeTab}
             on:change={(e) => onTabChange((e.target as HTMLSelectElement).value)}
-            aria-label="Select section"
+            aria-label={t.selectSection}
           >
             {#each tabs as tab}
               <option value={tab.value}>{tab.label}</option>

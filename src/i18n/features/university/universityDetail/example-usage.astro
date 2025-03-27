@@ -1,0 +1,109 @@
+---
+import UniversityDetailPage from '@/components/features/university/UniversityDetailPage/UniversityDetailPage.astro';
+
+// Example university data for demonstration purposes
+const exampleUniversity = {
+  id: "example-university",
+  name: "Example University",
+  city: "Example City",
+  rating: 4.8,
+  students: "25,000+",
+  fields: ["Computer Science", "Business", "Engineering", "Medicine"],
+  priceRange: "$5,000 - $15,000",
+  image: "https://placehold.co/600x400/EEE/31343C?text=University",
+  logo: "https://placehold.co/200x200/EEE/31343C?text=EU",
+  shortDescription: "A leading institution for higher education",
+  description: "Example University is a prestigious institution known for its excellent academic programs and research opportunities.",
+  isTopUniversity: true,
+  featured: true,
+  hasGrants: true,
+  established: 1975,
+  ranking: 15,
+  location: {
+    city: "Example City",
+    country: "Example Country"
+  },
+  price: {
+    amount: 10000,
+    currency: "USD"
+  },
+  tuitionRange: {
+    min: 5000,
+    max: 15000,
+    currency: "USD"
+  },
+  programs: ["Computer Science", "Business Administration", "Mechanical Engineering"],
+  educationType: ["Full-time", "Part-time", "Online"],
+  galleryCategories: [
+    {
+      name: "Campus",
+      description: "View our beautiful campus",
+      images: [
+        {
+          src: "https://placehold.co/600x400/EEE/31343C?text=Campus+1",
+          alt: "Campus building",
+          caption: "Main campus building"
+        },
+        {
+          src: "https://placehold.co/600x400/EEE/31343C?text=Campus+2",
+          alt: "Campus library",
+          caption: "University library"
+        }
+      ]
+    },
+    {
+      name: "Facilities",
+      description: "Our modern facilities",
+      images: [
+        {
+          src: "https://placehold.co/600x400/EEE/31343C?text=Lab",
+          alt: "Research lab",
+          caption: "State-of-the-art research laboratory"
+        },
+        {
+          src: "https://placehold.co/600x400/EEE/31343C?text=Gym",
+          alt: "Gym",
+          caption: "Student fitness center"
+        }
+      ]
+    }
+  ]
+};
+---
+
+<html>
+<head>
+  <title>University Detail Example Usage</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center mb-8">University Detail Page Examples</h1>
+    
+    <div class="space-y-16">
+      <section>
+        <h2 class="text-2xl font-bold mb-6 text-blue-600">Uzbek (Default)</h2>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <UniversityDetailPage university={exampleUniversity} />
+        </div>
+      </section>
+      
+      <section>
+        <h2 class="text-2xl font-bold mb-6 text-blue-600">English</h2>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <UniversityDetailPage university={exampleUniversity} lang="en" />
+        </div>
+      </section>
+      
+      <section>
+        <h2 class="text-2xl font-bold mb-6 text-blue-600">Russian</h2>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+          <UniversityDetailPage university={exampleUniversity} lang="ru" />
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html> 

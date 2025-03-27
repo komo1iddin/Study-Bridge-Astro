@@ -3,14 +3,16 @@
   import { Card, CardContent } from "@/components/ui/svelte";
   import type { University } from "@/types/university";
   import type { Lang } from "@/i18n/langUtils";
+  import type { UniversityDetailTranslations } from "@/i18n/features/university/universityDetail";
 
   export let university: University;
   export let lang: Lang;
+  export let t: UniversityDetailTranslations;
 </script>
 
 <Card class="border-none shadow-md overflow-hidden">
   <CardContent class="p-5">
-    <h3 class="font-semibold text-lg mb-4">Contact Information</h3>
+    <h3 class="font-semibold text-lg mb-4">{t.contact.title}</h3>
     
     <div class="space-y-3">
       {#if university.city}

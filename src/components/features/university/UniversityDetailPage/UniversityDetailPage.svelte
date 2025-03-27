@@ -3,6 +3,8 @@
   import { Home } from "lucide-svelte";
   import type { University } from "@/types/university";
   import type { Lang } from "@/i18n/langUtils";
+  import { getUniversityDetailTranslations } from "@/i18n/features/university/universityDetail";
+  import type { UniversityDetailTranslations } from "@/i18n/features/university/universityDetail";
 
   // Import section components
   import HeaderCard from "./components/HeaderCard.svelte";
@@ -23,6 +25,9 @@
   // Props
   export let university: University;
   export let lang: Lang = "en";
+
+  // Get translations
+  $: t = getUniversityDetailTranslations(lang);
 
   // State
   let mounted = false;
@@ -94,7 +99,7 @@
       <div class="flex items-center gap-2 text-sm text-slate-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap pb-2">
         <Home class="h-3.5 w-3.5 flex-shrink-0" />
         <span>/</span>
-        <span>Universities</span>
+        <span>{t.breadcrumb.universities}</span>
         <span>/</span>
         <span class="text-slate-900 font-medium">{university.name}</span>
       </div>
@@ -104,6 +109,7 @@
         <div class="md:col-span-2 space-y-4 sm:space-y-6 md:space-y-8">
           <HeaderCard 
             {university}
+            {t}
             activeTab={activeTab}
             onTabChange={changeTab}
             {lang}
@@ -129,16 +135,16 @@
 
         <!-- Sidebar -->
         <div class="space-y-4 sm:space-y-6">
-          <ApplicationCard {university} {lang} />
-          <StatsCard {university} {lang} />
-          <ContactCard {university} {lang} />
+          <ApplicationCard {university} {t} {lang} />
+          <StatsCard {university} {t} {lang} />
+          <ContactCard {university} {t} {lang} />
           
           <!-- Add a button to view gallery -->
           <button 
             class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             on:click={showImages}
           >
-            View Gallery
+            {t.viewGallery}
           </button>
         </div>
       </main>

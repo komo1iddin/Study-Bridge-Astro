@@ -1,54 +1,54 @@
 <script lang="ts">
-  import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/svelte";
+  import { Users, Calendar, Award, UserCheck } from "lucide-svelte";
+  import { Card, CardContent } from "@/components/ui/svelte";
   import type { University } from "@/types/university";
   import type { Lang } from "@/i18n/langUtils";
+  import type { UniversityDetailTranslations } from "@/i18n/features/university/universityDetail";
 
   export let university: University;
   export let lang: Lang;
+  export let t: UniversityDetailTranslations;
+
+  const stats = [
+    {
+      key: "internationalStudents",
+      value: "20%",
+      icon: Users
+    },
+    {
+      key: "acceptanceRate",
+      value: "65%",
+      icon: UserCheck
+    },
+    {
+      key: "graduationRate",
+      value: "94%",
+      icon: Award
+    },
+    {
+      key: "facultyStudentRatio",
+      value: "1:12",
+      icon: Calendar
+    }
+  ];
 </script>
 
-<Card class="border-none shadow-md">
-  <CardHeader class="pb-2">
-    <CardTitle class="text-lg font-bold text-slate-800">University Statistics</CardTitle>
-  </CardHeader>
-  <CardContent class="space-y-4">
-    <div>
-      <div class="flex justify-between mb-1">
-        <span class="text-sm font-medium text-slate-600">International Students</span>
-        <span class="text-sm font-medium text-slate-900">25%</span>
-      </div>
-      <div class="w-full bg-slate-200 rounded-full h-2">
-        <div class="bg-blue-600 h-2 rounded-full" style="width: 25%"></div>
-      </div>
+<Card class="border-none shadow-md overflow-hidden">
+  <CardContent class="p-0">
+    <div class="border-b p-4">
+      <h3 class="font-semibold text-lg text-slate-800">{t.statistics.title}</h3>
     </div>
-    
-    <div>
-      <div class="flex justify-between mb-1">
-        <span class="text-sm font-medium text-slate-600">Acceptance Rate</span>
-        <span class="text-sm font-medium text-slate-900">65%</span>
-      </div>
-      <div class="w-full bg-slate-200 rounded-full h-2">
-        <div class="bg-blue-600 h-2 rounded-full" style="width: 65%"></div>
-      </div>
-    </div>
-    
-    <div>
-      <div class="flex justify-between mb-1">
-        <span class="text-sm font-medium text-slate-600">Graduation Rate</span>
-        <span class="text-sm font-medium text-slate-900">85%</span>
-      </div>
-      <div class="w-full bg-slate-200 rounded-full h-2">
-        <div class="bg-blue-600 h-2 rounded-full" style="width: 85%"></div>
-      </div>
-    </div>
-    
-    <div>
-      <div class="flex justify-between mb-1">
-        <span class="text-sm font-medium text-slate-600">Faculty-Student Ratio</span>
-        <span class="text-sm font-medium text-slate-900">1:15</span>
-      </div>
-      <div class="w-full bg-slate-200 rounded-full h-2">
-        <div class="bg-blue-600 h-2 rounded-full" style="width: 75%"></div>
+    <div class="p-4">
+      <div class="grid grid-cols-2 gap-4">
+        {#each stats as stat}
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-1.5">
+              <svelte:component this={stat.icon} class="h-4 w-4 text-blue-600" />
+              <span class="text-xs text-slate-600">{t.statistics[stat.key]}</span>
+            </div>
+            <div class="font-semibold text-slate-900">{stat.value}</div>
+          </div>
+        {/each}
       </div>
     </div>
   </CardContent>
