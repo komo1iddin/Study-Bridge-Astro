@@ -71,7 +71,7 @@
     text-align: center;
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
-    background-color: rgba(59, 130, 246, 0.05);
+    background-color: rgba(241, 245, 249, 0.7);
     min-width: 5rem;
   }
   
@@ -157,14 +157,14 @@
           <div class="flex gap-3">
             {#if university.foundedYear}
               <div class="stat-item">
-                <p class="text-xs text-blue-600">{t.card.founded}</p>
+                <p class="text-xs text-muted-foreground">{t.card.founded}</p>
                 <p class="text-sm font-semibold">{university.foundedYear}</p>
               </div>
             {/if}
             
             {#if university.studentsCount}
               <div class="stat-item">
-                <p class="text-xs text-blue-600">{t.card.students}</p>
+                <p class="text-xs text-muted-foreground">{t.card.students}</p>
                 <p class="text-sm font-semibold">{formatNumber(university.studentsCount)}</p>
               </div>
             {/if}
@@ -172,7 +172,7 @@
           
           <Button 
             variant="default" 
-            class="whitespace-nowrap btn-details flex items-center gap-2 bg-blue-600 hover:bg-blue-700 transition-colors"
+            class="whitespace-nowrap btn-details flex items-center gap-2"
             on:click={handleViewDetails}
           >
             {t.card.viewDetails}
