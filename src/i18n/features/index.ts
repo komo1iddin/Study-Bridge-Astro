@@ -2,10 +2,12 @@ import { partnersTranslations, getPartnersTranslations } from './home/partners';
 import { successPathTranslations, getSuccessPathTranslations } from './home/successPath';
 import { heroTranslations, getHeroTranslations } from './home/hero';
 import { whyTranslations, getWhyTranslations } from './home/whyChina';
+import { missionStatsTranslations, getMissionStatsTranslations } from './home/missionStats';
 import type { PartnersTranslations } from './home/partners';
 import type { SuccessPathTranslations, Step, StepBenefit } from './home/successPath';
 import type { HeroTranslations } from './home/hero';
 import type { WhyTranslations, ReasonItem } from './home/whyChina';
+import type { MissionStatsTranslations, StatItem, AdvantageItem } from './home/missionStats';
 import type { Lang } from '@/i18n/langUtils';
 
 // Re-export types
@@ -16,7 +18,10 @@ export type {
   StepBenefit,
   HeroTranslations,
   WhyTranslations,
-  ReasonItem
+  ReasonItem,
+  MissionStatsTranslations,
+  StatItem,
+  AdvantageItem
 };
 
 // Export translations by feature
@@ -24,7 +29,8 @@ export const featureTranslations = {
   partners: partnersTranslations,
   successPath: successPathTranslations,
   hero: heroTranslations,
-  whyChina: whyTranslations
+  whyChina: whyTranslations,
+  missionStats: missionStatsTranslations
 };
 
 // Export helper functions to get translations by feature and language
@@ -32,7 +38,8 @@ export const getTranslations = {
   partners: getPartnersTranslations,
   successPath: getSuccessPathTranslations,
   hero: getHeroTranslations,
-  whyChina: getWhyTranslations
+  whyChina: getWhyTranslations,
+  missionStats: getMissionStatsTranslations
 };
 
 // This can be used to access all translations in a flat structure:
