@@ -14,7 +14,7 @@ import OurTeam from '@/components/features/home/OurTeam.astro';
 import ContactModal from '@/components/features/contact/ContactModal.astro';
 import Testimonials from '@/components/features/home/TestimonialsSection.astro';
 import Contact from '@/components/shared/contact/Contact.astro';
-import LatestPosts from '@/components/features/blog/LatestPosts.astro'
+import FeaturedBlogSection from '@/components/features/blog/FeaturedBlogSection.astro';
 import FAQ from '@/components/shared/faq/FAQ.astro';
 import ChinaVsUzbekistan from '@/components/features/home/ChinaVsUzbekistan.astro';
 import WhyChina from '@/components/features/home/WhyChina.astro';
@@ -79,9 +79,9 @@ const t = (key: string) => getTranslation(lang as Lang, key);
       <SuccessPath />
     </div>
 
-    <div class="section-gradient2 section-divider-new">
-    <LatestPosts />
-  </div>
+    <div class="section-divider-new">
+      <FeaturedBlogSection lang={lang as Lang} />
+    </div>
 
     <div class="section section-gradient-1">
       <FAQ />
