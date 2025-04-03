@@ -2,10 +2,51 @@ import type { TranslationSchema } from '../../types';
 
 export const ruTranslations: TranslationSchema = {
   faq: {
-    title: "Tez-tez so'raladigan savollar",
-    subtitle: "Xitoyda o'qish haqida eng ko'p so'raladigan savollarga javoblar",
-    notFoundQuestion: 'Savolingizga javob topmadingizmi?',
-    askQuestion: 'Savol berish',
+    title: "Часто задаваемые вопросы",
+    subtitle: "Ответы на наиболее популярные вопросы об обучении в Китае",
+    notFoundQuestion: 'Не нашли ответ на свой вопрос?',
+    askQuestion: 'Задать вопрос',
+    search: {
+      placeholder: "Поиск по вопросам...",
+      noResults: "Ничего не найдено"
+    },
+    categories: {
+      admission: "Процесс поступления",
+      documents: "Документы",
+      study: "Обучение",
+      life: "Жизнь в Китае",
+      finance: "Финансовые вопросы",
+      scholarships: "Стипендии",
+      transfer: "Перевод",
+      language: "Языковые курсы"
+    },
+    common: {
+      readMore: "Подробнее",
+      showAll: "Показать все",
+      hideAll: "Скрыть",
+      relatedQuestions: "Похожие вопросы"
+    },
+    guides: {
+      title: "Пошаговые руководства"
+    },
+    popularQuestions: "Самые популярные вопросы",
+    contactUs: "Отправьте нам свой вопрос",
+    meta: {
+      title: "Часто задаваемые вопросы | Study in China",
+      description: "Ответы на все вопросы об обучении в Китае"
+    },
+    wizard: {
+      title: "Нужна помощь?",
+      description: "Поможем найти ответ на ваш вопрос",
+      step1: "Выберите категорию",
+      step2: "Выберите вопрос",
+      step3: "Просмотрите ответ",
+      categoriesGroup: "Категории FAQ",
+      backButton: "Назад",
+      nextButton: "Далее",
+      restartButton: "Начать сначала"
+    },
+    pageTitle: "Часто задаваемые вопросы | Study in China"
   },
   howWeWork: {
     badge: 'Bizning jarayon',

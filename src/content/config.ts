@@ -176,9 +176,82 @@ const programsCollection = defineCollection({
   }),
 });
 
+const featuresCollection = defineCollection({
+  type: 'data',
+  schema: z.object({
+    title: z.record(z.string(), z.string()),
+    description: z.record(z.string(), z.string()),
+    icon: z.string().optional()
+  }),
+});
+
+const postsCollection = defineCollection({
+  type: 'data',
+  schema: z.object({
+    title: z.record(z.string(), z.string()),
+    description: z
+      .record(z.string(), z.string())
+      .optional(),
+    content: z
+      .record(z.string(), z.string())
+      .optional(),
+    image: z.string().optional(),
+    date: z.string().optional()
+  }),
+});
+
+const postsMdCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.object({
+      uz: z.string(),
+      ru: z.string(),
+      en: z.string()
+    }),
+    publishedDate: z.string(),
+    excerpt: z.object({
+      uz: z.string(),
+      ru: z.string(),
+      en: z.string()
+    }),
+    author: z.string(),
+    authorImage: z.string().optional(),
+    image: z.string().optional(),
+    featured: z.boolean().optional(),
+    content: z.object({
+      uz: z.string(),
+      ru: z.string(),
+      en: z.string()
+    })
+  }),
+});
+
+const testimonialsCollection = defineCollection({
+  type: 'data',
+  schema: z.object({
+    name: z.string(),
+    university: z.string(),
+    program: z.string(),
+    graduationYear: z.number(),
+    image: z.string(),
+    rating: z.number(),
+    quote: z.object({
+      uz: z.string(),
+      ru: z.string(),
+      en: z.string()
+    }),
+    featured: z.boolean().optional(),
+    position: z.record(z.string(), z.string()).optional()
+  }),
+});
+
 export const collections = {
   'universities': universitiesCollection,
   'grants': grantsCollection,
   'faq': faqCollection,
   'programs': programsCollection,
+  'features': featuresCollection,
+  'posts': postsCollection,
+  'posts-md': postsMdCollection,
+  'testimonials': testimonialsCollection
 };

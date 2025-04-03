@@ -407,6 +407,47 @@ export interface TranslationSchema {
     subtitle: string;
     notFoundQuestion: string;
     askQuestion: string;
+    search?: {
+      placeholder: string;
+      noResults: string;
+    };
+    categories?: {
+      admission: string;
+      documents: string;
+      study: string;
+      life: string;
+      finance: string;
+      scholarships: string;
+      transfer: string;
+      language: string;
+    };
+    common?: {
+      readMore: string;
+      showAll: string;
+      hideAll: string;
+      relatedQuestions: string;
+    };
+    guides?: {
+      title: string;
+    };
+    popularQuestions?: string;
+    contactUs?: string;
+    meta?: {
+      title: string;
+      description: string;
+    };
+    wizard?: {
+      title: string;
+      description: string;
+      step1: string;
+      step2: string;
+      step3: string;
+      categoriesGroup: string;
+      backButton: string;
+      nextButton: string;
+      restartButton: string;
+    };
+    pageTitle?: string;
   };
   howWeWork: {
     badge: string;

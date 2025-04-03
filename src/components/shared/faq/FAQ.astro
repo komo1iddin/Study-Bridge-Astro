@@ -29,9 +29,11 @@ const t = useTranslations(lang);
 // Get FAQ items using fileSystemReader
 const faqItems = await getAllFAQ(lang);
 // Sort by order if specified
-const sortedFaqItems = faqItems.sort((a, b) => 
-  (a.data.order || 0) - (b.data.order || 0)
-);
+const sortedFaqItems = faqItems.sort((a, b) => {
+  const orderA = a.data.order !== undefined ? a.data.order : 999;
+  const orderB = b.data.order !== undefined ? b.data.order : 999;
+  return orderA - orderB;
+});
 
 function getIcon(category: string = '') {
   switch(category.toLowerCase()) {
@@ -95,8 +97,46 @@ function getIcon(category: string = '') {
                     class="w-5 h-5 text-primary/70 flex-shrink-0 group-open/details:rotate-180 transition-transform"
                   />
                 </summary>
-                <div class="pl-16 pr-4 pb-4 text-gray-600">
-                  {item.data.answer[lang]}
+                <div class="pl-16 pr-4 pb-4 text-gray-600 faq-content">
+                  {
+                    // Format the answer with proper styling if it contains line breaks
+                    item.data.answer[lang].includes('\n') ? (
+                      <div class="formatted-answer">
+                        {item.data.answer[lang].split('\n').map((line, _index) => {
+                          // Handle bullet points
+                          if (line.trim().startsWith('- ') || line.trim().startsWith('• ')) {
+                            return (
+                              <div class="flex items-start gap-2 my-1.5">
+                                <div class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5"></div>
+                                <div>{line.replace(/^[\s\-\•]+/, '')}</div>
+                              </div>
+                            );
+                          }
+                          // Handle numbered points or section headers
+                          else if (/^\d+[\.:].+:$/.test(line.trim())) {
+                            return <h4 class="font-medium text-gray-800 mt-3 mb-1">{line}</h4>;
+                          }
+                          // Handle key-value pairs
+                          else if (line.includes(':')) {
+                            const [key, value] = line.split(':');
+                            if (value && key.length < 25) {
+                              return (
+                                <div class="my-1.5">
+                                  <span class="font-medium text-gray-800">{key}:</span>
+                                  <span>{value}</span>
+                                </div>
+                              );
+                            }
+                          }
+                          
+                          // Return regular paragraph if not empty
+                          return line.trim() ? <p class="my-1.5">{line}</p> : null;
+                        })}
+                      </div>
+                    ) : (
+                      <p>{item.data.answer[lang]}</p>
+                    )
+                  }
                 </div>
               </details>
             </div>

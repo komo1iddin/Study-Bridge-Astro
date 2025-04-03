@@ -75,14 +75,52 @@ export const prerender = false;
 
       <!-- Search Section -->
       <div class="max-w-2xl mx-auto mb-12" data-aos="fade-up" data-aos-delay="100">
-        <div class="relative">
+        <div class="relative search-container">
           <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           <input
             type="text"
             id="faqSearch"
             placeholder={t('faq.search.placeholder')}
             class="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all"
+            aria-label="Search FAQs"
+            autocomplete="off"
           />
+          <button 
+            id="clearSearch" 
+            class="absolute right-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 hover:text-gray-600 hidden"
+            aria-label="Clear search"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
+          <!-- Search Results Count -->
+          <div id="searchResults" class="text-sm text-gray-500 mt-2 hidden">
+            <span id="resultsCount">0</span> results found
+          </div>
+          
+          <!-- Advanced Search Options -->
+          <div class="mt-3 flex flex-wrap gap-2">
+            <div class="flex items-center">
+              <input type="checkbox" id="searchInAnswers" class="rounded border-gray-300 text-primary-500 focus:ring-primary-500 h-4 w-4" checked/>
+              <label for="searchInAnswers" class="ml-2 text-sm text-gray-600">
+                {t('faq.search.includeAnswers')}
+              </label>
+            </div>
+            
+            <div class="flex items-center ml-4">
+              <input type="checkbox" id="fuzzySearch" class="rounded border-gray-300 text-primary-500 focus:ring-primary-500 h-4 w-4" checked/>
+              <label for="fuzzySearch" class="ml-2 text-sm text-gray-600">
+                {t('faq.search.fuzzyMatch')}
+              </label>
+            </div>
+          </div>
+          
+          <!-- Search Suggestions -->
+          <div id="searchSuggestions" class="absolute w-full bg-white rounded-lg shadow-lg border border-gray-200 mt-1 z-10 hidden">
+            <!-- Suggestions will be populated via JavaScript -->
+          </div>
         </div>
       </div>
 
@@ -148,24 +186,113 @@ export const prerender = false;
         </div>
       </div>
 
-<!-- Categories Grid -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12" data-aos="fade-up" data-aos-delay="200">
-  {faqCategories.map((category, index) => ( // изменено с categoryId на category
-    <button 
-      class="category-button flex flex-col items-center p-6 bg-white rounded-xl border border-gray-200 hover:border-primary-200 hover:bg-primary-50 transition-all"
-      data-category={category.id} // используем category.id вместо category
-      data-aos="fade-up"
-      data-aos-delay={index * 50}
-    >
-      <div class="p-3 bg-primary-100 rounded-full mb-3">
-        <category.icon class="w-6 h-6 text-primary-600" />
+      <!-- Categories Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12" data-aos="fade-up" data-aos-delay="200" role="navigation" aria-label="FAQ Categories">
+        {faqCategories.map((category, index) => ( 
+          <button 
+            class="category-button flex flex-col items-center p-6 bg-white rounded-xl border border-gray-200 hover:border-primary-200 hover:bg-primary-50 transition-all"
+            data-category={category.id} 
+            data-aos="fade-up"
+            data-aos-delay={index * 50}
+            aria-controls={`faq-category-${category.id}`}
+            aria-expanded="false"
+          >
+            <div class="p-3 bg-primary-100 rounded-full mb-3">
+              <category.icon class="w-6 h-6 text-primary-600" aria-hidden="true" />
+            </div>
+            <span class="text-sm font-medium text-gray-900 text-center">
+              {t(category.translationKey)}
+            </span>
+          </button>
+        ))}
       </div>
-      <span class="text-sm font-medium text-gray-900 text-center">
-        {t(category.translationKey)}
-      </span>
-    </button>
-  ))}
-</div>
+
+      <!-- FAQ Wizard -->
+      <div class="max-w-3xl mx-auto mb-16 bg-gradient-to-r from-primary-50 to-primary-100/50 rounded-xl p-6 shadow-sm" data-aos="fade-up">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900 mb-2">
+            {t('faq.wizard.title')}
+          </h2>
+          <p class="text-gray-600">
+            {t('faq.wizard.subtitle')}
+          </p>
+        </div>
+        
+        <!-- Hidden translation elements for JavaScript -->
+        <div class="hidden">
+          <span data-translation-key="faq.wizard.noQuestions" data-translation-value={t('faq.wizard.noQuestions')}></span>
+          <span data-translation-key="faq.wizard.noRelatedQuestions" data-translation-value={t('faq.wizard.noRelatedQuestions')}></span>
+          <span data-translation-key="faq.common.showAll" data-translation-value={t('faq.common.showAll')}></span>
+          <span data-translation-key="faq.common.hideAll" data-translation-value={t('faq.common.hideAll')}></span>
+        </div>
+        
+        <div class="wizard-container">
+          <!-- Wizard Step 1 - Select a category -->
+          <div id="wizardStep1" class="wizard-step active" role="tabpanel" aria-labelledby="step1-heading">
+            <div class="text-center mb-4">
+              <p id="step1-heading" class="text-base font-medium text-gray-800">
+                {t('faq.wizard.step1')}
+              </p>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" role="group" aria-label={t('faq.wizard.categoriesGroup')}>
+              {faqCategories.map(category => (
+                <button 
+                  class="wizard-category flex flex-col items-center p-4 bg-white rounded-lg border border-gray-200 hover:border-primary-400 hover:bg-primary-50 transition-all"
+                  data-category={category.id}
+                  aria-label={t(category.translationKey)}
+                  tabindex="0"
+                >
+                  <div class="p-2 bg-primary-100 rounded-full mb-2">
+                    <category.icon class="w-5 h-5 text-primary-600" aria-hidden="true" />
+                  </div>
+                  <span class="text-sm font-medium text-gray-900 text-center">
+                    {t(category.translationKey)}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <!-- Wizard Step 2 - Common questions in category -->
+          <div id="wizardStep2" class="wizard-step hidden">
+            <div class="flex items-center mb-6">
+              <button id="wizardBackBtn" class="text-gray-500 hover:text-gray-700 mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h3 id="wizardCategoryTitle" class="text-lg font-medium text-gray-900"></h3>
+            </div>
+            
+            <div id="wizardQuestions" class="space-y-3">
+              <!-- Questions will be populated via JavaScript -->
+            </div>
+          </div>
+          
+          <!-- Wizard Step 3 - Answer view -->
+          <div id="wizardStep3" class="wizard-step hidden">
+            <div class="flex items-center mb-6">
+              <button id="wizardBackToQuestionsBtn" class="text-gray-500 hover:text-gray-700 mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h3 id="wizardQuestionTitle" class="text-lg font-medium text-gray-900"></h3>
+            </div>
+            
+            <div id="wizardAnswer" class="bg-white rounded-lg p-4 shadow-sm">
+              <!-- Answer will be populated via JavaScript -->
+            </div>
+            
+            <div class="mt-6">
+              <h4 class="text-base font-medium text-gray-800 mb-3">{t('faq.wizard.relatedQuestions')}</h4>
+              <div id="wizardRelatedQuestions" class="space-y-2">
+                <!-- Related questions will be populated via JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- FAQ Content -->
       <div class="max-w-3xl mx-auto">
@@ -174,38 +301,107 @@ export const prerender = false;
             class="faq-category mb-8" 
             data-category={categoryId} 
             data-aos="fade-up"
+            id={`faq-category-${categoryId}`}
+            role="region"
+            aria-labelledby={`category-heading-${categoryId}`}
           >
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            <h2 id={`category-heading-${categoryId}`} class="text-2xl font-bold text-gray-900 mb-6">
               {t(`faq.categories.${categoryId}`)} 
             </h2>
             <div class="space-y-4">
               {items.map((item) => (
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md">
-                  <details class="group">
+                  <details class="group" id={item.data.id}>
                     <summary class="flex items-center justify-between p-6 cursor-pointer">
                       <h3 class="text-lg font-medium text-gray-900 pr-8">
                         {item.data.question[lang]}
                       </h3>
-                      <ChevronDown class="w-5 h-5 text-gray-500 transition-transform duration-300 group-open:rotate-180" />
+                      <ChevronDown class="w-5 h-5 text-gray-500 transition-transform duration-300 group-open:rotate-180" aria-hidden="true" />
                     </summary>
                     <div class="px-6 pb-6">
-                      <div class="prose prose-sm max-w-none text-gray-600">
-                        {item.data.answer[lang]}
+                      <div class="prose prose-sm max-w-none text-gray-600 faq-content-wrapper">
+                        {
+                          // Check if the answer contains line breaks for formatting
+                          item.data.answer[lang].includes('\n') ? (
+                            <div set:html={
+                              item.data.answer[lang]
+                                .split('\n')
+                                .map((line: string) => {
+                                  // Format section headers (lines with colon at the end)
+                                  if (/^\d+[\.:].+:$/.test(line.trim())) {
+                                    return `<h4 class="text-gray-800 font-medium mt-4 mb-2">${line}</h4>`;
+                                  } 
+                                  // Format list items (lines with dash or bullet)
+                                  else if (/^\s*[\-\•]\s+/.test(line)) {
+                                    return `<div class="flex items-start gap-2 my-1">
+                                      <div class="w-2 h-2 rounded-full bg-primary-500 mt-1.5 flex-shrink-0"></div>
+                                      <div>${line.replace(/^\s*[\-\•]\s+/, '')}</div>
+                                    </div>`;
+                                  }
+                                  // Format key points
+                                  else if (line.includes(':')) {
+                                    const [key, value] = line.split(':');
+                                    if (value && key.length < 30) {
+                                      return `<div class="my-1.5">
+                                        <span class="font-medium text-gray-800">${key}:</span>
+                                        <span>${value}</span>
+                                      </div>`;
+                                    }
+                                  }
+                                  // Return normal paragraph
+                                  if (line.trim().length > 0) {
+                                    return `<p class="my-1">${line}</p>`;
+                                  }
+                                  return '';
+                                })
+                                .join('')
+                            } />
+                          ) : (
+                            <p>{item.data.answer[lang]}</p>
+                          )
+                        }
                       </div>
+                      
                       {item.data.image && (
-                        <img 
-                          src={item.data.image} 
-                          alt=""
-                          class="mt-4 rounded-lg w-full object-cover"
-                          loading="lazy"
-                        />
-                      )}
-                      {item.data.lastUpdated && (
-                        <div class="flex items-center gap-2 mt-4 text-sm text-gray-500">
-                          <Clock class="h-4 w-4" />
-                          <span>Last updated: {new Date(item.data.lastUpdated).toLocaleDateString()}</span>
+                        <div class="mt-4">
+                          <img 
+                            src={item.data.image} 
+                            alt=""
+                            class="rounded-lg w-full max-h-[300px] object-cover"
+                            loading="lazy"
+                            decoding="async"
+                            fetchpriority="low"
+                          />
                         </div>
                       )}
+                      
+                      <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center">
+                        {item.data.lastUpdated && (
+                          <div class="flex items-center gap-2 text-sm text-gray-500">
+                            <Clock class="h-4 w-4" />
+                            <span>Last updated: {new Date(item.data.lastUpdated).toLocaleDateString()}</span>
+                          </div>
+                        )}
+                        
+                        <div class="flex items-center gap-3">
+                          <button class="text-sm text-gray-500 hover:text-primary-600 flex items-center gap-1 transition-colors" id={`copy-faq-${item.data.id}`} title="Copy link">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <span class="hidden sm:inline">Copy link</span>
+                          </button>
+                          <button class="feedback-btn" data-faq-id={item.data.id} data-helpful="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-green-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                            </svg>
+                          </button>
+                          <button class="feedback-btn" data-faq-id={item.data.id} data-helpful="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 hover:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </details>
                 </div>
@@ -269,6 +465,117 @@ export const prerender = false;
     }
   }
 
+  /* Feedback animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  /* Search styling */
+  #searchSuggestions {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  #searchSuggestions div {
+    transition: background-color 0.15s ease;
+  }
+
+  #searchSuggestions div:focus {
+    outline: none;
+    background-color: #f3f4f6;
+  }
+
+  #searchSuggestions div:first-child {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+
+  #searchSuggestions div:last-child {
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+
+  /* Clear search button styling */
+  #clearSearch {
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+
+  #clearSearch:hover {
+    opacity: 0.8;
+  }
+
+  /* Wizard styling */
+  .wizard-step {
+    transition: opacity 0.3s ease;
+  }
+
+  .wizard-step.active {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .wizard-category {
+    transition: all 0.2s ease;
+  }
+
+  .wizard-category:hover {
+    transform: translateY(-2px);
+  }
+
+  #wizardBackBtn, 
+  #wizardBackToQuestionsBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    transition: background-color 0.15s ease;
+  }
+
+  #wizardBackBtn:hover, 
+  #wizardBackToQuestionsBtn:hover {
+    background-color: #f3f4f6;
+  }
+
+  #wizardQuestions button,
+  #wizardRelatedQuestions button {
+    transition: all 0.2s ease;
+  }
+
+  #wizardQuestions button:hover,
+  #wizardRelatedQuestions button:hover {
+    transform: translateX(2px);
+  }
+
+  /* FAQ content formatting */
+  .faq-content-wrapper h4 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: #1e293b;
+  }
+
+  .faq-content-wrapper p {
+    margin-bottom: 0.75rem;
+  }
+
+  .faq-content-wrapper ul {
+    margin-left: 1.5rem;
+  }
+
+  .faq-content-wrapper li {
+    margin-bottom: 0.5rem;
+  }
+
   /* Category button hover effects */
   .category-button {
     transition: all 0.3s ease;
@@ -300,6 +607,106 @@ export const prerender = false;
     .text-4xl {
       font-size: 2rem;
     }
+    
+    /* Better spacing for mobile */
+    .faq-content-wrapper {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+    
+    .mt-4.pt-3 {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .mt-4.pt-3 > div:first-child {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Improved mobile layout */
+    .wizard-container .grid-cols-2 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    
+    .wizard-container .sm\:grid-cols-3 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    
+    /* More compact category grid */
+    .md\:grid-cols-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    
+    .category-button {
+      padding: 0.75rem;
+    }
+    
+    .category-button .p-3 {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Better mobile search */
+    .search-container .mt-3 {
+      flex-wrap: wrap;
+    }
+    
+    /* Summary items on mobile */
+    details summary {
+      position: relative;
+      padding-right: 2rem;
+    }
+    
+    details summary .w-5 {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    /* Step guides */
+    .md\:grid-cols-2 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    
+    /* Make wizard more compact */
+    #wizardAnswer {
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+  }
+  
+  /* Small screens */
+  @media (max-width: 480px) {
+    .grid-cols-2 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    
+    .wizard-container .sm\:grid-cols-3 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    
+    .py-12 {
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+    
+    .mb-12 {
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Smaller fonts */
+    h1.text-4xl {
+      font-size: 1.75rem;
+    }
+    
+    h2.text-2xl {
+      font-size: 1.5rem;
+    }
+    
+    h3.text-lg {
+      font-size: 1rem;
+    }
   }
 
   /* Reduce motion */
@@ -311,29 +718,289 @@ export const prerender = false;
     .category-button:hover {
       transform: none;
     }
+    
+    .animate-fadeIn {
+      animation: none;
+      opacity: 1;
+    }
   }
 </style>
 
 <script>
+  // Add TypeScript declaration for gtag
+  declare global {
+    interface Window {
+      gtag?: (...args: any[]) => void;
+    }
+  }
+
+  // Simple fuzzy search function
+  function fuzzySearch(needle: string, haystack: string): boolean {
+    needle = needle.toLowerCase();
+    haystack = haystack.toLowerCase();
+    
+    let hIndex = 0;
+    let nIndex = 0;
+    
+    while (hIndex < haystack.length && nIndex < needle.length) {
+      if (needle[nIndex] === haystack[hIndex]) {
+        nIndex++;
+      }
+      hIndex++;
+    }
+    
+    return nIndex === needle.length;
+  }
+  
+  // Utility function to debounce function calls
+  function debounce<F extends (...args: any[]) => any>(func: F, wait: number): (...args: Parameters<F>) => void {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+    
+    return function(...args: Parameters<F>) {
+      const later = () => {
+        timeout = null;
+        func(...args);
+      };
+      
+      if (timeout !== null) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(later, wait);
+    };
+  }
+  
+  // Search history to improve suggestions
+  const searchHistory: string[] = [];
+  const saveToHistory = (term: string) => {
+    if (term.length > 2 && !searchHistory.includes(term)) {
+      searchHistory.unshift(term);
+      if (searchHistory.length > 5) {
+        searchHistory.pop();
+      }
+      
+      // Store in localStorage
+      try {
+        localStorage.setItem('faqSearchHistory', JSON.stringify(searchHistory));
+      } catch (e) {
+        console.log('Could not save to localStorage');
+      }
+    }
+  };
+  
+  // Load search history from localStorage
+  const loadSearchHistory = (): string[] => {
+    try {
+      const history = localStorage.getItem('faqSearchHistory');
+      return history ? JSON.parse(history) : [];
+    } catch (e) {
+      return [];
+    }
+  };
+
   // FAQ search functionality
   document.addEventListener('astro:page-load', () => {
     const searchInput = document.getElementById('faqSearch') as HTMLInputElement;
+    const clearSearchBtn = document.getElementById('clearSearch');
+    const searchResults = document.getElementById('searchResults');
+    const resultsCount = document.getElementById('resultsCount');
+    const searchInAnswers = document.getElementById('searchInAnswers') as HTMLInputElement;
+    const fuzzySearchCheckbox = document.getElementById('fuzzySearch') as HTMLInputElement;
     const faqItems = document.querySelectorAll('details');
     const categories = document.querySelectorAll('.faq-category');
-
+    const suggestionsList = document.getElementById('searchSuggestions');
+    
+    // Helper function for translations since we don't have access to t() in client JS
+    const getTranslation = (key: string, fallback: string): string => {
+      // Try to get from DOM if available
+      const translationEl = document.querySelector(`[data-translation-key="${key}"]`);
+      if (translationEl) {
+        return translationEl.getAttribute('data-translation-value') || fallback;
+      }
+      return fallback;
+    };
+    
+    // Restore search history from localStorage
+    const storedHistory = loadSearchHistory();
+    if (storedHistory.length > 0) {
+      searchHistory.push(...storedHistory);
+    }
+    
     if (!searchInput) return;
+    
+    // Clear search button functionality
+    if (clearSearchBtn) {
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        searchResults?.classList.add('hidden');
+        suggestionsList?.classList.add('hidden');
+        
+        // Show all FAQ items again
+        faqItems.forEach(item => {
+          item.classList.remove('hidden');
+          item.removeAttribute('open');
+        });
+        
+        // Show all categories
+        categories.forEach(category => {
+          category.classList.remove('hidden');
+        });
+        
+        searchInput.focus();
+      });
+    }
 
+    // Debounced search function to improve performance
+    const debouncedSearch = debounce((searchTerm: string) => {
+      performSearch(searchTerm);
+    }, 300); // 300ms debounce time
+    
     searchInput.addEventListener('input', (e) => {
       const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
-
+      
+      // Toggle clear button visibility
+      if (clearSearchBtn) {
+        clearSearchBtn.classList.toggle('hidden', searchTerm.length === 0);
+      }
+      
+      // Handle suggestions display
+      if (searchTerm.length > 1 && suggestionsList) {
+        // Generate suggestions based on available questions and history
+        const suggestions = new Set<string>();
+        
+        // Add from history first
+        searchHistory.forEach(term => {
+          if (term.toLowerCase().includes(searchTerm)) {
+            suggestions.add(term);
+          }
+        });
+        
+        // Add from FAQ questions (limit for performance)
+        let count = 0;
+        faqItems.forEach(item => {
+          if (count < 10) { // Only process up to 10 matches for better performance
+            const question = item.querySelector('summary')?.textContent?.trim() || '';
+            if (question && question.toLowerCase().includes(searchTerm)) {
+              const words = question.split(' ');
+              if (words.length > 3) {
+                // Add a shorter version of the question
+                suggestions.add(words.slice(0, 3).join(' ') + '...');
+              } else {
+                suggestions.add(question);
+              }
+              count++;
+            }
+          }
+        });
+        
+        // Display suggestions if we have any
+        if (suggestions.size > 0) {
+          suggestionsList.innerHTML = '';
+          suggestions.forEach(suggestion => {
+            const div = document.createElement('div');
+            div.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
+            div.textContent = suggestion;
+            div.addEventListener('click', () => {
+              searchInput.value = suggestion;
+              suggestionsList.classList.add('hidden');
+              performSearch(suggestion);
+            });
+            suggestionsList.appendChild(div);
+          });
+          suggestionsList.classList.remove('hidden');
+        } else {
+          suggestionsList.classList.add('hidden');
+        }
+      } else if (suggestionsList) {
+        suggestionsList.classList.add('hidden');
+      }
+      
+      // Use debounced search for better performance
+      debouncedSearch(searchTerm);
+    });
+    
+    // Handle keyboard navigation for search suggestions
+    searchInput.addEventListener('keydown', (e) => {
+      if (suggestionsList && !suggestionsList.classList.contains('hidden')) {
+        const suggestions = suggestionsList.querySelectorAll('div');
+        let focusedIndex = Array.from(suggestions).findIndex(el => el === document.activeElement);
+        
+        switch(e.key) {
+          case 'ArrowDown':
+            e.preventDefault();
+            if (focusedIndex < suggestions.length - 1) {
+              (suggestions[focusedIndex + 1] as HTMLElement).focus();
+            } else {
+              (suggestions[0] as HTMLElement).focus();
+            }
+            break;
+            
+          case 'ArrowUp':
+            e.preventDefault();
+            if (focusedIndex > 0) {
+              (suggestions[focusedIndex - 1] as HTMLElement).focus();
+            } else {
+              (suggestions[suggestions.length - 1] as HTMLElement).focus();
+            }
+            break;
+            
+          case 'Escape':
+            e.preventDefault();
+            suggestionsList.classList.add('hidden');
+            searchInput.focus();
+            break;
+            
+          case 'Enter':
+            if (document.activeElement && document.activeElement !== searchInput) {
+              e.preventDefault();
+              (document.activeElement as HTMLElement).click();
+            } else {
+              // Let the native form submission happen
+              suggestionsList.classList.add('hidden');
+            }
+            break;
+        }
+      }
+    });
+    
+    // Click outside to close suggestions
+    document.addEventListener('click', (e) => {
+      if (suggestionsList && !suggestionsList.classList.contains('hidden') && 
+          e.target !== searchInput && 
+          !suggestionsList.contains(e.target as Node)) {
+        suggestionsList.classList.add('hidden');
+      }
+    });
+    
+    // Main search function
+    function performSearch(searchTerm: string) {
+      if (searchTerm.length > 0) {
+        saveToHistory(searchTerm);
+      }
+      
+      let matchCount = 0;
+      
       faqItems.forEach(item => {
         const question = item.querySelector('summary')?.textContent?.toLowerCase() || '';
-        const answer = item.querySelector('div')?.textContent?.toLowerCase() || '';
-        const isMatch = question.includes(searchTerm) || answer.includes(searchTerm);
+        const answer = searchInAnswers?.checked ? 
+          (item.querySelector('div')?.textContent?.toLowerCase() || '') : '';
+        
+        let isMatch = false;
+        
+        if (fuzzySearchCheckbox?.checked) {
+          // Perform fuzzy search
+          isMatch = fuzzySearch(searchTerm, question) || 
+                    (searchInAnswers?.checked && fuzzySearch(searchTerm, answer));
+        } else {
+          // Perform regular search
+          isMatch = question.includes(searchTerm) || 
+                    (searchInAnswers?.checked && answer.includes(searchTerm));
+        }
         
         item.closest('.faq-category')?.classList.toggle('hidden', !isMatch);
         if (isMatch) {
           item.classList.remove('hidden');
+          matchCount++;
           if (searchTerm.length > 2) {
             item.setAttribute('open', 'true');
           }
@@ -341,13 +1008,22 @@ export const prerender = false;
           item.classList.add('hidden');
         }
       });
-
+      
+      // Update results count
+      if (resultsCount) {
+        resultsCount.textContent = matchCount.toString();
+      }
+      
+      if (searchResults) {
+        searchResults.classList.toggle('hidden', searchTerm.length === 0);
+      }
+      
       // Hide empty categories
       categories.forEach(category => {
         const visibleItems = category.querySelectorAll('details:not(.hidden)');
         category.classList.toggle('hidden', visibleItems.length === 0);
       });
-    });
+    }
 
     // Category filtering
     const categoryButtons = document.querySelectorAll('.category-button');
@@ -377,17 +1053,319 @@ export const prerender = false;
 
       const toggleButton = document.createElement('button');
       toggleButton.className = 'text-sm text-primary-600 hover:text-primary-700 font-medium mb-4';
-      toggleButton.textContent = t('faq.common.showAll');
+      toggleButton.textContent = getTranslation('faq.common.showAll', 'Show all');
 
       toggleButton.addEventListener('click', () => {
         isExpanded = !isExpanded;
         details.forEach(detail => {
           detail.open = isExpanded;
         });
-        toggleButton.textContent = isExpanded ? t('faq.common.hideAll') : t('faq.common.showAll');
+        toggleButton.textContent = isExpanded ? 
+          getTranslation('faq.common.hideAll', 'Hide all') : 
+          getTranslation('faq.common.showAll', 'Show all');
       });
 
       category.querySelector('h2')?.parentNode?.insertBefore(toggleButton, category.querySelector('.space-y-4'));
+    });
+    
+    // FAQ Wizard Functionality
+    const setupWizard = () => {
+      const wizardStep1 = document.getElementById('wizardStep1');
+      const wizardStep2 = document.getElementById('wizardStep2');
+      const wizardStep3 = document.getElementById('wizardStep3');
+      const wizardCategoryButtons = document.querySelectorAll('.wizard-category');
+      const wizardBackBtn = document.getElementById('wizardBackBtn');
+      const wizardBackToQuestionsBtn = document.getElementById('wizardBackToQuestionsBtn');
+      const wizardCategoryTitle = document.getElementById('wizardCategoryTitle');
+      const wizardQuestions = document.getElementById('wizardQuestions');
+      const wizardQuestionTitle = document.getElementById('wizardQuestionTitle');
+      const wizardAnswer = document.getElementById('wizardAnswer');
+      const wizardRelatedQuestions = document.getElementById('wizardRelatedQuestions');
+      
+      // Current state variables
+      let currentCategoryId = '';
+      let currentQuestion = null;
+      
+      // Return if wizard elements don't exist
+      if (!wizardStep1 || !wizardStep2 || !wizardStep3) return;
+      
+      // Helper function to show a specific step
+      const showStep = (step: number) => {
+        [wizardStep1, wizardStep2, wizardStep3].forEach((elem, index) => {
+          if (elem) {
+            elem.classList.toggle('hidden', index + 1 !== step);
+            if (index + 1 === step) {
+              elem.classList.add('active');
+            } else {
+              elem.classList.remove('active');
+            }
+          }
+        });
+      };
+      
+      // Step 1 - Category selection
+      wizardCategoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          currentCategoryId = button.getAttribute('data-category') || '';
+          
+          // Set the category title
+          if (wizardCategoryTitle) {
+            const categorySpan = button.querySelector('span');
+            wizardCategoryTitle.textContent = categorySpan ? categorySpan.textContent || '' : '';
+          }
+          
+          // Populate questions for this category
+          populateQuestions(currentCategoryId);
+          
+          // Show step 2
+          showStep(2);
+        });
+      });
+      
+      // Back button functionality
+      if (wizardBackBtn) {
+        wizardBackBtn.addEventListener('click', () => {
+          showStep(1);
+        });
+      }
+      
+      // Back to questions button functionality
+      if (wizardBackToQuestionsBtn) {
+        wizardBackToQuestionsBtn.addEventListener('click', () => {
+          showStep(2);
+        });
+      }
+      
+      // Populate questions for a category
+      const populateQuestions = (categoryId: string) => {
+        if (!wizardQuestions) return;
+        
+        // Clear current questions
+        wizardQuestions.innerHTML = '';
+        
+        // Find FAQ items for this category
+        const categoryItems = Array.from(document.querySelectorAll(`.faq-category[data-category="${categoryId}"] details`));
+        
+        if (categoryItems.length === 0) {
+          wizardQuestions.innerHTML = `<p class="text-gray-500">${getTranslation('faq.wizard.noQuestions', 'No questions found in this category')}</p>`;
+          return;
+        }
+        
+        // Create a button for each question
+        categoryItems.forEach(item => {
+          const questionText = item.querySelector('summary h3')?.textContent || '';
+          const answerHTML = item.querySelector('.faq-content-wrapper')?.innerHTML || '';
+          
+          if (questionText) {
+            const button = document.createElement('button');
+            button.className = 'w-full text-left p-3 bg-white hover:bg-primary-50 border border-gray-200 rounded-lg transition-colors';
+            button.innerHTML = `
+              <div class="flex items-center">
+                <div class="flex-grow font-medium text-gray-800">${questionText}</div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            `;
+            
+            button.addEventListener('click', () => {
+              currentQuestion = { question: questionText, answer: answerHTML, element: item };
+              showQuestionAnswer(currentQuestion);
+            });
+            
+            wizardQuestions.appendChild(button);
+          }
+        });
+      };
+      
+      // Show a specific question and its answer
+      const showQuestionAnswer = (questionData: { question: string, answer: string, element: Element }) => {
+        if (!wizardQuestionTitle || !wizardAnswer || !wizardRelatedQuestions) return;
+        
+        // Set question title
+        wizardQuestionTitle.textContent = questionData.question;
+        
+        // Set answer content
+        wizardAnswer.innerHTML = questionData.answer;
+        
+        // Find related questions
+        findRelatedQuestions(questionData);
+        
+        // Show step 3
+        showStep(3);
+      };
+      
+      // Find questions related to the current one
+      const findRelatedQuestions = (questionData: { question: string, answer: string, element: Element }) => {
+        if (!wizardRelatedQuestions) return;
+        
+        // Clear current related questions
+        wizardRelatedQuestions.innerHTML = '';
+        
+        // Get keywords from current question
+        const keywords = getKeywords(questionData.question, 4);
+        
+        // Find all questions
+        const allQuestions = Array.from(document.querySelectorAll('details summary h3'))
+          .map(el => ({
+            text: el.textContent || '',
+            element: el.closest('details')
+          }))
+          .filter(q => q.text !== questionData.question); // Exclude current question
+        
+        // Find questions with matching keywords
+        const relatedQuestions = allQuestions
+          .map(q => ({
+            ...q,
+            score: calculateRelevanceScore(q.text, keywords)
+          }))
+          .filter(q => q.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 3); // Get top 3
+        
+        // Add related questions to UI
+        if (relatedQuestions.length === 0) {
+          wizardRelatedQuestions.innerHTML = `<p class="text-gray-500">${getTranslation('faq.wizard.noRelatedQuestions', 'No related questions found')}</p>`;
+          return;
+        }
+        
+        relatedQuestions.forEach(q => {
+          const button = document.createElement('button');
+          button.className = 'w-full text-left p-3 bg-white hover:bg-primary-50 border border-gray-200 rounded-lg transition-colors';
+          button.innerHTML = `
+            <div class="flex items-center">
+              <div class="flex-grow text-gray-800">${q.text}</div>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          `;
+          
+          button.addEventListener('click', () => {
+            if (q.element) {
+              const answerHTML = q.element.querySelector('.faq-content-wrapper')?.innerHTML || '';
+              currentQuestion = { question: q.text, answer: answerHTML, element: q.element };
+              showQuestionAnswer(currentQuestion);
+            }
+          });
+          
+          wizardRelatedQuestions.appendChild(button);
+        });
+      };
+      
+      // Helper function to extract keywords from text
+      const getKeywords = (text: string, count: number): string[] => {
+        // Simple algorithm to extract potentially significant words
+        const words = text.toLowerCase()
+          .replace(/[^\w\s]/gi, '')
+          .split(/\s+/)
+          .filter(word => 
+            word.length > 3 && 
+            !['what', 'when', 'where', 'which', 'while', 'with', 'would', 'could', 'should', 'there', 'their', 'about', 'after', 'again'].includes(word)
+          );
+        
+        // Count word frequency
+        const wordCounts = words.reduce((acc, word) => {
+          acc[word] = (acc[word] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>);
+        
+        // Sort by frequency and return top words
+        return Object.entries(wordCounts)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, count)
+          .map(([word]) => word);
+      };
+      
+      // Calculate relevance score between text and keywords
+      const calculateRelevanceScore = (text: string, keywords: string[]): number => {
+        const textLower = text.toLowerCase();
+        let score = 0;
+        
+        keywords.forEach(keyword => {
+          if (textLower.includes(keyword)) {
+            score += 1;
+          }
+        });
+        
+        return score;
+      };
+    };
+    
+    // Initialize wizard functionality
+    if (document.getElementById('wizardStep1')) {
+      // Use requestIdleCallback for non-critical initialization
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(() => {
+          setupWizard();
+        }, { timeout: 2000 });
+      } else {
+        // Fallback to setTimeout for browsers without requestIdleCallback
+        setTimeout(setupWizard, 100);
+      }
+    }
+    
+    // Copy FAQ link to clipboard
+    document.querySelectorAll('[id^="copy-faq-"]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const faqId = (button as HTMLElement).id.replace('copy-faq-', '');
+        const url = `${window.location.href.split('#')[0]}#${faqId}`;
+        
+        navigator.clipboard.writeText(url).then(() => {
+          // Show feedback
+          const originalText = (button as HTMLElement).querySelector('span')?.textContent;
+          const span = (button as HTMLElement).querySelector('span');
+          if (span) {
+            span.textContent = 'Copied!';
+            setTimeout(() => {
+              if (span && originalText) span.textContent = originalText;
+            }, 2000);
+          }
+        });
+      });
+    });
+    
+    // FAQ feedback system
+    document.querySelectorAll('.feedback-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const faqId = (button as HTMLElement).getAttribute('data-faq-id');
+        const isHelpful = (button as HTMLElement).getAttribute('data-helpful') === 'true';
+        
+        // Simple analytics log for now
+        try {
+          // @ts-ignore - Ignore TypeScript warning for gtag
+          if (window.gtag) {
+            // @ts-ignore
+            window.gtag('event', isHelpful ? 'faq_helpful' : 'faq_not_helpful', {
+              faq_id: faqId
+            });
+          }
+        } catch (error) {
+          console.log('Analytics not available');
+        }
+        
+        // Add UI feedback
+        const parent = (button as HTMLElement).closest('.flex');
+        if (parent) {
+          // Remove existing feedback message
+          const existingFeedback = parent.querySelector('.feedback-msg');
+          if (existingFeedback) {
+            existingFeedback.remove();
+          }
+          
+          // Add thank you message
+          const feedbackMsg = document.createElement('span');
+          feedbackMsg.className = 'feedback-msg text-sm text-gray-500 animate-fadeIn';
+          feedbackMsg.textContent = isHelpful ? 'Thanks for your feedback!' : 'Thanks, we\'ll improve this answer.';
+          parent.appendChild(feedbackMsg);
+          
+          // Disable all feedback buttons in this FAQ
+          parent.querySelectorAll('.feedback-btn').forEach(btn => {
+            btn.classList.add('opacity-50', 'pointer-events-none');
+          });
+        }
+      });
     });
   });
 </script>

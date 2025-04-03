@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import svelte from '@astrojs/svelte';
-import netlify from '@astrojs/netlify/static';
+import netlify from '@astrojs/netlify';
 import compress from 'astro-compress';
 
 export default defineConfig({

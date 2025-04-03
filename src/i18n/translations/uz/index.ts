@@ -26,6 +26,26 @@ export const uzTranslations: TranslationSchema = {
       showAll: "Hammasini ko'rsatish",
       hideAll: "Yashirish",
       relatedQuestions: "Aloqador savollar"
+    },
+    guides: {
+      title: "Bosqichma-bosqich yo'riqnomalar"
+    },
+    popularQuestions: "Eng ko'p so'raladigan savollar",
+    contactUs: "Bizga savolingizni yuboring",
+    meta: {
+      title: "Ko'p so'raladigan savollar | Study in China",
+      description: "Xitoyda o'qish bo'yicha barcha savollarga javoblar"
+    },
+    wizard: {
+      title: "Sizga yordam kerakmi?",
+      description: "Sizga mos savol-javobni topishda yordam beramiz",
+      step1: "Kategoriyani tanlang",
+      step2: "Savolni tanlang",
+      step3: "Javobni ko'ring",
+      categoriesGroup: "FAQ kategoriyalari",
+      backButton: "Orqaga",
+      nextButton: "Keyingi",
+      restartButton: "Boshidan boshlash"
     }
   },
   howWeWork: {

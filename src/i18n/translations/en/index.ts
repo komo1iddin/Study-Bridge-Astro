@@ -6,6 +6,47 @@ export const enTranslations: TranslationSchema = {
     subtitle: "Xitoyda o'qish haqida eng ko'p so'raladigan savollarga javoblar",
     notFoundQuestion: 'Savolingizga javob topmadingizmi?',
     askQuestion: 'Savol berish',
+    search: {
+      placeholder: "Savollar bo'yicha qidirish...",
+      noResults: "Hech qanday natija topilmadi"
+    },
+    categories: {
+      admission: "Qabul jarayoni",
+      documents: "Hujjatlar",
+      study: "O'qish",
+      life: "Xitoyda hayot",
+      finance: "Moliyaviy masalalar",
+      scholarships: "Stipendiyalar",
+      transfer: "O'qishni ko'chirish",
+      language: "Til kurslari"
+    },
+    common: {
+      readMore: "Batafsil",
+      showAll: "Hammasini ko'rsatish",
+      hideAll: "Yashirish",
+      relatedQuestions: "Aloqador savollar"
+    },
+    guides: {
+      title: "Bosqichma-bosqich yo'riqnomalar"
+    },
+    popularQuestions: "Eng ko'p so'raladigan savollar",
+    contactUs: "Bizga savolingizni yuboring",
+    meta: {
+      title: "Ko'p so'raladigan savollar | Study in China",
+      description: "Xitoyda o'qish bo'yicha barcha savollarga javoblar"
+    },
+    wizard: {
+      title: "Sizga yordam kerakmi?",
+      description: "Sizga mos savol-javobni topishda yordam beramiz",
+      step1: "Kategoriyani tanlang",
+      step2: "Savolni tanlang",
+      step3: "Javobni ko'ring",
+      categoriesGroup: "FAQ kategoriyalari",
+      backButton: "Orqaga",
+      nextButton: "Keyingi",
+      restartButton: "Boshidan boshlash"
+    },
+    pageTitle: "Ko'p so'raladigan savollar | Study in China"
   },
   howWeWork: {
     badge: 'Bizning jarayon',
