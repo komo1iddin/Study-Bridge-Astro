@@ -60,15 +60,15 @@
     }, 100);
   });
 
-  // Direct tab change handler - simpler and more reliable
-  function changeTab(value) {
+  // Tab change handler
+  function handleTabChange(event: CustomEvent<string>) {
     if (!mounted) return;
-    console.log("Changing tab to:", value);
-    activeTab = value;
+    activeTab = event.detail;
+    console.log("Tab changed to:", activeTab);
     
     // Update URL hash for shareable links
     if (typeof window !== "undefined") {
-      window.location.hash = value;
+      window.location.hash = activeTab;
     }
   }
 
@@ -110,9 +110,9 @@
           <HeaderCard 
             {university}
             {t}
-            activeTab={activeTab}
-            onTabChange={changeTab}
+            {activeTab}
             {lang}
+            on:change={handleTabChange}
           />
 
           <!-- Render active section content -->
@@ -122,8 +122,6 @@
             <ProgramsSection {university} {lang} />
           {:else if activeTab === "admission"}
             <AdmissionSection {university} {lang} />
-          {:else if activeTab === "facilities"}
-            <FacilitiesSection {university} {lang} />
           {:else if activeTab === "images"}
             <ImagesSection {university} {lang} />
           {:else if activeTab === "dorms"}

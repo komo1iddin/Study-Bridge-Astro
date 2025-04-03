@@ -4,13 +4,24 @@
   import type { University } from "@/types/university";
   import type { Lang } from "@/i18n/langUtils";
   import type { UniversityDetailTranslations } from "@/i18n/features/university/universityDetail";
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
 
   export let university: University;
   export let activeTab: string;
-  export let onTabChange: (value: string) => void;
   export let lang: Lang;
   export let t: UniversityDetailTranslations;
+
+  // Create event dispatcher instead of using callback
+  const dispatch = createEventDispatcher<{
+    change: string;
+  }>();
+
+  // Function to handle tab clicks with logging
+  function handleTabClick(value: string) {
+    console.log("Tab clicked:", value);
+    console.log("Before change, activeTab was:", activeTab);
+    dispatch('change', value);
+  }
 
   // Extract localized content
   $: description = typeof university.description === 'object' 
@@ -18,7 +29,7 @@
     : university.description;
 
   $: students = typeof university.students === 'object'
-    ? university.students[lang] || university.students.en
+    ? university.students[lang] || (university.students as any).en
     : university.students;
 
   // Define tabs using translations
@@ -26,7 +37,6 @@
     { value: "overview", label: t.tabs.overview },
     { value: "programs", label: t.tabs.programs },
     { value: "admission", label: t.tabs.admission },
-    { value: "facilities", label: t.tabs.facilities },
     { value: "images", label: t.tabs.images },
     { value: "dorms", label: t.tabs.dorms },
     { value: "faq", label: t.tabs.faq }
@@ -34,6 +44,10 @@
 
   // Get active tab label
   $: activeTabLabel = tabs.find(tab => tab.value === activeTab)?.label || t.selectSection;
+
+  onMount(() => {
+    console.log("HeaderCard mounted with activeTab:", activeTab);
+  });
 </script>
 
 <Card class="overflow-hidden border-none shadow-lg">
@@ -59,7 +73,7 @@
           </span>
         {/if}
         <span class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
-          {t.badges.rank.replace('{rank}', university.ranking || 'N/A')}
+          {t.badges.rank.replace('{rank}', String(university.ranking || 'N/A'))}
         </span>
       </div>
 
@@ -105,7 +119,7 @@
           <select 
             class="w-full appearance-none bg-white border border-slate-200 rounded-md shadow-sm focus:outline-none text-slate-800 font-medium p-2.5 pr-10"
             value={activeTab}
-            on:change={(e) => onTabChange((e.target as HTMLSelectElement).value)}
+            on:change={(e) => handleTabClick((e.target as HTMLSelectElement).value)}
             aria-label={t.selectSection}
           >
             {#each tabs as tab}
@@ -122,23 +136,15 @@
 
     <!-- Desktop Tabs -->
     <div class="hidden md:block">
-      <div class="w-full overflow-hidden">
-        <div class="flex bg-slate-100 rounded-none h-auto">
+      <div class="w-full">
+        <div class="flex bg-slate-100 rounded-none h-auto p-0">
           {#each tabs as tab}
-            <div
-              role="button"
-              tabindex="0"
-              class="px-5 py-3 whitespace-nowrap focus:outline-none cursor-pointer transition-colors duration-200 hover:bg-slate-50 border-b-2"
-              style="border-color: {activeTab === tab.value ? 'var(--color-blue-600)' : 'transparent'}; 
-                     background-color: {activeTab === tab.value ? 'white' : 'transparent'};"
-              class:text-blue-600={activeTab === tab.value}
-              class:font-medium={activeTab === tab.value}
-              class:text-slate-600={activeTab !== tab.value}
-              on:click={() => onTabChange(tab.value)}
-              on:keydown={(e) => e.key === 'Enter' && onTabChange(tab.value)}
+            <button 
+              class="py-3 px-4 rounded-none flex-1 text-center whitespace-nowrap {activeTab === tab.value ? 'bg-white text-slate-600 font-medium' : 'text-slate-600 hover:bg-slate-50'}"
+              on:click={() => handleTabClick(tab.value)}
             >
               {tab.label}
-            </div>
+            </button>
           {/each}
         </div>
       </div>
