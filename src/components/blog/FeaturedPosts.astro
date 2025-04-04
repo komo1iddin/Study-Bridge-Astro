@@ -1,0 +1,54 @@
+---
+import { getFeaturedPosts } from '@/lib/blog';
+import BlogCard from './BlogCard.astro';
+
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'uz' } = Astro.props;
+const featuredPosts = getFeaturedPosts();
+---
+
+<section class="py-8 animate-fade-in">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold tracking-tight text-blue-800">Рекомендуемые статьи</h2>
+    <p class="text-muted-foreground mt-1">Избранные статьи для вашего академического пути</p>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {featuredPosts.map((post, index) => (
+      <div class={`animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+        <BlogCard post={post} variant="featured" lang={lang} />
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+  }
+  
+  .animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 

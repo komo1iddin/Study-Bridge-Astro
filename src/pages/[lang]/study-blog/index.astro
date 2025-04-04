@@ -1,0 +1,362 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getFeaturedPosts, getLatestPosts, getPostsByCategory, blogPosts, type BlogPost, type BlogCategory } from '@/lib/blog';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import BlogHeader from '@/components/blog/BlogHeader.astro';
+import Breadcrumb from '@/components/blog/Breadcrumb.astro';
+import SearchBar from '@/components/blog/SearchBar.astro';
+import CategoryFilter from '@/components/blog/CategoryFilter.astro';
+import { languages, type Lang } from '@/i18n/langUtils';
+import BlogTester from '@/components/blog/BlogTester.astro';
+
+// Define the getStaticPaths function required for dynamic routes
+export function getStaticPaths() {
+  return languages.map(lang => ({
+    params: { lang }
+  }));
+}
+
+// Get the language from the URL parameter
+const { lang } = Astro.params;
+
+// Validate the language parameter
+if (!lang || !languages.includes(lang as Lang)) {
+  return Astro.redirect('/uz/'); // Redirect to default language if invalid
+}
+
+// Get blog data
+const featuredPosts = getFeaturedPosts();
+const latestPosts = getLatestPosts(3);
+
+// Get category from URL query parameter, if any
+const categoryParam = Astro.url.searchParams.get('category');
+const selectedCategory = categoryParam || 'all';
+
+// Get all posts or posts filtered by category
+const allPosts = selectedCategory === 'all' ? blogPosts : getPostsByCategory(selectedCategory as BlogCategory);
+
+// Meta data for the page
+const meta = {
+  title: "Учебный блог | Study in China",
+  description: "Образовательный блог о учебе в Китае. Советы, гайды и полезная информация для студентов."
+};
+
+// Breadcrumb items
+const breadcrumbItems = [
+  { label: 'Ресурсы', href: `/${lang}/resources` },
+  { label: 'Учебный блог', href: `/${lang}/study-blog`, active: true },
+];
+---
+
+<Layout meta={meta}>
+  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50">
+    <div class="container py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      <!-- Breadcrumbs -->
+      <Breadcrumb items={breadcrumbItems} />
+      
+      <!-- Header and Search Area -->
+      <div class="mt-6 mb-10">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+          <BlogHeader />
+          <div class="w-full md:w-auto md:min-w-[300px]">
+            <SearchBar />
+          </div>
+        </div>
+        
+        <CategoryFilter selectedCategory={selectedCategory} />
+      </div>
+      
+      <div class="my-6 border-t border-gray-200"></div>
+      
+      <!-- Featured Posts Section - Only shown when no filter is active -->
+      {selectedCategory === 'all' && (
+        <section class="py-6 animate-fade-in">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold tracking-tight text-blue-800">Рекомендуемые статьи</h2>
+            <p class="text-gray-600 mt-1">Избранные статьи для вашего академического пути</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featuredPosts.map((post: BlogPost, index: number) => (
+              <div class={`animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+                <BlogCard post={post} variant="featured" lang={lang} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      
+      {selectedCategory === 'all' && (
+        <div class="my-6 border-t border-gray-200"></div>
+      )}
+      
+      <!-- Latest Posts Section - Only shown when no filter is active -->
+      {selectedCategory === 'all' && (
+        <section class="py-6 animate-fade-in">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold tracking-tight text-blue-800">Последние статьи</h2>
+            <p class="text-gray-600 mt-1">Свежий контент, чтобы держать вас в курсе</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {latestPosts.map((post: BlogPost, index: number) => (
+              <div class={`animate-slide-up`} style={`animation-delay: ${index * 100}ms`}>
+                <BlogCard post={post} lang={lang} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      
+      {selectedCategory === 'all' ? (
+        <div class="my-6 border-t border-gray-200"></div>
+      ) : null}
+      
+      <!-- All/Filtered Posts Section -->
+      <section class="py-6 animate-fade-in" id="all-posts">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold tracking-tight text-blue-800">
+            {selectedCategory === 'all' ? 'Все статьи' : 'Фильтрованные статьи'}
+          </h2>
+          <p class="text-gray-600 mt-1">
+            {selectedCategory === 'all' 
+              ? 'Полная библиотека наших образовательных материалов'
+              : 'Статьи, соответствующие выбранным критериям'
+            }
+          </p>
+        </div>
+        
+        <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8 mt-6">
+          {allPosts.map((post: BlogPost, index: number) => (
+            <div 
+              class="post-item animate-slide-up" 
+              style={`animation-delay: ${(index % 3) * 100}ms`}
+              data-categories={JSON.stringify(post.categories)}
+              data-title={post.title.toLowerCase()}
+              data-content={post.excerpt.toLowerCase()}
+            >
+              <BlogCard post={post} lang={lang} />
+            </div>
+          ))}
+        </div>
+        
+        <div id="no-results-message" class="hidden text-center p-6 bg-blue-50 rounded-lg text-blue-700 mt-6">
+          <p class="text-lg font-medium">Статьи не найдены</p>
+          <p class="text-sm mt-2">Попробуйте изменить поисковый запрос или выбрать другую категорию</p>
+        </div>
+        
+        <div class="mt-8 flex justify-center items-center gap-2">
+          <button id="prevPage" class="pagination-btn disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1 border border-blue-200 rounded text-blue-700 hover:bg-blue-50 transition-colors" disabled>
+            <span class="sr-only">Previous Page</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+              <path d="m15 18-6-6 6-6"></path>
+            </svg>
+          </button>
+          
+          <span id="paginationInfo" class="text-sm text-gray-500">
+            Страница <span id="currentPage">1</span> из <span id="totalPages">1</span>
+          </span>
+          
+          <button id="nextPage" class="pagination-btn px-3 py-1 border border-blue-200 rounded text-blue-700 hover:bg-blue-50 transition-colors">
+            <span class="sr-only">Next Page</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+              <path d="m9 18 6-6-6-6"></path>
+            </svg>
+          </button>
+        </div>
+      </section>
+      
+      <!-- Include BlogTester only in development mode -->
+      {import.meta.env.DEV && <BlogTester />}
+    </div>
+  </div>
+</Layout>
+
+<script>
+  document.addEventListener('astro:page-load', function() {
+    interface CustomEventWithDetail extends CustomEvent {
+      detail: {
+        category?: string;
+        query?: string;
+      };
+    }
+
+    let currentCategory = 'all';
+    let currentSearchQuery = '';
+    let currentPage = 1;
+    let filteredPosts: HTMLElement[] = [];
+    const postsPerPage = 9;
+    
+    // Get elements
+    const postsContainer = document.getElementById('postsContainer');
+    const prevPageBtn = document.getElementById('prevPage') as HTMLButtonElement | null;
+    const nextPageBtn = document.getElementById('nextPage') as HTMLButtonElement | null;
+    const currentPageEl = document.getElementById('currentPage');
+    const totalPagesEl = document.getElementById('totalPages');
+    const postItems = document.querySelectorAll<HTMLElement>('.post-item');
+    const noResultsMessage = document.getElementById('no-results-message');
+    const searchResultsCount = document.getElementById('search-results-count');
+    
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    const searchParam = urlParams.get('search');
+    
+    if (categoryParam) {
+      currentCategory = categoryParam;
+    }
+    
+    if (searchParam) {
+      currentSearchQuery = searchParam;
+    }
+    
+    // Apply filters based on URL parameters
+    filterPosts();
+    updatePagination();
+    renderCurrentPage();
+    
+    // Listen for category change events
+    document.addEventListener('category-changed', (e: Event) => {
+      const event = e as CustomEventWithDetail;
+      if (event.detail && event.detail.category) {
+        currentCategory = event.detail.category;
+        currentPage = 1;
+        filterPosts();
+        updatePagination();
+        renderCurrentPage();
+      }
+    });
+    
+    // Listen for search events
+    document.addEventListener('search-query-changed', (e: Event) => {
+      const event = e as CustomEventWithDetail;
+      if (event.detail && event.detail.query !== undefined) {
+        currentSearchQuery = event.detail.query;
+        currentPage = 1;
+        filterPosts();
+        updatePagination();
+        renderCurrentPage();
+      }
+    });
+    
+    // Pagination event listeners
+    if (prevPageBtn) {
+      prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderCurrentPage();
+          updatePagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+    
+    if (nextPageBtn) {
+      nextPageBtn.addEventListener('click', () => {
+        if (currentPage < Math.ceil(filteredPosts.length / postsPerPage)) {
+          currentPage++;
+          renderCurrentPage();
+          updatePagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+    
+    function filterPosts() {
+      // Start with all posts
+      let filtered = Array.from(postItems);
+      
+      // Apply category filter
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(post => {
+          const categories = JSON.parse(post.dataset.categories || '[]');
+          return categories.includes(currentCategory);
+        });
+      }
+      
+      // Apply search filter
+      if (currentSearchQuery) {
+        const query = currentSearchQuery.toLowerCase();
+        filtered = filtered.filter(post => {
+          const title = post.dataset.title || '';
+          const content = post.dataset.content || '';
+          return title.includes(query) || content.includes(query);
+        });
+      }
+      
+      filteredPosts = filtered;
+      
+      // Update search results count
+      if (searchResultsCount && currentSearchQuery) {
+        searchResultsCount.textContent = `Найдено результатов: ${filteredPosts.length}`;
+        searchResultsCount.classList.remove('hidden');
+      } else if (searchResultsCount) {
+        searchResultsCount.classList.add('hidden');
+      }
+      
+      // Show/hide no results message
+      if (noResultsMessage) {
+        if (filteredPosts.length === 0) {
+          noResultsMessage.classList.remove('hidden');
+        } else {
+          noResultsMessage.classList.add('hidden');
+        }
+      }
+    }
+    
+    function updatePagination() {
+      if (!currentPageEl || !totalPagesEl || !prevPageBtn || !nextPageBtn) return;
+      
+      const totalPages = Math.max(1, Math.ceil(filteredPosts.length / postsPerPage));
+      currentPageEl.textContent = currentPage.toString();
+      totalPagesEl.textContent = totalPages.toString();
+      
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= totalPages;
+    }
+    
+    function renderCurrentPage() {
+      const startIdx = (currentPage - 1) * postsPerPage;
+      const endIdx = startIdx + postsPerPage;
+      const visiblePosts = filteredPosts.slice(startIdx, endIdx);
+      
+      // Hide all posts
+      postItems.forEach(post => {
+        post.style.display = 'none';
+      });
+      
+      // Show only filtered posts for current page
+      visiblePosts.forEach(post => {
+        post.style.display = 'block';
+      });
+    }
+  });
+</script>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+  }
+  
+  .animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 

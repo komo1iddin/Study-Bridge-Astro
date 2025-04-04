@@ -1,0 +1,98 @@
+---
+interface Props {
+  totalSections?: number;
+}
+
+const { totalSections = 0 } = Astro.props;
+---
+
+<div id="reading-progress-container" class="fixed top-0 left-0 w-full h-1 z-50">
+  <div 
+    id="reading-progress-bar" 
+    class="h-full bg-gradient-to-r from-blue-500 to-blue-700 w-0 transition-all duration-100"
+    data-total-sections={totalSections}
+  ></div>
+</div>
+
+<script>
+  function setupReadingProgress() {
+    const progressBar = document.getElementById('reading-progress-bar');
+    const totalSections = parseInt(progressBar?.getAttribute('data-total-sections') || '0', 10);
+    
+    if (!progressBar) return;
+    
+    // Track active section
+    let activeSection = '';
+    let currentSectionProgress = 0;
+    
+    function updateReadingProgress() {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      
+      // Calculate how far the user has scrolled as a percentage
+      let scrollPercentage = 0;
+      
+      if (documentHeight > windowHeight) {
+        scrollPercentage = (scrollPosition / (documentHeight - windowHeight)) * 100;
+      }
+      
+      // Find the current active section (if any)
+      const headings = document.querySelectorAll('h2[id], h3[id]');
+      
+      if (headings.length > 0) {
+        headings.forEach((heading) => {
+          const rect = heading.getBoundingClientRect();
+          // Consider a heading visible if it's within the top 30% of the viewport
+          if (rect.top > 0 && rect.top < windowHeight * 0.3) {
+            activeSection = heading.id;
+            
+            // Update current section progress
+            if (totalSections > 0) {
+              // Find this section's index
+              const headingsList = Array.from(headings);
+              const currentIndex = headingsList.findIndex(h => h.id === activeSection);
+              if (currentIndex >= 0) {
+                currentSectionProgress = (currentIndex / (totalSections - 1)) * 100;
+              }
+            }
+          }
+        });
+      }
+      
+      // Use section-based progress if available, otherwise use scroll percentage
+      const finalPercentage = totalSections > 0 && currentSectionProgress > 0 
+        ? currentSectionProgress
+        : scrollPercentage;
+        
+      // Update the progress bar width - ensure progressBar exists
+      if (progressBar) {
+        progressBar.style.width = `${Math.min(finalPercentage, 100)}%`;
+      }
+      
+      // Dispatch event for section change (for sidebar highlighting)
+      if (activeSection) {
+        document.dispatchEvent(new CustomEvent('sectionChanged', {
+          detail: { sectionId: activeSection }
+        }));
+      }
+    }
+    
+    // Update on scroll
+    window.addEventListener('scroll', updateReadingProgress);
+    
+    // Initial update
+    updateReadingProgress();
+    
+    // Return cleanup function
+    return () => {
+      window.removeEventListener('scroll', updateReadingProgress);
+    };
+  }
+  
+  // Initialize when DOM is loaded
+  document.addEventListener('DOMContentLoaded', setupReadingProgress);
+  
+  // Re-initialize when content changes
+  document.addEventListener('astro:page-load', setupReadingProgress);
+</script> 

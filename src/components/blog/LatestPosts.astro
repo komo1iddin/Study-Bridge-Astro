@@ -1,0 +1,75 @@
+---
+import { getLatestPosts } from '@/lib/blog';
+import BlogCard from './BlogCard.astro';
+
+interface Props {
+  count?: number;
+  lang?: string;
+}
+
+const { count = 6, lang = 'uz' } = Astro.props;
+const latestPosts = getLatestPosts(count);
+---
+
+<section class="py-8 animate-fade-in">
+  <div class="mb-6 flex justify-between items-center">
+    <div>
+      <h2 class="text-2xl font-bold tracking-tight text-blue-800">Последние статьи</h2>
+      <p class="text-muted-foreground mt-1">Свежий контент, чтобы держать вас в курсе событий</p>
+    </div>
+    
+    <a href={`/${lang}/study-blog/studying-in-china`} class="hidden sm:flex group px-4 py-2 border border-blue-200 rounded-md text-blue-700 hover:bg-blue-50 transition-colors">
+      Читать статью о Китае 
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+    </a>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
+    {latestPosts.map((post, index) => (
+      <div class="animate-slide-up" style={`animation-delay: ${(index % 3) * 100}ms`}>
+        <BlogCard post={post} lang={lang} />
+      </div>
+    ))}
+  </div>
+  
+  <div class="mt-8 flex justify-center sm:hidden">
+    <a href={`/${lang}/study-blog/studying-in-china`} class="group px-4 py-2 border border-blue-200 rounded-md text-blue-700 hover:bg-blue-50 transition-colors">
+      Читать статью о Китае 
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block ml-2 h-4 w-4 transition-transform group-hover:translate-x-1">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+  }
+  
+  .animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 

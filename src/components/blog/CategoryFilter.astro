@@ -1,0 +1,135 @@
+---
+import { categories } from "@/lib/blog";
+import type { BlogCategory } from "@/lib/blog";
+import { cn } from "@/lib/utils";
+
+export interface Props {
+  selectedCategory?: string;
+}
+
+const { selectedCategory = 'all' } = Astro.props;
+---
+
+<div class="blog-filter animate-fade-in" id="category-filter">
+  <h3 class="text-sm font-medium text-blue-700 mb-3">Фильтр по категории</h3>
+  <div class="flex flex-wrap gap-2">
+    <button
+      data-category="all"
+      class={cn(
+        "category-btn px-3 py-1.5 text-sm rounded-full transition-all duration-200",
+        "hover:bg-blue-100",
+        selectedCategory === 'all'
+          ? "bg-blue-600 text-white shadow-sm"
+          : "bg-white text-blue-700 border border-blue-200"
+      )}
+    >
+      Все
+    </button>
+    {categories.filter(cat => cat.id !== 'all').map((category) => (
+      <button
+        data-category={category.id}
+        class={cn(
+          "category-btn px-3 py-1.5 text-sm rounded-full transition-all duration-200",
+          "hover:bg-blue-100",
+          selectedCategory === category.id
+            ? "bg-blue-600 text-white shadow-sm"
+            : "bg-white text-blue-700 border border-blue-200"
+        )}
+      >
+        {category.label}
+      </button>
+    ))}
+  </div>
+</div>
+
+<script>
+  // Client-side JavaScript for category filter interactivity
+  document.addEventListener('astro:page-load', function() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.category-btn');
+    
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const category = button.getAttribute('data-category') || 'all';
+        
+        // Update active state visually
+        buttons.forEach(btn => {
+          btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
+          btn.classList.add('bg-white', 'text-blue-700', 'border', 'border-blue-200');
+        });
+        
+        button.classList.remove('bg-white', 'text-blue-700', 'border', 'border-blue-200');
+        button.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
+        
+        // Dispatch event for the posts component to listen to
+        document.dispatchEvent(new CustomEvent('category-changed', {
+          detail: { category }
+        }));
+        
+        // Update URL with category query parameter (without page reload)
+        const url = new URL(window.location.href);
+        if (category === 'all') {
+          url.searchParams.delete('category');
+        } else {
+          url.searchParams.set('category', category);
+        }
+        window.history.pushState({}, '', url);
+      });
+    });
+    
+    // On page load, check for category in URL and select appropriate button
+    const url = new URL(window.location.href);
+    const categoryParam = url.searchParams.get('category');
+    
+    if (categoryParam) {
+      const button = document.querySelector<HTMLButtonElement>(`[data-category="${categoryParam}"]`);
+      if (button) {
+        button.click();
+      }
+    }
+  });
+</script>
+
+<style>
+  .blog-filter {
+    position: relative;
+    overflow: hidden;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background-color: rgba(239, 246, 255, 0.6);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+  }
+
+  .category-btn {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .category-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(59, 130, 246, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.4s ease;
+    pointer-events: none;
+  }
+  
+  .category-btn:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style> 

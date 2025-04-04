@@ -1,0 +1,247 @@
+---
+import { getPostsByCategory, blogPosts, type BlogPost, type BlogCategory } from '@/lib/blog';
+import BlogCard from './BlogCard.astro';
+import CategoryFilter from './CategoryFilter.astro';
+import SearchBar from './SearchBar.astro';
+import { ChevronLeft, ChevronRight } from 'lucide-astro';
+
+interface Props {
+  lang?: string;
+  selectedCategory?: string;
+}
+
+const { lang = 'uz', selectedCategory = 'all' } = Astro.props;
+const allPosts = selectedCategory === 'all' ? blogPosts : getPostsByCategory(selectedCategory as BlogCategory);
+const postsPerPage = 9;
+
+// Client-side filtering and pagination will be handled by the script
+---
+
+<div class="animate-fade-in">
+  <div class="mb-8 space-y-6">
+    <SearchBar />
+    <CategoryFilter selectedCategory={selectedCategory} />
+  </div>
+  
+  <div id="no-results-message" class="hidden text-center p-6 bg-blue-50 rounded-lg text-blue-700 mb-6">
+    <p class="text-lg font-medium">Статьи не найдены</p>
+    <p class="text-sm mt-2">Попробуйте изменить поисковый запрос или выбрать другую категорию</p>
+  </div>
+  
+  <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8 mt-6">
+    {allPosts.map((post, index) => (
+      <div 
+        class="post-item animate-slide-up" 
+        style={`animation-delay: ${(index % 3) * 100}ms`}
+        data-categories={JSON.stringify(post.categories)}
+        data-title={post.title.toLowerCase()}
+        data-content={post.excerpt.toLowerCase()}
+      >
+        <BlogCard post={post} lang={lang} />
+      </div>
+    ))}
+  </div>
+  
+  <div class="mt-8 flex justify-center items-center gap-2">
+    <button id="prevPage" class="pagination-btn disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1 border border-blue-200 rounded text-blue-700 hover:bg-blue-50 transition-colors" disabled>
+      <ChevronLeft size={16} />
+    </button>
+    
+    <span id="paginationInfo" class="text-sm text-gray-500">
+      Страница <span id="currentPage">1</span> из <span id="totalPages">1</span>
+    </span>
+    
+    <button id="nextPage" class="pagination-btn px-3 py-1 border border-blue-200 rounded text-blue-700 hover:bg-blue-50 transition-colors">
+      <ChevronRight size={16} />
+    </button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', function() {
+    interface CustomEventWithDetail extends CustomEvent {
+      detail: {
+        category?: string;
+        query?: string;
+      };
+    }
+
+    let currentCategory = 'all';
+    let currentSearchQuery = '';
+    let currentPage = 1;
+    let filteredPosts: HTMLElement[] = [];
+    const postsPerPage = 9;
+    
+    // Get elements
+    const postsContainer = document.getElementById('postsContainer');
+    const prevPageBtn = document.getElementById('prevPage') as HTMLButtonElement | null;
+    const nextPageBtn = document.getElementById('nextPage') as HTMLButtonElement | null;
+    const currentPageEl = document.getElementById('currentPage');
+    const totalPagesEl = document.getElementById('totalPages');
+    const postItems = document.querySelectorAll<HTMLElement>('.post-item');
+    const noResultsMessage = document.getElementById('no-results-message');
+    const searchResultsCount = document.getElementById('search-results-count');
+    
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    const searchParam = urlParams.get('search');
+    
+    if (categoryParam) {
+      currentCategory = categoryParam;
+    }
+    
+    if (searchParam) {
+      currentSearchQuery = searchParam;
+    }
+    
+    // Apply filters based on URL parameters
+    filterPosts();
+    updatePagination();
+    renderCurrentPage();
+    
+    // Listen for category change events
+    document.addEventListener('category-changed', (e: Event) => {
+      const event = e as CustomEventWithDetail;
+      if (event.detail && event.detail.category) {
+        currentCategory = event.detail.category;
+        currentPage = 1;
+        filterPosts();
+        updatePagination();
+        renderCurrentPage();
+      }
+    });
+    
+    // Listen for search events
+    document.addEventListener('search-query-changed', (e: Event) => {
+      const event = e as CustomEventWithDetail;
+      if (event.detail && event.detail.query !== undefined) {
+        currentSearchQuery = event.detail.query;
+        currentPage = 1;
+        filterPosts();
+        updatePagination();
+        renderCurrentPage();
+      }
+    });
+    
+    // Pagination event listeners
+    if (prevPageBtn) {
+      prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderCurrentPage();
+          updatePagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+    
+    if (nextPageBtn) {
+      nextPageBtn.addEventListener('click', () => {
+        if (currentPage < Math.ceil(filteredPosts.length / postsPerPage)) {
+          currentPage++;
+          renderCurrentPage();
+          updatePagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+    
+    function filterPosts() {
+      // Start with all posts
+      let filtered = Array.from(postItems);
+      
+      // Apply category filter
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(post => {
+          const categories = JSON.parse(post.dataset.categories || '[]');
+          return categories.includes(currentCategory);
+        });
+      }
+      
+      // Apply search filter
+      if (currentSearchQuery) {
+        const query = currentSearchQuery.toLowerCase();
+        filtered = filtered.filter(post => {
+          const title = post.dataset.title || '';
+          const content = post.dataset.content || '';
+          return title.includes(query) || content.includes(query);
+        });
+      }
+      
+      filteredPosts = filtered;
+      
+      // Update search results count
+      if (searchResultsCount && currentSearchQuery) {
+        searchResultsCount.textContent = `Найдено результатов: ${filteredPosts.length}`;
+        searchResultsCount.classList.remove('hidden');
+      } else if (searchResultsCount) {
+        searchResultsCount.classList.add('hidden');
+      }
+      
+      // Show/hide no results message
+      if (noResultsMessage) {
+        if (filteredPosts.length === 0) {
+          noResultsMessage.classList.remove('hidden');
+        } else {
+          noResultsMessage.classList.add('hidden');
+        }
+      }
+    }
+    
+    function updatePagination() {
+      if (!currentPageEl || !totalPagesEl || !prevPageBtn || !nextPageBtn) return;
+      
+      const totalPages = Math.max(1, Math.ceil(filteredPosts.length / postsPerPage));
+      currentPageEl.textContent = currentPage.toString();
+      totalPagesEl.textContent = totalPages.toString();
+      
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= totalPages;
+    }
+    
+    function renderCurrentPage() {
+      const startIdx = (currentPage - 1) * postsPerPage;
+      const endIdx = startIdx + postsPerPage;
+      const visiblePosts = filteredPosts.slice(startIdx, endIdx);
+      
+      // Hide all posts
+      postItems.forEach(post => {
+        post.style.display = 'none';
+      });
+      
+      // Show only filtered posts for current page
+      visiblePosts.forEach(post => {
+        post.style.display = 'block';
+      });
+    }
+  });
+</script>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+  }
+  
+  .animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 

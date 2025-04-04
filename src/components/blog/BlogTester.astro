@@ -1,0 +1,23 @@
+---
+// This component is only used in development to test blog functionality
+---
+
+<script>
+  import { testBlogComponentInteractions } from './blog-utils.js';
+
+  // Only run in development mode
+  if (import.meta.env.DEV) {
+    document.addEventListener('astro:page-load', () => {
+      // Wait for all components to initialize
+      setTimeout(() => {
+        testBlogComponentInteractions();
+      }, 500);
+    });
+
+    // Add to global window object for debugging
+    if (typeof window !== 'undefined') {
+      // Use type assertion to fix the TypeScript error
+      (window as any).debugBlog = true;
+    }
+  }
+</script> 
