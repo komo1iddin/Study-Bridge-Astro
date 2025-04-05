@@ -1,3 +1,4 @@
+<!-- DialogDescription.svelte -->
 <script lang="ts">
   import { cn } from '../../../lib/utils';
   import { dialogTheme } from '../../../lib/theme-utils';
@@ -5,6 +6,6 @@
   export let class_name = '';
 </script>
 
-<h2 class={cn(dialogTheme.title, class_name)} {...$$restProps}>
+<p class={cn(dialogTheme.description, class_name)} {...$$restProps}>
   <slot />
-</h2> 
+</p> 

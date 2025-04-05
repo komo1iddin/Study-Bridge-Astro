@@ -12,8 +12,9 @@ export const heroEn: HeroTranslations = {
     enrollment: '2025 Enrollment Started',
   },
   title: {
-    first: "Studying in China is now a",
-    highlight: 'reality',
+    first: "Uzbekistan",
+    highlight: 'reliable bridge',
+    connector: 'and China',
   },
   buttons: {
     apply: 'Apply Now',

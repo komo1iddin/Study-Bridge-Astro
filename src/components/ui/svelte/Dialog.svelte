@@ -8,6 +8,7 @@
   export let className: string = '';
   
   const dispatch = createEventDispatcher();
+  let mounted = false;
   
   function closeDialog() {
     open = false;
@@ -27,16 +28,19 @@
   }
   
   onMount(() => {
+    mounted = true;
     document.addEventListener('keydown', handleKeydown);
     return () => {
       document.removeEventListener('keydown', handleKeydown);
     };
   });
   
-  $: if (open) {
-    document.body.classList.add('overflow-hidden');
-  } else {
-    document.body.classList.remove('overflow-hidden');
+  $: if (mounted && typeof document !== 'undefined') {
+    if (open) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
   }
 </script>
 

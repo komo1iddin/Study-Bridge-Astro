@@ -1,38 +1,18 @@
 {
-  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@assets/*": ["src/assets/*"],
-      "@data/*": ["src/data/*"],
-      "@types/*": ["src/types/*"]
-    },
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "verbatimModuleSyntax": true,
-    "moduleResolution": "bundler",
-    "allowJs": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "types": ["astro/client"],
-    "noEmit": true,
-    "isolatedModules": true,
-    "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "outDir": "dist",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": [
-    ".astro/types.d.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.astro"
-  ],
-  "exclude": ["dist", "node_modules"]
+  "include": ["src/**/*", "scripts/**/*"],
+  "exclude": ["node_modules"]
 }

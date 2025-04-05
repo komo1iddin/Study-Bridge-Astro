@@ -12,8 +12,9 @@ export const heroUz: HeroTranslations = {
     enrollment: '2025-yil qabuli boshlandi',
   },
   title: {
-    first: "Xitoyda o'qish orzusi endi",
-    highlight: 'reallik',
+    first: "O'zbekiston",
+    highlight: "ishonchli ko'prik",
+    connector: 'va Xitoy orasidagi',
   },
   buttons: {
     apply: 'Ariza topshirish',

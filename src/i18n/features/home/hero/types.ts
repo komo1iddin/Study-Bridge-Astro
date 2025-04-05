@@ -21,6 +21,7 @@ export interface HeroTranslations {
   title: {
     first: string;
     highlight: string;
+    connector?: string;
   };
   description: string;
   buttons: {
@@ -34,4 +35,10 @@ export interface HeroTranslations {
     label: string;
     content: string;
   };
+  testimonials?: Array<{
+    name: string;
+    role: string;
+    image: string;
+    quote: string;
+  }>;
 } 

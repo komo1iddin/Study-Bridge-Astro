@@ -3,14 +3,18 @@ import { type Lang } from '@/i18n/langUtils';
 import { getTranslation } from '@/i18n/translationUtils';
 import LanguageSelector from '@/components/shared/LanguageSelector/LanguageSelector.astro';
 import LocalizedLink from '@/components/ui/LocalizedLink.astro';
+import Header from '../components/shared/navigation/Header/index.astro';
+import Footer from '../components/layout/Footer.astro';
 
 interface Props {
-  title: string;
-  description: string;
-  lang: Lang;
+  meta: {
+    title: string;
+    description: string;
+  };
 }
 
-const { title, description, lang } = Astro.props;
+const { meta } = Astro.props;
+const { lang } = Astro.params as { lang: Lang };
 
 // Create translation function for the current language
 const t = (key: string) => getTranslation(lang, key);
@@ -20,155 +24,19 @@ const t = (key: string) => getTranslation(lang, key);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{title}</title>
-  <meta name="description" content={description}>
+  <title>{meta.title}</title>
+  <meta name="description" content={meta.description}>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="generator" content={Astro.generator} />
 </head>
+
 <body>
-  <header>
-    <div class="container">
-      <div class="nav-container">
-        <div class="logo">
-          <LocalizedLink href="/" lang={lang}>
-            <img src="/logo.svg" alt="AstroStudy Logo" width="150" height="40" />
-          </LocalizedLink>
-        </div>
-        
-        <nav class="main-nav">
-          <ul>
-            <li>
-              <LocalizedLink href="/" lang={lang}>
-                {t('common.nav.home')}
-              </LocalizedLink>
-            </li>
-            <li>
-              <LocalizedLink href="/about" lang={lang}>
-                {t('common.nav.about')}
-              </LocalizedLink>
-            </li>
-            <li>
-              <LocalizedLink href="/programs" lang={lang}>
-                {t('common.nav.programs')}
-              </LocalizedLink>
-            </li>
-            <li>
-              <LocalizedLink href="/contact" lang={lang}>
-                {t('common.nav.contact')}
-              </LocalizedLink>
-            </li>
-          </ul>
-        </nav>
-        
-        <div class="language-selector-container">
-          <LanguageSelector />
-        </div>
-      </div>
-    </div>
-  </header>
-  
+
+  <Header />
   <main>
     <slot />
   </main>
+  <Footer />
   
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="copyright">
-          &copy; {new Date().getFullYear()} AstroStudy. {t('common.footer.copyright')}
-        </div>
-      </div>
-    </div>
-  </footer>
-  
-  <style is:global>
-    :root {
-      --primary-color: #3b82f6;
-      --secondary-color: #1f2937;
-      --accent-color: #10b981;
-      --text-color: #111827;
-      --bg-color: #ffffff;
-      --light-gray: #f3f4f6;
-      --border-color: #e5e7eb;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      color: var(--text-color);
-      background-color: var(--bg-color);
-      line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-    
-    header {
-      background-color: var(--bg-color);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    
-    .nav-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0;
-    }
-    
-    .main-nav ul {
-      display: flex;
-      list-style: none;
-      gap: 1.5rem;
-    }
-    
-    .main-nav a {
-      text-decoration: none;
-      color: var(--text-color);
-      font-weight: 500;
-      padding: 0.5rem 0;
-      transition: color 0.2s;
-    }
-    
-    .main-nav a:hover {
-      color: var(--primary-color);
-    }
-    
-    footer {
-      background-color: var(--secondary-color);
-      color: white;
-      padding: 2rem 0;
-      margin-top: 4rem;
-    }
-    
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    /* Responsive styles */
-    @media (max-width: 768px) {
-      .nav-container {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .main-nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-    }
-  </style>
 </body>
 </html> 

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { cn } from '@/lib/utils';
-  import { buttonTheme } from '@/lib/theme-utils';
+  import { cn } from '../../../lib/utils';
+  import { buttonTheme } from '../../../lib/theme-utils';
   import type { HTMLButtonAttributes } from 'svelte/elements';
 
   type Variant = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';

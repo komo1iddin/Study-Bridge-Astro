@@ -1,8 +1,6 @@
 <script lang="ts">
   import { ChevronRight, GraduationCap, MapPin } from 'lucide-svelte';
   import Card from '@/components/ui/svelte/Card.svelte';
-  import Badge from '@/components/ui/svelte/Badge.svelte';
-  import Button from '@/components/ui/svelte/Button.svelte';
   import type { UniversityFeatureTranslations } from '@/i18n/features/university/universityFeature';
   import type { Lang } from '@/i18n/langUtils';
   
@@ -67,7 +65,7 @@
     <!-- Location section -->
     <div class="h-[28px] sm:h-[32px] mb-2">
       <div class="text-xs sm:text-sm font-semibold flex items-center gap-2 text-gray-700">
-        <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center flex-shrink-0">
           <MapPin class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
         </div>
         <span class="line-clamp-1">{university.location}</span>
@@ -77,7 +75,7 @@
     <!-- Faculties section -->
     <div class="h-[80px] sm:h-[90px] overflow-y-auto mb-3">
       <div class="text-xs sm:text-sm font-semibold mb-2 flex items-center gap-2 text-gray-700">
-        <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center flex-shrink-0">
           <GraduationCap class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
         </div>
         <span>{t.faculties}</span>
@@ -94,7 +92,7 @@
     <!-- Button -->
     <button 
       on:click={handleMoreInfo}
-      class="w-full flex items-center justify-center gap-1.5 bg-primary/10 hover:bg-primary/20 text-primary transition-colors rounded-xl py-2 sm:py-2.5 text-xs sm:text-sm font-medium group"
+      class="w-full flex items-center justify-center gap-1.5 text-primary hover:text-gray-800 hover:bg-gray-100 transition-colors rounded-xl py-2 sm:py-2.5 text-xs sm:text-sm font-medium group"
     >
       {t.moreInfo}
       <ChevronRight class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-0.5" />

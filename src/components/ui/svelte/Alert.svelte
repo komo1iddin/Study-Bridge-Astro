@@ -1,7 +1,7 @@
 <script>
-  import { cn } from '@/lib/utils';
+  import { cn } from '../../../lib/utils';
   import './svelte-components.css';
-  import { alertTheme } from '@/lib/theme-utils';
+  import { alertTheme } from '../../../lib/theme-utils';
   
   export let variant = 'default';
   let className = '';

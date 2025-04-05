@@ -1,0 +1,314 @@
+{
+  "frontMatter.framework.id": "astro",
+  "frontMatter.preview.host": "http://localhost:4321",
+  "frontMatter.content.publicFolder": "public",
+  "frontMatter.content.pageFolders": [
+    {
+      "title": "Universities",
+      "path": "[[workspace]]/src/content/universities",
+      "filePrefix": ""
+    },
+    {
+      "title": "Blog Posts",
+      "path": "[[workspace]]/src/content/posts",
+      "filePrefix": ""
+    },
+    {
+      "title": "Markdown Posts",
+      "path": "[[workspace]]/src/content/posts-md",
+      "filePrefix": ""
+    },
+    {
+      "title": "Programs",
+      "path": "[[workspace]]/src/content/programs",
+      "filePrefix": ""
+    },
+    {
+      "title": "FAQ",
+      "path": "[[workspace]]/src/content/faq",
+      "filePrefix": ""
+    },
+    {
+      "title": "Grants",
+      "path": "[[workspace]]/src/content/grants",
+      "filePrefix": ""
+    },
+    {
+      "title": "Features",
+      "path": "[[workspace]]/src/content/features",
+      "filePrefix": ""
+    },
+    {
+      "title": "Testimonials",
+      "path": "[[workspace]]/src/content/testimonials",
+      "filePrefix": ""
+    }
+  ],
+  "frontMatter.taxonomy.contentTypes": [
+    {
+      "name": "university",
+      "fileExtension": "yaml",
+      "pageBundle": false,
+      "fields": [
+        {
+          "title": "Name (Uzbek)",
+          "name": "name.uz",
+          "type": "string"
+        },
+        {
+          "title": "Name (Russian)",
+          "name": "name.ru",
+          "type": "string"
+        },
+        {
+          "title": "Name (English)",
+          "name": "name.en",
+          "type": "string"
+        },
+        {
+          "title": "Location",
+          "name": "location",
+          "type": "string"
+        },
+        {
+          "title": "Ranking",
+          "name": "ranking",
+          "type": "number"
+        },
+        {
+          "title": "Founded Year",
+          "name": "foundedYear",
+          "type": "number"
+        },
+        {
+          "title": "Description (Uzbek)",
+          "name": "description.uz",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Description (Russian)",
+          "name": "description.ru",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Description (English)",
+          "name": "description.en",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Students (Uzbek)",
+          "name": "students.uz",
+          "type": "string"
+        },
+        {
+          "title": "Students (Russian)",
+          "name": "students.ru",
+          "type": "string"
+        },
+        {
+          "title": "Students (English)",
+          "name": "students.en",
+          "type": "string"
+        },
+        {
+          "title": "Image",
+          "name": "image",
+          "type": "image",
+          "isPreviewImage": true
+        },
+        {
+          "title": "Logo",
+          "name": "logo",
+          "type": "image"
+        },
+        {
+          "title": "Featured",
+          "name": "featured",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "name": "post",
+      "fileExtension": "yaml",
+      "pageBundle": false,
+      "fields": [
+        {
+          "title": "Title (Uzbek)",
+          "name": "title.uz",
+          "type": "string"
+        },
+        {
+          "title": "Title (Russian)",
+          "name": "title.ru",
+          "type": "string"
+        },
+        {
+          "title": "Title (English)",
+          "name": "title.en",
+          "type": "string"
+        },
+        {
+          "title": "Published Date",
+          "name": "publishedDate",
+          "type": "datetime",
+          "default": "{{now}}",
+          "isPublishDate": true
+        },
+        {
+          "title": "Excerpt (Uzbek)",
+          "name": "excerpt.uz",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Excerpt (Russian)",
+          "name": "excerpt.ru",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Excerpt (English)",
+          "name": "excerpt.en",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Author",
+          "name": "author",
+          "type": "string"
+        },
+        {
+          "title": "Author Image",
+          "name": "authorImage",
+          "type": "image"
+        },
+        {
+          "title": "Featured Image",
+          "name": "image",
+          "type": "image",
+          "isPreviewImage": true
+        },
+        {
+          "title": "Featured",
+          "name": "featured",
+          "type": "boolean"
+        },
+        {
+          "title": "Content (Uzbek)",
+          "name": "content.uz",
+          "type": "string"
+        },
+        {
+          "title": "Content (Russian)",
+          "name": "content.ru",
+          "type": "string"
+        },
+        {
+          "title": "Content (English)",
+          "name": "content.en",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "faq",
+      "fileExtension": "yaml",
+      "pageBundle": false,
+      "fields": [
+        {
+          "title": "ID",
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "title": "Category ID",
+          "name": "categoryId",
+          "type": "string"
+        },
+        {
+          "title": "Question (Uzbek)",
+          "name": "question.uz",
+          "type": "string"
+        },
+        {
+          "title": "Question (Russian)",
+          "name": "question.ru",
+          "type": "string"
+        },
+        {
+          "title": "Question (English)",
+          "name": "question.en",
+          "type": "string"
+        },
+        {
+          "title": "Answer (Uzbek)",
+          "name": "answer.uz",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Answer (Russian)",
+          "name": "answer.ru",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Answer (English)",
+          "name": "answer.en",
+          "type": "string",
+          "multiline": true
+        },
+        {
+          "title": "Order",
+          "name": "order",
+          "type": "number"
+        },
+        {
+          "title": "Last Updated",
+          "name": "lastUpdated",
+          "type": "datetime",
+          "default": "{{now}}"
+        },
+        {
+          "title": "Image",
+          "name": "image",
+          "type": "image"
+        }
+      ]
+    }
+  ],
+  "frontMatter.media.supportedMimeTypes": [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/svg+xml"
+  ],
+  "frontMatter.i18n.languages": [
+    {
+      "id": "uz",
+      "label": "Uzbek"
+    },
+    {
+      "id": "ru",
+      "label": "Russian"
+    },
+    {
+      "id": "en",
+      "label": "English"
+    }
+  ],
+  "frontMatter.i18n.defaultLanguage": "uz",
+  "frontMatter.content.supportedFileTypes": [
+    "md",
+    "markdown",
+    "mdx",
+    "yaml",
+    "yml",
+    "json"
+  ]
+} 

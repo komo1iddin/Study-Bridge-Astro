@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { cn } from '@/lib/utils';
-  import { dialogTheme } from '@/lib/theme-utils';
+  import { cn } from '../../../lib/utils';
+  import { dialogTheme } from '../../../lib/theme-utils';
   
-  export let className: string = '';
+  export let class_name = '';
 </script>
 
-<div class={cn(dialogTheme.footer, className)} {...$$restProps}>
-  <slot></slot>
+<div class={cn(dialogTheme.footer, class_name)} {...$$restProps}>
+  <slot />
 </div>

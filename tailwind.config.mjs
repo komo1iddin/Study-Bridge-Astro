@@ -48,7 +48,7 @@ export default {
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
+          DEFAULT: '#FFBB38',
           foreground: 'hsl(var(--secondary-foreground))',
         },
         destructive: {
@@ -86,6 +86,7 @@ export default {
       },
       animation: {
         'pulse-slow': 'pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-very-slow': 'pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         float: 'float 6s ease-in-out infinite',
         'float-slow': 'float-slow 8s ease-in-out infinite',
         'float-delayed': 'float-delayed 6s ease-in-out 1s infinite',
@@ -95,6 +96,10 @@ export default {
         'charming-reallik': 'charming-reallik 3s ease-in-out infinite',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        typing: 'typing 3.5s steps(40, end), blink .75s step-end infinite',
+        'float-alt': 'floatAlt 20s linear infinite',
+        'float-alt-delay-1': 'floatAlt 20s linear 4s infinite',
+        'float-alt-delay-2': 'floatAlt 20s linear 8s infinite',
       },
       keyframes: {
         'pulse-slow': {
@@ -204,6 +209,23 @@ export default {
           to: {
             height: '0',
           },
+        },
+        floatAlt: {
+          "0%": {
+            transform: "translateY(20px) rotate(-3deg)",
+            opacity: "0"
+          },
+          "100%": {
+            transform: "translateY(-800px) rotate(-3deg)",
+            opacity: "0"
+          },
+          "10%, 90%": {
+            opacity: "1"
+          },
+          "30%, 70%": {
+            transform: "translateY(-400px) rotate(-3deg)",
+            opacity: "1"
+          }
         },
       },
     },

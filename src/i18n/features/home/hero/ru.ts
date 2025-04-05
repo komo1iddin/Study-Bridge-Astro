@@ -12,8 +12,9 @@ export const heroRu: HeroTranslations = {
     enrollment: 'Прием на 2025 год открыт',
   },
   title: {
-    first: "Обучение в Китае теперь",
-    highlight: 'реальность',
+    first: "Узбекистан",
+    highlight: 'надежный мост',
+    connector: 'и Китай',
   },
   buttons: {
     apply: 'Подать заявку',

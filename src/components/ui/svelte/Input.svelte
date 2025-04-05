@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { cn } from '@/lib/utils';
-  import { inputTheme } from '@/lib/theme-utils';
+  import { cn } from '../../../lib/utils';
+  import { inputTheme } from '../../../lib/theme-utils';
   import type { HTMLInputAttributes } from 'svelte/elements';
 
   type Variant = 'default' | 'destructive' | 'outlined' | 'ghost';
