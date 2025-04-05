@@ -1,0 +1,39 @@
+---
+import HeroComponent from './Index.svelte';
+import type { Lang } from '@/i18n/langUtils';
+import { getHeroTranslations } from '@/i18n/features/home/hero';
+import './hero-styles.css';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'uz' } = Astro.props;
+const translations = getHeroTranslations(lang);
+
+// Add testimonials to translations if needed
+if (!translations.testimonials) {
+  translations.testimonials = [
+    {
+      name: "Sardor Turaev",
+      role: "Tibbiyot fakulteti talabasi, Tianjin University",
+      image: "/images/testimonials/student1.jpg",
+      quote: "Study Bridge menga Xitoyning eng zo'r tibbiyot universitetiga kirish imkonini berdi. Ular barcha hujjat ishlari va vizani rasmiylashtirish jarayonlarida yordam berishdi."
+    },
+    {
+      name: "Diyora Karimova",
+      role: "Kompyuter muhandisligi, Tsinghua University",
+      image: "/images/testimonials/student2.jpg",
+      quote: "Xitoyda o'qish orzuyim edi. Study Bridge bilan bu orzu haqiqatga aylandi. Stipendiya olishimda katta yordam ko'rsatishdi!"
+    },
+    {
+      name: "Jahongir Vohidov",
+      role: "Iqtisodiyot talabasi, Peking University",
+      image: "/images/testimonials/student3.jpg",
+      quote: "Study Bridge xodimlari professional va g'amxo'r. Universiteti tanlashdan tortib, Xitoyga borishgacha bo'lgan jarayonning har bir bosqichida qo'llab-quvvatladilar."
+    }
+  ];
+}
+---
+
+<HeroComponent lang={lang} translations={translations} client:load /> 
