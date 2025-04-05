@@ -4,7 +4,7 @@ import '@/styles/components/sections.css';
 // Import language utilities
 import { languages, type Lang } from '@/i18n/langUtils';
 // Components
-import Hero from '@/components/features/home/Hero.astro';
+import Hero from '@/components/features/home/Hero/Hero.astro';
 import MissionStats from '@/components/features/home/MissionStats.astro';
 import UniversityFeature from '@/components/features/university/UniversityFeature/UniversityFeature.astro';
 import SuccessPath from '@/components/features/home/SuccessPath/SuccessPath.astro';
@@ -43,7 +43,7 @@ const t = (key: string) => getTranslation(lang as Lang, key);
 
 <Layout meta={meta}>
   <main>
-    <Hero />
+    <Hero lang={lang as Lang} />
     <div class="section section-gradient-1">
       <WhyChina />
     </div>
@@ -90,7 +90,7 @@ const t = (key: string) => getTranslation(lang as Lang, key);
       <Contact />
  
     <ContactModal /> 
-    <OfferPopup />
+    <OfferPopup lang={lang as Lang} />
   </main>
 
   <script>
