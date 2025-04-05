@@ -1,72 +1,108 @@
 ---
-import type { BlogPost } from '@/types/blog';
-import { Clock, Tag, ChevronRight } from 'lucide-astro';
+import { formatDate } from '@/lib/blog';
+import type { BlogPost } from '@/lib/blog';
+import { cn } from '@/lib/utils';
 
 interface Props {
   post: BlogPost;
+  variant?: 'default' | 'featured' | 'minimal';
+  className?: string;
+  lang?: string;
 }
 
-const { post } = Astro.props;
+const { post, variant = 'default', className, lang = 'uz' } = Astro.props;
+const isMinimal = variant === 'minimal';
+const isFeatured = variant === 'featured';
 
-const postImage = post.image || '/images/posts/placeholder/post.jpeg';
-const authorImage = post.authorImage || '/images/posts/placeholder/author.jpg';
-const postLang = post.lang || 'uz'; // Default to 'uz' if lang is not specified
+// Helper function to map category IDs to display names
+function getCategoryLabel(category: string): string {
+  switch (category) {
+    case 'academic': return 'Академические';
+    case 'study-tips': return 'Советы по учебе';
+    case 'career': return 'Карьера';
+    case 'student-life': return 'Студенческая жизнь';
+    case 'technology': return 'Технологии';
+    default: return category;
+  }
+}
 ---
 
-<div class="blog-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-  <div class="relative h-48 overflow-hidden">
-    <img 
-      src={postImage} 
-      alt={post.title} 
-      class="blog-card-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-      onerror="this.src='/images/posts/placeholder/post.jpeg'"
+<article 
+  class={cn(
+    "group relative flex flex-col overflow-hidden rounded-xl transition-all duration-300",
+    "hover:shadow-lg transform hover:-translate-y-1",
+    isFeatured ? "h-full" : "",
+    isMinimal ? "border-0" : "border border-blue-100",
+    "bg-white",
+    className
+  )}
+>
+  <div class={cn(
+    "relative overflow-hidden",
+    isMinimal ? "aspect-[16/9] rounded-lg" : 
+    isFeatured ? "aspect-[16/12]" : "aspect-[16/9]",
+  )}>
+    <img
+      src={post.coverImage}
+      alt={post.title}
+      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
     />
-    <div class="absolute top-3 left-3">
-      <span class="inline-block px-4 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium">
-        <Tag size={12} class="mr-1" />
-        {post.category || "Education"}
-      </span>
-    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
   </div>
-  
-  <div class="p-6">
-    <div class="flex items-center space-x-2 text-xs text-gray-600 mb-2">
-      <time datetime={post.date || post.publishedDate} class="blog-card-date flex items-center">
-        <Clock size={12} class="mr-1" />
-        {new Date(post.date || post.publishedDate).toLocaleDateString(postLang === 'ru' ? 'ru-RU' : (postLang === 'en' ? 'en-US' : 'uz-UZ'))}
-      </time>
-      <span>•</span>
-      <span>{post.readTime || "5 min"}</span>
+
+  <div class={cn(
+    "flex flex-col",
+    isMinimal ? "p-2" : isFeatured ? "p-6" : "p-4"
+  )}>
+    <div class="flex items-center gap-2 mb-2">
+      {!isMinimal && post.categories.slice(0, 2).map((category) => (
+        <span class="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full">
+          {getCategoryLabel(category)}
+        </span>
+      ))}
+      {!isMinimal && (
+        <span class="text-xs text-blue-500 ml-auto">
+          {post.readTime}
+        </span>
+      )}
     </div>
-    
-    <h3 class="blog-card-title text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-      <a href={`/${postLang}/blog/${post.slug}`} class="hover:text-primary-600 transition-colors duration-300">
+
+    <h3 class={cn(
+      "font-semibold tracking-tight leading-tight mb-2 group-hover:text-blue-600 transition-colors",
+      isFeatured ? "text-2xl" : isMinimal ? "text-base" : "text-lg"
+    )}>
+      <a href={`/${lang}/blog/${post.id}`}>
         {post.title}
       </a>
     </h3>
-    
-    <p class="blog-card-excerpt text-sm text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
-    
-    <div class="flex items-center justify-between">
-      <div class="flex items-center">
-        <img 
-          src={authorImage} 
-          alt={post.author} 
-          class="h-8 w-8 rounded-full ring-1 ring-primary-100"
-          onerror="this.src='/images/posts/placeholder/author.jpg'"
+
+    {!isMinimal && (
+      <p class={cn(
+        "text-gray-600 line-clamp-2 mb-4",
+        isFeatured ? "text-base" : "text-sm"
+      )}>
+        {post.excerpt}
+      </p>
+    )}
+
+    <div class="mt-auto flex items-center gap-2">
+      {!isMinimal && (
+        <img
+          src={post.author.avatar}
+          alt={post.author.name}
+          class="h-8 w-8 rounded-full object-cover border-2 border-blue-200"
         />
-        <div class="ml-2">
-          <p class="text-xs font-medium text-gray-900">{post.author}</p>
-        </div>
+      )}
+      <div class="flex flex-col">
+        {!isMinimal && (
+          <span class="text-xs font-medium text-gray-700">
+            {post.author.name}
+          </span>
+        )}
+        <span class="text-xs text-blue-500">
+          {formatDate(post.publishedDate)}
+        </span>
       </div>
-      
-      <a 
-        href={`/${postLang}/blog/${post.slug}`} 
-        class="inline-flex items-center text-xs text-primary-600 font-medium hover:text-primary-700 transition-colors duration-300"
-      >
-        {postLang === 'ru' ? 'Читать' : (postLang === 'en' ? 'Read' : 'O\'qish')}
-        <ChevronRight size={12} class="ml-1" />
-      </a>
     </div>
   </div>
-</div>
+</article> 

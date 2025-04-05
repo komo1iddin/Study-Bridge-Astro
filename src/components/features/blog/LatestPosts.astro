@@ -1,177 +1,75 @@
 ---
-import { getAllPosts } from '@/lib/fileSystemReader';
-import type { BlogPost, Author } from '@/types/blog';
-import { useTranslations } from '@/i18n/utils';
-import type { Lang } from '@/i18n/langUtils';
-import SectionHeader from '@/components/ui/SectionHeader.astro';
-import ButtonView from '@/components/ui/astro/ButtonView.astro';
-import { Calendar } from 'lucide-astro';
+import { getLatestPosts } from '@/lib/blog';
+import BlogCard from './BlogCard.astro';
 
 interface Props {
   count?: number;
-  lang?: Lang;
+  lang?: string;
 }
 
-const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
-const { count = 5 } = Astro.props;
-
-let latestPosts: BlogPost[] = [];
-
-try {
-  const posts = await getAllPosts('uz');
-  
-  latestPosts = posts.map(post => {
-    const postImage = post.data.image || '/images/posts/placeholder/post.jpeg';
-    const authorImage = post.data.authorImage || '/images/posts/placeholder/author.jpg';
-    
-    let author;
-    if (typeof post.data.author === 'string') {
-      author = {
-        name: post.data.author,
-        image: authorImage,
-        role: 'Muallif'
-      } as Author;
-    } else {
-      author = {
-        ...(post.data.author || {}),
-        image: authorImage
-      };
-    }
-    
-    return {
-      slug: post.slug,
-      title: post.data.title?.[lang] || post.data.title,
-      excerpt: post.data.excerpt?.[lang] || post.data.excerpt,
-      content: post.data.content?.[lang] || post.data.content,
-      publishedDate: post.data.publishedDate ? new Date(post.data.publishedDate).toLocaleDateString('uz-UZ', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }) : '',
-      author,
-      image: postImage,
-      category: post.data.category?.[lang] || post.data.category || 'Ta\'lim',
-      featured: post.data.featured || false,
-      tags: (post.data.tags || []).map(tag => typeof tag === 'object' ? tag[lang] : tag),
-      date: post.data.date || post.data.publishedDate,
-      id: post.slug
-    };
-  });
-  
-  latestPosts = latestPosts
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, count);
-    
-} catch (e) {
-  console.error('Failed to fetch latest posts:', e);
-}
+const { count = 6, lang = 'uz' } = Astro.props;
+const latestPosts = getLatestPosts(count);
 ---
 
-<section class="relative py-20 overflow-hidden bg-gradient-to-br from-blue-50 to-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <SectionHeader
-      title={t('blog.latest.title')}
-      subtitle={t('blog.latest.subtitle')}
-    />
+<section class="py-8 animate-fade-in">
+  <div class="mb-6 flex justify-between items-center">
+    <div>
+      <h2 class="text-2xl font-bold tracking-tight text-blue-800">Последние статьи</h2>
+      <p class="text-muted-foreground mt-1">Свежий контент, чтобы держать вас в курсе событий</p>
+    </div>
     
-    <div 
-      class="flex flex-wrap gap-6" 
-      role="list"
-      data-aos="fade-up"
-      data-aos-delay="100"
-    >
-<!-- Контейнер для всех карточек -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-  <!-- Главная (левая) карточка -->
-  <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-    {latestPosts[0] && (
-      <article role="listitem" data-aos="fade-up">
-        <a href={`/uz/blog/${latestPosts[0].slug}`} class="block group">
-          <div class="relative aspect-[16/9] overflow-hidden">
-            <img 
-              src={latestPosts[0].image} 
-              alt={latestPosts[0].title || 'Blog post image'}
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              onerror="this.src='/images/posts/placeholder/post.jpeg'"
-            />
-            {latestPosts[0].category && (
-              <span class="absolute top-4 left-4 px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium whitespace-nowrap">
-                {latestPosts[0].category}
-              </span>
-            )}
-          </div>
-          
-          <div class="p-5"> <!-- Уменьшили padding -->
-            <h3 class="text-xl font-semibold text-gray-900 leading-tight mb-2">{latestPosts[0].title}</h3>
-            <p class="text-sm text-gray-600 mb-3 line-clamp-4">{latestPosts[0].excerpt}</p> 
-            
-            <div class="flex items-center border-t border-gray-100 pt-3"> 
-              <Calendar class="w-4 h-4 text-gray-500 mr-2" />
-              <time class="text-xs text-gray-500" datetime={latestPosts[0].date instanceof Date ? latestPosts[0].date.toISOString() : latestPosts[0].date}>
-                {latestPosts[0].publishedDate}
-              </time>
-            </div>
-          </div>
-        </a>
-      </article>
-    )}
+    <a href={`/${lang}/blog/studying-in-china`} class="hidden sm:flex group px-4 py-2 border border-blue-200 rounded-md text-blue-700 hover:bg-blue-50 transition-colors">
+      Читать статью о Китае 
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+    </a>
   </div>
-
-  <!-- Правые карточки -->
-  <div class="flex flex-col gap-6">
-    {latestPosts.slice(1).map((post) => (
-      <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-        <a href={`/uz/blog/${post.slug}`} class="flex group">
-          <div class="relative w-1/3 aspect-[4/3] overflow-hidden">
-            <img 
-              src={post.image} 
-              alt={post.title || 'Blog post image'}
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              onerror="this.src='/images/posts/placeholder/post.jpeg'"
-            />
-            {post.category && (
-              <span class="absolute top-4 left-4 px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium whitespace-nowrap">
-                {post.category}
-              </span>
-            )}
-          </div>
-          <div class="flex-1 p-5">
-            <h3 class="text-lg font-semibold text-gray-900 leading-tight mb-2">{post.title}</h3>
-            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{post.excerpt}</p>
-            <div class="flex items-center">
-              <Calendar class="w-4 h-4 text-gray-500 mr-2" />
-              <time class="text-xs text-gray-500">
-                {post.publishedDate}
-              </time>
-            </div>
-          </div>
-        </a>
-      </article>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8">
+    {latestPosts.map((post, index) => (
+      <div class="animate-slide-up" style={`animation-delay: ${(index % 3) * 100}ms`}>
+        <BlogCard post={post} lang={lang} />
+      </div>
     ))}
   </div>
-</div>
-    
-    <div class="container">
-      <!-- Мобильная кнопка (скрыта на десктопе) -->
-      <div class="text-center mt-12">
-        <ButtonView
-          href={`/${lang}/blog`} 
-          text={t("Barcha maqolalar")} 
-          variant="mobile" 
-          showOnDesktop={false} 
-        />
-      </div>
-    
-      <!-- Десктопная кнопка (скрыта на мобильных) -->
-      <div class="text-center mt-12">
-        <ButtonView
-          href={`/${lang}/blog`} 
-          text={t("Barcha maqolalar")} 
-          variant="desktop" 
-          showOnMobile={false} 
-        />
-      </div>
-    </div>
+  
+  <div class="mt-8 flex justify-center sm:hidden">
+    <a href={`/${lang}/blog/studying-in-china`} class="group px-4 py-2 border border-blue-200 rounded-md text-blue-700 hover:bg-blue-50 transition-colors">
+      Читать статью о Китае 
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block ml-2 h-4 w-4 transition-transform group-hover:translate-x-1">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+    </a>
   </div>
 </section>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+  }
+  
+  .animate-slide-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> 
