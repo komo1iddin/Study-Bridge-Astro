@@ -48,4 +48,47 @@ We've already set up the new translation structure for these components:
    - Integrated with the feature translation system
    - Created example usage
    - Updated component to use modular translations
-   - Properly handled accessibility labels for language switching 
+   - Properly handled accessibility labels for language switching
+
+8. **HowWeWork**
+   - Created translation types
+   - Added translations for all languages (en, ru, uz)
+   - Integrated with the feature translation system
+   - Created example usage
+   - Updated component to use modular translations
+
+9. **CTA**
+   - Created translation types
+   - Added translations for all languages (en, ru, uz)
+   - Integrated with the feature translation system
+   - Created example usage
+   - Updated component to use modular translations
+
+10. **ChinaVsUzbekistan (Comparison)**
+    - Created translation types
+    - Added translations for all languages (en, ru, uz)
+    - Integrated with the feature translation system
+    - Created example usage
+    - Updated component to use modular translations
+
+11. **TestimonialsSection**
+    - Created translation types
+    - Added translations for all languages (en, ru, uz)
+    - Integrated with the feature translation system
+    - Created example usage
+    - Updated component to use modular translations
+
+12. **FAQ**
+    - Created translation types
+    - Added translations for all languages (en, ru, uz)
+    - Integrated with the feature translation system
+    - Created example usage
+    - Updated component to use modular translations
+
+13. **FeaturedBlogSection**
+    - Created translation types
+    - Added translations for all languages (en, ru, uz)
+    - Integrated with the feature translation system
+    - Created example usage
+    - Updated component to use modular translations
+    - Implemented proper category mapping with translations 

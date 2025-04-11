@@ -1,0 +1,78 @@
+---
+import { getBlogCommonTranslations } from './index';
+
+const uzTranslations = getBlogCommonTranslations('uz');
+const enTranslations = getBlogCommonTranslations('en');
+const ruTranslations = getBlogCommonTranslations('ru');
+---
+
+<div class="p-6 space-y-12">
+  <div>
+    <h2 class="text-xl font-bold mb-4">Uzbek (Default)</h2>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
+      <h3 class="text-lg font-semibold mb-2">Header</h3>
+      <p><strong>Title:</strong> {uzTranslations.header.title}</p>
+      <p><strong>Subtitle:</strong> {uzTranslations.header.subtitle}</p>
+    </div>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
+      <h3 class="text-lg font-semibold mb-2">Search</h3>
+      <p><strong>Placeholder:</strong> {uzTranslations.search.placeholder}</p>
+      <p><strong>Results count:</strong> {uzTranslations.search.resultsCount.replace('{0}', '5')}</p>
+    </div>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm">
+      <h3 class="text-lg font-semibold mb-2">Categories</h3>
+      <p><strong>Title:</strong> {uzTranslations.categories.title}</p>
+      <p><strong>All:</strong> {uzTranslations.categories.all}</p>
+      <p><strong>Academic:</strong> {uzTranslations.categories.academic}</p>
+    </div>
+  </div>
+  
+  <div>
+    <h2 class="text-xl font-bold mb-4">English</h2>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
+      <h3 class="text-lg font-semibold mb-2">Header</h3>
+      <p><strong>Title:</strong> {enTranslations.header.title}</p>
+      <p><strong>Subtitle:</strong> {enTranslations.header.subtitle}</p>
+    </div>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
+      <h3 class="text-lg font-semibold mb-2">Search</h3>
+      <p><strong>Placeholder:</strong> {enTranslations.search.placeholder}</p>
+      <p><strong>Results count:</strong> {enTranslations.search.resultsCount.replace('{0}', '5')}</p>
+    </div>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm">
+      <h3 class="text-lg font-semibold mb-2">Categories</h3>
+      <p><strong>Title:</strong> {enTranslations.categories.title}</p>
+      <p><strong>All:</strong> {enTranslations.categories.all}</p>
+      <p><strong>Academic:</strong> {enTranslations.categories.academic}</p>
+    </div>
+  </div>
+  
+  <div>
+    <h2 class="text-xl font-bold mb-4">Russian</h2>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
+      <h3 class="text-lg font-semibold mb-2">Header</h3>
+      <p><strong>Title:</strong> {ruTranslations.header.title}</p>
+      <p><strong>Subtitle:</strong> {ruTranslations.header.subtitle}</p>
+    </div>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
+      <h3 class="text-lg font-semibold mb-2">Search</h3>
+      <p><strong>Placeholder:</strong> {ruTranslations.search.placeholder}</p>
+      <p><strong>Results count:</strong> {ruTranslations.search.resultsCount.replace('{0}', '5')}</p>
+    </div>
+    
+    <div class="bg-white p-4 rounded-lg shadow-sm">
+      <h3 class="text-lg font-semibold mb-2">Categories</h3>
+      <p><strong>Title:</strong> {ruTranslations.categories.title}</p>
+      <p><strong>All:</strong> {ruTranslations.categories.all}</p>
+      <p><strong>Academic:</strong> {ruTranslations.categories.academic}</p>
+    </div>
+  </div>
+</div> 

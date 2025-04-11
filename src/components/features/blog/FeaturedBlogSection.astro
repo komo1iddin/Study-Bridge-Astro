@@ -1,10 +1,9 @@
 ---
 import { getFeaturedPosts, getLatestPosts, formatDate } from '@/lib/blog';
-import type { BlogPost } from '@/lib/blog/types';
-import { useTranslations } from '@/i18n/utils';
 import type { Lang } from '@/i18n/langUtils';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import { ArrowRight, Calendar, Clock } from 'lucide-astro';
+import { getFeaturedBlogTranslations } from '@/i18n/features/blog/featured';
 
 interface Props {
   lang: Lang;
@@ -13,7 +12,7 @@ interface Props {
 }
 
 const { lang, featuredCount = 1, latestCount = 4 } = Astro.props;
-const t = useTranslations(lang);
+const t = getFeaturedBlogTranslations(lang);
 
 // Fetch posts
 const featuredPosts = getFeaturedPosts().slice(0, featuredCount);
@@ -24,11 +23,11 @@ const latestPosts = getLatestPosts(latestCount + featuredCount)
 // Helper function to map category IDs to display names
 function getCategoryLabel(category: string): string {
   switch (category) {
-    case 'academic': return 'Академические';
-    case 'study-tips': return 'Советы по учебе';
-    case 'career': return 'Карьера';
-    case 'student-life': return 'Студенческая жизнь';
-    case 'technology': return 'Технологии';
+    case 'academic': return t.categories.academic;
+    case 'study-tips': return t.categories.studyTips;
+    case 'career': return t.categories.career;
+    case 'student-life': return t.categories.studentLife;
+    case 'technology': return t.categories.technology;
     default: return category;
   }
 }
@@ -37,9 +36,9 @@ function getCategoryLabel(category: string): string {
 <section class="py-20 bg-gradient-to-br from-blue-50 via-white to-indigo-50 overflow-hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <SectionHeader
-      title={t('blog.featured.title') || "Образовательный блог"}
-      subtitle={t('blog.featured.subtitle') || "Полезные материалы для студентов"}
-      alignment="center"
+      title={t.title}
+      subtitle={t.subtitle}
+      centered={true}
     />
     
     <div class="mt-12 grid gap-8 md:grid-cols-12">
@@ -63,7 +62,7 @@ function getCategoryLabel(category: string): string {
               </div>
               <div class="absolute top-4 right-4">
                 <span class="px-3 py-1 text-xs font-medium bg-blue-600 text-white rounded-full">
-                  Рекомендуемое
+                  {t.featuredBadge}
                 </span>
               </div>
             </div>
@@ -153,7 +152,7 @@ function getCategoryLabel(category: string): string {
                     href={`/${lang}/study-blog/${post.id}`}
                     class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center"
                   >
-                    Читать
+                    {t.readMore}
                     <ArrowRight class="w-3 h-3 ml-1" />
                   </a>
                 </div>
@@ -169,7 +168,7 @@ function getCategoryLabel(category: string): string {
         href={`/${lang}/study-blog`}
         class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md"
       >
-        {t('blog.viewAll') || "Все статьи"}
+        {t.viewAll}
         <ArrowRight class="w-4 h-4 ml-2" />
       </a>
     </div>

@@ -12,6 +12,9 @@ import { universityPageTranslations, getUniversityPageTranslations } from './uni
 import { getContactTranslations } from './contact';
 import { getUITranslations } from './shared/ui';
 import { testimonialsTranslations, getTestimonialsTranslations } from './shared/testimonials';
+import { faqTranslations, getFAQTranslations } from './shared/faq';
+import { featuredBlogTranslations, getFeaturedBlogTranslations } from './blog/featured';
+import { blogCommonTranslations, getBlogCommonTranslations } from './blog/common';
 import { getProgramsTranslations } from './programs';
 import { ctaTranslations as uiCtaTranslations, getCTATranslations as getUICTATranslations } from './ui/cta';
 import { sectionTranslations, getSectionTranslations } from './ui/section';
@@ -27,18 +30,20 @@ import type { OurTeamTranslations } from './home/ourTeam';
 import type { HowWeWorkTranslations } from './home/howWeWork';
 import type { CTATranslations } from './home/cta';
 import type { ComparisonTranslations } from './home/comparison';
+import type { TestimonialsTranslations } from './shared/testimonials';
+import type { FAQTranslations } from './shared/faq';
+import type { FeaturedBlogTranslations } from './blog/featured';
 import type { UniversityDetailTranslations } from './university/universityDetail';
 import type { UniversityPageTranslations } from './university/universityPage';
 import type { ContactTranslations } from './contact';
 import type { UITranslations } from './shared/ui';
-import type { TestimonialsTranslations } from './shared/testimonials';
-import type { ProgramsTranslations } from './programs';
-import type { CTATranslations as UICTATranslations } from './ui/cta';
+import type { CTATranslations as UICtaTranslations } from './ui/cta';
 import type { SectionTranslations } from './ui/section';
 import type { BreadcrumbsTranslations } from './ui/breadcrumbs';
 import type { LanguageSelectorTranslations } from './ui/language';
 import type { NavigationTranslations } from './navigation';
 import type { Lang } from '@/i18n/langUtils';
+import type { BlogCommonTranslations } from './blog/common';
 
 // Re-export types
 export type {
@@ -53,13 +58,15 @@ export type {
   HowWeWorkTranslations,
   CTATranslations,
   ComparisonTranslations,
+  TestimonialsTranslations,
+  FAQTranslations,
+  FeaturedBlogTranslations,
+  BlogCommonTranslations,
   UniversityDetailTranslations,
   UniversityPageTranslations,
   ContactTranslations,
   UITranslations,
-  TestimonialsTranslations,
-  ProgramsTranslations,
-  UICTATranslations,
+  UICtaTranslations,
   SectionTranslations,
   BreadcrumbsTranslations,
   LanguageSelectorTranslations,
@@ -71,19 +78,22 @@ export const featureTranslations = {
   partners: partnersTranslations,
   successPath: successPathTranslations,
   hero: heroTranslations,
-  whyChina: whyTranslations,
+  why: whyTranslations,
   missionStats: missionStatsTranslations,
   ourTeam: ourTeamTranslations,
   howWeWork: howWeWorkTranslations,
-  homeCta: ctaTranslations,
+  cta: ctaTranslations,
   comparison: comparisonTranslations,
   universityDetail: universityDetailTranslations,
   universityPage: universityPageTranslations,
   testimonials: testimonialsTranslations,
+  faq: faqTranslations,
+  featuredBlog: featuredBlogTranslations,
+  blogCommon: blogCommonTranslations,
   uiCta: uiCtaTranslations,
   section: sectionTranslations,
   breadcrumbs: breadcrumbsTranslations,
-  languageSelector: languageSelectorTranslations,
+  language: languageSelectorTranslations,
   navigation: navigationTranslations
 };
 
@@ -92,22 +102,25 @@ export const getTranslations = {
   partners: getPartnersTranslations,
   successPath: getSuccessPathTranslations,
   hero: getHeroTranslations,
-  whyChina: getWhyTranslations,
+  why: getWhyTranslations,
   missionStats: getMissionStatsTranslations,
   ourTeam: getOurTeamTranslations,
   howWeWork: getHowWeWorkTranslations,
-  homeCta: getCTATranslations,
+  cta: getCTATranslations,
   comparison: getComparisonTranslations,
   universityDetail: getUniversityDetailTranslations,
   universityPage: getUniversityPageTranslations,
   contact: getContactTranslations,
   ui: getUITranslations,
   testimonials: getTestimonialsTranslations,
+  faq: getFAQTranslations,
+  featuredBlog: getFeaturedBlogTranslations,
+  blogCommon: getBlogCommonTranslations,
   programs: getProgramsTranslations,
   uiCta: getUICTATranslations,
   section: getSectionTranslations,
   breadcrumbs: getBreadcrumbsTranslations,
-  languageSelector: getLanguageSelectorTranslations,
+  language: getLanguageSelectorTranslations,
   navigation: getNavigationTranslations
 };
 

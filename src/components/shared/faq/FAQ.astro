@@ -13,18 +13,18 @@ import {
   Users,
   Award
 } from 'lucide-astro'
-import { useTranslations } from '@/i18n/utils';
 import type { Lang } from '@/i18n/langUtils';
 import { getAllFAQ } from '@/lib/fileSystemReader';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import ContactButton from '@/components/ui/astro/ContactButton.astro';
+import { getFAQTranslations } from '@/i18n/features/shared/faq';
 
 interface Props {
   lang?: Lang;
 }
 
 const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
+const t = getFAQTranslations(lang);
 
 // Get FAQ items using fileSystemReader
 const faqItems = await getAllFAQ(lang);
@@ -66,8 +66,8 @@ function getIcon(category: string = '') {
 <section class="section-container" id="faq" data-aos="fade-up">
   <div class="max-w-2xl mx-auto">
     <SectionHeader
-      title={t('faq.title')}
-      subtitle={t('faq.subtitle')}
+      title={t.title}
+      subtitle={t.subtitle}
     />
 
     <div class="space-y-4">
@@ -148,14 +148,14 @@ function getIcon(category: string = '') {
     <!-- Help Section -->
     <div class="mt-10 text-center">
       <p class="text-base text-gray-600 mb-3">
-        {t('faq.notFoundQuestion')}
+        {t.notFoundQuestion}
       </p>
 
         <div class="container">
           <!-- Мобильная кнопка (скрыта на десктопе) -->
           <div class="text-center mt-12">
             <ContactButton
-            text={t('faq.askQuestion')} 
+            text={t.askQuestion} 
             variant="mobile" 
             showOnDesktop={false}
             />
@@ -164,7 +164,7 @@ function getIcon(category: string = '') {
           <!-- Десктопная кнопка (скрыта на мобильных) -->
           <div class="text-center mt-12">
             <ContactButton
-            text={t('faq.askQuestion')} 
+            text={t.askQuestion} 
             variant="desktop" 
             showOnMobile={false}
             />

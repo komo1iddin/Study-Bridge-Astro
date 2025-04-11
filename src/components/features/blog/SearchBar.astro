@@ -1,12 +1,16 @@
 ---
 import { cn } from "@/lib/utils";
 import { Search, X } from "lucide-astro";
+import type { Lang } from '@/i18n/langUtils';
+import { getBlogCommonTranslations } from '@/i18n/features/blog/common';
 
 interface Props {
   className?: string;
+  lang?: Lang;
 }
 
-const { className } = Astro.props;
+const { className, lang = 'uz' } = Astro.props;
+const t = getBlogCommonTranslations(lang);
 ---
 
 <div 
@@ -20,7 +24,7 @@ const { className } = Astro.props;
     <input
       type="text"
       id="blog-search"
-      placeholder="Поиск статей..."
+      placeholder={t.search.placeholder}
       class="w-full h-11 pl-10 pr-4 text-sm text-gray-700 bg-white border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-sm"
     />
     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -29,6 +33,7 @@ const { className } = Astro.props;
     <button 
       id="clear-search" 
       class="hidden absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+      aria-label={t.search.clearSearch}
     >
       <X size={18} />
     </button>
