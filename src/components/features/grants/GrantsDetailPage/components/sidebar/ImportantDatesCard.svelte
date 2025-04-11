@@ -5,33 +5,69 @@
   import type { Lang } from '@/i18n/langUtils';
 
   export let grant: TransformedGrantData;
-  export const lang: Lang = 'en';
+  export let lang: Lang;
 
-  const importantDates = [
+  // Debug the grant date values
+  console.log("Grant dates:", {
+    startDate: grant.applicationStartDate,
+    endDate: grant.applicationEndDate,
+    resultsDate: grant.resultsAnnouncedDate,
+    deadline: grant.deadline
+  });
+
+  // Localization for titles
+  const dateTitles = {
+    uz: {
+      startDate: "Ariza qabul qilish boshlanishi",
+      endDate: "Ariza qabul qilish tugashi",
+      resultsDate: "Natijalar e'lon qilinishi",
+      header: "Muhim sanalar"
+    },
+    ru: {
+      startDate: "Начало приема заявок",
+      endDate: "Окончание приема заявок",
+      resultsDate: "Объявление результатов",
+      header: "Важные даты"
+    },
+    en: {
+      startDate: "Application Start Date",
+      endDate: "Application End Date",
+      resultsDate: "Results Announcement Date",
+      header: "Important Dates"
+    }
+  };
+  const localizedTitles = dateTitles[lang] || dateTitles.en;
+
+  // Dynamically create importantDates array
+  $: importantDates = [
     {
       id: 1,
-      title: "Ariza qabul qilish boshlanishi",
-      date: "2024-01-15",
+      title: localizedTitles.startDate,
+      date: grant.applicationStartDate,
       isHighlighted: false
     },
     {
       id: 2,
-      title: "Ariza qabul qilish tugashi",
-      date: grant.deadline,
+      title: localizedTitles.endDate,
+      date: grant.applicationEndDate || grant.deadline, // Fallback to deadline if endDate is missing
       isHighlighted: true
     },
     {
       id: 3,
-      title: "Natijalar e'lon qilinishi",
-      date: "2024-05-15",
+      title: localizedTitles.resultsDate,
+      date: grant.resultsAnnouncedDate,
       isHighlighted: false
     }
-  ];
+  ].filter(d => {
+    // Add debugging
+    console.log(`Date ${d.title}:`, d.date);
+    return d.date;
+  }); // Filter out dates that are not provided
 </script>
 
 <Card class="border-none shadow-md overflow-hidden">
   <CardHeader class="pb-2 bg-gradient-to-r from-slate-50 to-blue-50">
-    <CardTitle class="text-lg font-bold text-slate-800">Muhim sanalar</CardTitle>
+    <CardTitle class="text-lg font-bold text-slate-800">{localizedTitles.header}</CardTitle>
   </CardHeader>
   <CardContent class="space-y-4 pt-4">
     <div class="space-y-4">

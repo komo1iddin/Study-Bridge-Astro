@@ -58,6 +58,9 @@ const grantsCollection = defineCollection({
       en: z.array(z.string()),
     }),
     deadline: z.string(),
+    applicationStartDate: z.string().optional(),
+    applicationEndDate: z.string().optional(),
+    resultsAnnouncedDate: z.string().optional(),
     requirements: z.object({
       uz: z.array(z.string()),
       ru: z.array(z.string()),
@@ -75,6 +78,117 @@ const grantsCollection = defineCollection({
     }),
     image: z.string(),
     color: z.string(),
+    featuresDescriptions: z.object({
+      uz: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+      ru: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+      en: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+    }).optional(),
+    process: z.object({
+      uz: z.array(z.object({
+        id: z.number(),
+        title: z.string(),
+        description: z.string(),
+        icon: z.string(),
+      })),
+      ru: z.array(z.object({
+        id: z.number(),
+        title: z.string(),
+        description: z.string(),
+        icon: z.string(),
+      })),
+      en: z.array(z.object({
+        id: z.number(),
+        title: z.string(),
+        description: z.string(),
+        icon: z.string(),
+      })),
+    }).optional(),
+    universities: z.array(z.object({
+      id: z.number(),
+      name: z.string(),
+      location: z.string(),
+      rating: z.number(),
+    })).optional(),
+    testimonials: z.object({
+      uz: z.array(z.object({
+        id: z.number(),
+        name: z.string(),
+        avatarUrl: z.string(),
+        graduationYear: z.string(),
+        testimonial: z.string(),
+        initials: z.string(),
+      })),
+      ru: z.array(z.object({
+        id: z.number(),
+        name: z.string(),
+        avatarUrl: z.string(),
+        graduationYear: z.string(),
+        testimonial: z.string(),
+        initials: z.string(),
+      })),
+      en: z.array(z.object({
+        id: z.number(),
+        name: z.string(),
+        avatarUrl: z.string(),
+        graduationYear: z.string(),
+        testimonial: z.string(),
+        initials: z.string(),
+      })),
+    }).optional(),
+    faqs: z.object({
+      uz: z.array(z.object({
+        id: z.string(),
+        question: z.string(),
+        answer: z.string(),
+      })),
+      ru: z.array(z.object({
+        id: z.string(),
+        question: z.string(),
+        answer: z.string(),
+      })),
+      en: z.array(z.object({
+        id: z.string(),
+        question: z.string(),
+        answer: z.string(),
+      })),
+    }).optional(),
+    benefitsDetails: z.object({
+      uz: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+      ru: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+      en: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+    }).optional(),
+    requirementsDetails: z.object({
+      uz: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+      ru: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+      en: z.array(z.object({
+        title: z.string(),
+        description: z.string(),
+      })),
+    }).optional(),
   }),
 });
 
