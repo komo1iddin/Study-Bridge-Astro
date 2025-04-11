@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { Users, Building2, Clock } from 'lucide-svelte';
   
   // Accept translations from parent
   export let translations = {
@@ -8,31 +9,24 @@
     experience: "Yillik tajriba"
   };
   
-  // Refined icon style with consistent weight
-  const usersSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`;
-  
-  const buildingSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><path d="M6 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 12h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"></path><path d="M10 9h4"></path><path d="M10 13h4"></path><path d="M10 17h4"></path></svg>`;
-  
-  const clockSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-7 w-7"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
-
   let mounted = false;
   
   // Stats data with animation information
   const stats = [
     { 
-      icon: usersSvg, 
+      icon: Users, 
       value: 5000, 
       label: translations.students,
       animationDelay: "0ms"
     },
     { 
-      icon: buildingSvg, 
+      icon: Building2, 
       value: 50, 
       label: translations.universities,
       animationDelay: "150ms"
     },
     { 
-      icon: clockSvg, 
+      icon: Clock, 
       value: 10, 
       label: translations.experience,
       animationDelay: "300ms"
@@ -51,7 +45,7 @@
       <div class="stat-item" style="--delay: {stat.animationDelay};">
         <div class="stat-card">
           <div class="stat-icon">
-            {@html stat.icon}
+            <svelte:component this={stat.icon} size={24} strokeWidth={1.5} />
           </div>
           <div class="stat-number">
             <span class="stat-value counter">{stat.value}</span>

@@ -5,7 +5,7 @@
   import type { Lang } from "@/i18n/langUtils";
 
   export let university: University;
-  export let lang: Lang;
+  export const lang: Lang = 'en';
   
   // Example facilities data - in a real app, this would come from university data
   const sampleFacilityCategories: FacilityCategory[] = [

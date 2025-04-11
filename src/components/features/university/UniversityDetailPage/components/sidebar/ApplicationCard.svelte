@@ -7,7 +7,7 @@
   import type { UniversityDetailTranslations } from "@/i18n/features/university/universityDetail";
 
   export let university: University;
-  export let lang: Lang;
+  export const lang: Lang = 'en';
   export let t: UniversityDetailTranslations;
   
   $: subtitle = t.application.subtitle.replace('{university}', university.name);

@@ -1,4 +1,5 @@
 <script>
+  import { Send, User } from 'lucide-svelte';
   export let onOpenForm;
   export let translations = {
     apply: "Arizani qoldirish",
@@ -15,10 +16,7 @@
     >
       <span class="relative z-10">{translations.apply}</span>
       <span class="ml-2 inline-flex transition-all duration-300 group-hover:translate-x-1 group-hover:rotate-12">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-          <path d="m22 2-7 20-4-9-9-4Z"/>
-          <path d="M22 2 11 13"/>
-        </svg>
+        <Send size={20} class="h-5 w-5" />
       </span>
     </button>
   </div>
@@ -30,10 +28,7 @@
     >
       <span class="relative z-10">{translations.programs}</span>
       <span class="ml-2 inline-flex transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-          <rect x="9" y="2" width="6" height="10" rx="3"/>
-        </svg>
+        <User size={20} class="h-5 w-5" />
       </span>
     </button>
   </div>

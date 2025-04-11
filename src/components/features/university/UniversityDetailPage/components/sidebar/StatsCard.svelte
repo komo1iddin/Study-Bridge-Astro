@@ -5,8 +5,8 @@
   import type { Lang } from "@/i18n/langUtils";
   import type { UniversityDetailTranslations } from "@/i18n/features/university/universityDetail";
 
-  export let university: University;
-  export let lang: Lang;
+  export const university: University = {} as University;
+  export const lang: Lang = 'en';
   export let t: UniversityDetailTranslations;
 
   const stats = [

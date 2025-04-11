@@ -6,7 +6,7 @@
   import { useLazyLoad } from "@/utils/componentLazyLoader";
 
   export let university: University;
-  export let lang: Lang;
+  export const lang: Lang = 'en';
   
   // Create lazy loading action
   const lazyGallery = useLazyLoad('gallery-thumbnails', {
