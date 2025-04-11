@@ -1,9 +1,12 @@
 ---
+import type { Lang } from '@/i18n/langUtils';
+
 interface Props {
   totalSections?: number;
+  lang?: Lang;
 }
 
-const { totalSections = 0 } = Astro.props;
+const { totalSections = 0, lang = 'uz' } = Astro.props;
 ---
 
 <div id="reading-progress-container" class="fixed top-0 left-0 w-full h-1 z-50">

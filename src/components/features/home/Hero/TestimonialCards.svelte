@@ -1,67 +1,69 @@
 <script>
   import { onMount } from 'svelte';
   
-  const testimonials = [
+  // Define a placeholder image as fallback
+  const placeholderImage = "/images/testimonials/placeholder.jpeg";
+  
+  // Accept testimonials as props with default fallback 
+  export let testimonials = [
     {
-      id: 1,
       name: "Alisher K.",
-      university: "Pekin Universiteti",
-      comment: "Hayotimdagi eng yaxshi qaror! 2 yildan beri Xitoyda o'qiyapman.",
-      imageUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=100&auto=format&fit=crop",
+      role: "Pekin Universiteti",
+      quote: "Hayotimdagi eng yaxshi qaror! 2 yildan beri Xitoyda o'qiyapman.",
+      image: placeholderImage,
     },
     {
-      id: 2,
       name: "Malika N.",
-      university: "Shanxay Universiteti",
-      comment: "Agentlik yordamida stipendiya oldim!",
-      imageUrl: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?q=80&w=100&auto=format&fit=crop",
+      role: "Shanxay Universiteti",
+      quote: "Agentlik yordamida stipendiya oldim!",
+      image: placeholderImage,
     },
     {
-      id: 3,
       name: "Rustam D.",
-      university: "Fudan Universiteti",
-      comment: "Hozir Xitoydagi xalqaro kompaniyada ishlayman!",
-      imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop",
-    },
-    {
-      id: 4,
-      name: "Nodira I.",
-      university: "Chjejiang Universiteti",
-      comment: "Jamoadan har bir bosqichda ajoyib qo'llab-quvvatlash!",
-      imageUrl: "https://images.unsplash.com/photo-1464863979621-258859e62245?q=80&w=100&auto=format&fit=crop",
-    },
-    {
-      id: 5,
-      name: "Aziz T.",
-      university: "Nankin Universiteti",
-      comment: "Ikkinchi yildan beri Xitoyda tibbiyot o'qiyapman!",
-      imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop",
-    },
-    {
-      id: 6,
-      name: "Sabina M.",
-      university: "Tyanjin Universiteti",
-      comment: "To'liq stipendiya oldim! Juda minnatdorman!",
-      imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=100&auto=format&fit=crop",
-    },
-    {
-      id: 7,
-      name: "Temur P.",
-      university: "Uxan Universiteti",
-      comment: "IT o'rganyapman va Xitoy kompaniyasida amaliyot o'tayapman!",
-      imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=100&auto=format&fit=crop",
-    },
+      role: "Fudan Universiteti",
+      quote: "Hozir Xitoydagi xalqaro kompaniyada ishlayman!",
+      image: placeholderImage,
+    }
   ];
   
-  // Create two columns of cards
-  const leftColumnCards = testimonials.filter((_, idx) => idx % 2 === 0);
-  const rightColumnCards = testimonials.filter((_, idx) => idx % 2 === 1);
+  // Add id to each testimonial for key tracking
+  const processedTestimonials = testimonials.map((t, index) => ({
+    ...t,
+    id: index + 1
+  }));
+  
+  // Balance columns to have equal number of cards
+  let leftColumnCards = [];
+  let rightColumnCards = [];
+  
+  // If there's an odd number of testimonials, duplicate the last one to balance columns
+  if (processedTestimonials.length % 2 !== 0) {
+    const balancedTestimonials = [...processedTestimonials];
+    if (balancedTestimonials.length > 0) {
+      const lastItem = {...balancedTestimonials[balancedTestimonials.length - 1]};
+      lastItem.id = lastItem.id + 1000; // Ensure unique key
+      balancedTestimonials.push(lastItem);
+    }
+    
+    // Distribute cards evenly
+    leftColumnCards = balancedTestimonials.filter((_, idx) => idx % 2 === 0);
+    rightColumnCards = balancedTestimonials.filter((_, idx) => idx % 2 === 1);
+  } else {
+    // If even number, just distribute evenly
+    leftColumnCards = processedTestimonials.filter((_, idx) => idx % 2 === 0);
+    rightColumnCards = processedTestimonials.filter((_, idx) => idx % 2 === 1);
+  }
   
   // Clone cards for seamless loop
   const getClonedCards = (cards) => [...cards, ...cards, ...cards.slice(0, 2)];
   
   const clonedLeftCards = getClonedCards(leftColumnCards);
   const clonedRightCards = getClonedCards(rightColumnCards);
+  
+  // Handle image errors by replacing with placeholder
+  function handleImageError(event) {
+    event.target.src = placeholderImage;
+  }
 </script>
 
 <div class="relative h-full w-full overflow-hidden">
@@ -75,16 +77,17 @@
         >
           <div class="flex items-center gap-3 mb-3">
             <img
-              src={testimonial.imageUrl}
+              src={testimonial.image}
               alt={testimonial.name}
               class="w-11 h-11 rounded-full object-cover border border-gray-100 shadow-sm"
+              on:error={handleImageError}
             />
             <div>
               <h3 class="font-semibold text-slate-800 text-sm">{testimonial.name}</h3>
-              <p class="text-blue-600 text-xs font-medium">{testimonial.university}</p>
+              <p class="text-blue-600 text-xs font-medium">{testimonial.role}</p>
             </div>
           </div>
-          <p class="text-slate-700 text-sm leading-relaxed">{testimonial.comment}</p>
+          <p class="text-slate-700 text-sm leading-relaxed">{testimonial.quote}</p>
         </div>
       {/each}
     </div>
@@ -100,16 +103,17 @@
         >
           <div class="flex items-center gap-3 mb-3">
             <img
-              src={testimonial.imageUrl}
+              src={testimonial.image}
               alt={testimonial.name}
               class="w-11 h-11 rounded-full object-cover border border-gray-100 shadow-sm"
+              on:error={handleImageError}
             />
             <div>
               <h3 class="font-semibold text-slate-800 text-sm">{testimonial.name}</h3>
-              <p class="text-blue-600 text-xs font-medium">{testimonial.university}</p>
+              <p class="text-blue-600 text-xs font-medium">{testimonial.role}</p>
             </div>
           </div>
-          <p class="text-slate-700 text-sm leading-relaxed">{testimonial.comment}</p>
+          <p class="text-slate-700 text-sm leading-relaxed">{testimonial.quote}</p>
         </div>
       {/each}
     </div>
@@ -180,4 +184,4 @@
   .scrolling-wrapper:hover .scrolling-content {
     animation-play-state: paused;
   }
-</style> 
+</style>

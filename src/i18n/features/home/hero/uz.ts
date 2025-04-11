@@ -38,4 +38,24 @@ export const heroUz: HeroTranslations = {
       desc: '100% kafolatlangan universitet qabuli',
     },
   },
+  testimonials: [
+    {
+      name: "Sardor Turaev",
+      role: "Tibbiyot fakulteti talabasi, Tianjin Universiteti",
+      image: "/images/testimonials/placeholder.jpeg",
+      quote: "Study Bridge menga Xitoyning eng zo'r tibbiyot universitetiga kirish imkonini berdi. Ular barcha hujjat ishlari va vizani rasmiylashtirish jarayonlarida yordam berishdi."
+    },
+    {
+      name: "Diyora Karimova",
+      role: "Kompyuter muhandisligi, Tsinghua Universiteti",
+      image: "/images/testimonials/placeholder.jpeg",
+      quote: "Xitoyda o'qish orzuyim edi. Study Bridge bilan bu orzu haqiqatga aylandi. Stipendiya olishimda katta yordam ko'rsatishdi!"
+    },
+    {
+      name: "Jahongir Vohidov",
+      role: "Iqtisodiyot talabasi, Peking Universiteti",
+      image: "/images/testimonials/placeholder.jpeg",
+      quote: "Study Bridge xodimlari professional va g'amxo'r. Universiteti tanlashdan tortib, Xitoyga borishgacha bo'lgan jarayonning har bir bosqichida qo'llab-quvvatladilar."
+    }
+  ]
 }; 

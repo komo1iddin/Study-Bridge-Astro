@@ -2,16 +2,33 @@
 import { categories } from "@/lib/blog";
 import type { BlogCategory } from "@/lib/blog";
 import { cn } from "@/lib/utils";
+import type { Lang } from '@/i18n/langUtils';
+import { getBlogCommonTranslations } from '@/i18n/features/blog/common';
 
 export interface Props {
   selectedCategory?: string;
+  lang?: Lang;
 }
 
-const { selectedCategory = 'all' } = Astro.props;
+const { selectedCategory = 'all', lang = 'uz' } = Astro.props;
+const t = getBlogCommonTranslations(lang);
+
+// Helper function to get category labels from translations
+function getCategoryLabel(categoryId: string): string {
+  switch (categoryId) {
+    case 'all': return t.categories.all;
+    case 'academic': return t.categories.academic;
+    case 'study-tips': return t.categories.studyTips;
+    case 'career': return t.categories.career;
+    case 'student-life': return t.categories.studentLife;
+    case 'technology': return t.categories.technology;
+    default: return categoryId;
+  }
+}
 ---
 
 <div class="blog-filter animate-fade-in" id="category-filter">
-  <h3 class="text-sm font-medium text-blue-700 mb-3">Фильтр по категории</h3>
+  <h3 class="text-sm font-medium text-blue-700 mb-3">{t.categories.title}</h3>
   <div class="flex flex-wrap gap-2">
     <button
       data-category="all"
@@ -23,7 +40,7 @@ const { selectedCategory = 'all' } = Astro.props;
           : "bg-white text-blue-700 border border-blue-200"
       )}
     >
-      Все
+      {t.categories.all}
     </button>
     {categories.filter(cat => cat.id !== 'all').map((category) => (
       <button
@@ -36,7 +53,7 @@ const { selectedCategory = 'all' } = Astro.props;
             : "bg-white text-blue-700 border border-blue-200"
         )}
       >
-        {category.label}
+        {getCategoryLabel(category.id)}
       </button>
     ))}
   </div>

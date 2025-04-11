@@ -1,8 +1,11 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
 
-  const messages = ["Qabul ochiq", "2025-yil uchun qabul", "Stipendiyalar mavjud"];
-  let currentMessageIndex = 2; // Start with "Stipendiyalar mavjud" to match first image
+  // Accept translations from parent
+  export let badgeText = "";
+
+  const messages = badgeText ? [badgeText] : ["Qabul ochiq", "2025-yil uchun qabul", "Stipendiyalar mavjud"];
+  let currentMessageIndex = 0;
   let displayText = "";
   let isDeleting = false;
   let timeout;
@@ -37,7 +40,7 @@
   }
 
   onMount(() => {
-    // Initialize with the full text to match the image
+    // Initialize with the first text in the array
     displayText = messages[currentMessageIndex];
     typeEffect();
   });

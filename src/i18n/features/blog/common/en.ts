@@ -36,10 +36,50 @@ export const blogCommonEn: BlogCommonTranslations = {
     publishedOn: "Published on",
     updatedOn: "Updated on",
     shareArticle: "Share this article",
-    authorInfo: "About the author"
+    authorInfo: "About the author",
+    content: {
+      inDevelopment: {
+        title: "Content in Development",
+        description: "The full article will be available soon. Please check back later!"
+      },
+      share: {
+        twitter: "Share on Twitter",
+        facebook: "Share on Facebook",
+        linkedin: "Share on LinkedIn",
+        copyLink: "Copy link",
+        linkCopied: "Link copied!"
+      }
+    }
   },
   breadcrumb: {
     home: "Home",
     blog: "Blog"
+  },
+  pagination: {
+    page: "Page",
+    of: "of",
+    noResults: {
+      title: "No articles found",
+      description: "Try changing your search query or selecting a different category"
+    }
+  },
+  sidebar: {
+    title: "Article Contents",
+    subtitle: "Select a section to navigate",
+    shareTitle: "Enjoyed the article?",
+    shareDescription: "Share with friends or save for later reading.",
+    shareButton: "Share",
+    copyButton: "Copy",
+    mobileTocButton: "Show contents",
+    mobileTocTitle: "Article Contents"
+  },
+  featuredPosts: {
+    title: "Featured Articles",
+    subtitle: "Selected articles for your academic journey"
+  },
+  latestPosts: {
+    title: "Latest Articles",
+    subtitle: "Fresh content to keep you informed",
+    readMore: "Read article about China"
   }
 }; 

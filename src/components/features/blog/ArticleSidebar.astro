@@ -15,12 +15,16 @@ import {
   Share,
   ChevronRight
 } from 'lucide-astro';
+import type { Lang } from '@/i18n/langUtils';
+import { getBlogCommonTranslations } from '@/i18n/features/blog/common';
 
 interface Props {
   sections: { id: string, title: string }[];
+  lang?: Lang;
 }
 
-const { sections } = Astro.props;
+const { sections, lang = 'uz' } = Astro.props;
+const t = getBlogCommonTranslations(lang);
 
 // Function to get the appropriate icon component
 const getIcon = (id: string) => {
@@ -42,8 +46,8 @@ const getIcon = (id: string) => {
 
 <aside class="article-sidebar bg-white border-r border-gray-200 w-64 hidden md:block overflow-y-auto max-h-[calc(100vh-80px)]">
   <div class="px-4 py-5">
-    <h3 class="text-xl font-bold text-blue-900 mb-1">Содержание статьи</h3>
-    <p class="text-sm text-gray-500">Выберите раздел для навигации</p>
+    <h3 class="text-xl font-bold text-blue-900 mb-1">{t.article.tableOfContents}</h3>
+    <p class="text-sm text-gray-500">{t.sidebar.subtitle}</p>
   </div>
   
   <div class="border-t border-gray-200 px-2 py-3">
@@ -57,7 +61,7 @@ const getIcon = (id: string) => {
           <span class="flex-shrink-0 w-5 h-5 text-blue-600">
             <Home size={18} />
           </span>
-          <span class="font-medium">Начало статьи</span>
+          <span class="font-medium">{t.breadcrumb.home}</span>
         </a>
       </li>
       
@@ -84,21 +88,21 @@ const getIcon = (id: string) => {
   
   <div class="px-4 pt-4 pb-6 border-t border-gray-200 mt-4">
     <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
-      <h4 class="font-medium text-blue-800 text-sm mb-2">Понравилась статья?</h4>
-      <p class="text-xs text-gray-700 mb-3">Поделитесь с друзьями или сохраните для будущего прочтения.</p>
+      <h4 class="font-medium text-blue-800 text-sm mb-2">{t.sidebar.shareTitle}</h4>
+      <p class="text-xs text-gray-700 mb-3">{t.sidebar.shareDescription}</p>
       <div class="grid grid-cols-2 gap-2">
         <button 
           class="share-button flex items-center justify-center gap-1 px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 text-xs"
           data-platform="telegram"
         >
           <Share size={14} class="text-blue-600" />
-          <span>Поделиться</span>
+          <span>{t.sidebar.shareButton}</span>
         </button>
         <button 
           class="copy-button flex items-center justify-center gap-1 px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 text-xs"
         >
           <Copy size={14} class="text-blue-600" />
-          <span>Копировать</span>
+          <span>{t.sidebar.copyButton}</span>
         </button>
       </div>
     </div>
@@ -109,7 +113,7 @@ const getIcon = (id: string) => {
 <button 
   id="mobileTocButton" 
   class="fixed bottom-4 right-4 z-50 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg md:hidden p-3"
-  aria-label="Показать содержание"
+  aria-label={t.sidebar.mobileTocButton}
 >
   <Book size={20} />
 </button>
@@ -118,7 +122,7 @@ const getIcon = (id: string) => {
 <div id="mobileTocDrawer" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
   <div class="bg-white w-full max-w-sm h-full absolute right-0 shadow-xl transform transition-transform duration-300 translate-x-full">
     <div class="p-4 border-b border-gray-200 flex justify-between items-center">
-      <h3 class="text-lg font-bold text-blue-900">Содержание статьи</h3>
+      <h3 class="text-lg font-bold text-blue-900">{t.sidebar.mobileTocTitle}</h3>
       <button id="closeMobileToc" class="p-1 rounded-full hover:bg-gray-100">
         <X size={20} />
       </button>
@@ -134,7 +138,7 @@ const getIcon = (id: string) => {
             <span class="flex-shrink-0 w-5 h-5 text-blue-600">
               <Home size={18} />
             </span>
-            <span class="font-medium">Начало статьи</span>
+            <span class="font-medium">{t.breadcrumb.home}</span>
           </a>
         </li>
         {sections.map((section) => {
@@ -188,7 +192,12 @@ const getIcon = (id: string) => {
   // Function to copy link to clipboard
   function copyLink() {
     navigator.clipboard.writeText(window.location.href);
-    showToast('Ссылка скопирована в буфер обмена');
+    const toastMessage = document.querySelector('html')?.lang === 'en' 
+      ? 'Link copied to clipboard'
+      : document.querySelector('html')?.lang === 'ru'
+        ? 'Ссылка скопирована в буфер обмена'
+        : 'Havola nusxalandi';
+    showToast(toastMessage);
   }
   
   // Function to show toast notification

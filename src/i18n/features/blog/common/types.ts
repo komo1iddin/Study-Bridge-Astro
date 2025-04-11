@@ -58,6 +58,19 @@ export interface BlogCommonTranslations {
     updatedOn: string;
     shareArticle: string;
     authorInfo: string;
+    content: {
+      inDevelopment: {
+        title: string;
+        description: string;
+      };
+      share: {
+        twitter: string;
+        facebook: string;
+        linkedin: string;
+        copyLink: string;
+        linkCopied: string;
+      };
+    };
   };
 
   /**
@@ -66,5 +79,39 @@ export interface BlogCommonTranslations {
   breadcrumb: {
     home: string;
     blog: string;
+  };
+
+  /**
+   * Pagination translations
+   */
+  pagination: {
+    page: string;
+    of: string;
+    noResults: {
+      title: string;
+      description: string;
+    };
+  };
+
+  sidebar: {
+    title: string;
+    subtitle: string;
+    shareTitle: string;
+    shareDescription: string;
+    shareButton: string;
+    copyButton: string;
+    mobileTocButton: string;
+    mobileTocTitle: string;
+  };
+
+  featuredPosts: {
+    title: string;
+    subtitle: string;
+  };
+
+  latestPosts: {
+    title: string;
+    subtitle: string;
+    readMore: string;
   };
 } 

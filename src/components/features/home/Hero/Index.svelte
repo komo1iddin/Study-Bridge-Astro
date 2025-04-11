@@ -4,6 +4,32 @@
   import HeroButtons from './HeroButtons.svelte';
   import StatsSection from './StatsSection.svelte';
 
+  // Accept translations as a prop with the structure from i18n system
+  export let translations = {
+    title: {
+      first: "O'zbekiston",
+      highlight: "ishonchli ko'prik",
+      connector: "va Xitoy"
+    },
+    description: "O'zbek talabalar uchun Xitoyning eng yaxshi universitetlarida ta'lim.",
+    badge: {
+      enrollment: "2025-yil uchun qabul"
+    },
+    buttons: {
+      apply: "Arizani qoldirish",
+      programs: "Universitetlar"
+    },
+    stats: {
+      universities: "Universitetlar",
+      students: "Talabalar",
+      experience: "Yillik tajriba",
+      success: "Muvaffaqiyat"
+    },
+    testimonials: []
+  };
+  
+  export let lang = 'uz';
+
   function handleOpenForm() {
     // Since we're not using ApplicationForm, we'll just show an alert instead
     alert("Ariza yuborish uchun: +998 XX XXX XX XX");
@@ -38,38 +64,37 @@
       <!-- Left Content -->
       <div class="lg:col-span-7 z-10">
         <div class="fade-in" style="--delay: 0.15s">
-          <OzbekTypingBadge />
+          <OzbekTypingBadge badgeText={translations.badge.enrollment} />
         </div>
         
         <h1 class="fancy-heading text-4xl md:text-5xl lg:text-6xl mt-6 leading-tight fade-in" style="--delay: 0.3s">
-          <span class="text-[#2463EB]">O'zbekiston</span> va <br />
+          <span class="text-[#2463EB]">{translations.title.first}</span> <br />
           <span class="relative inline-block">
-            Xitoy
+            {translations.title.connector}
             <span class="absolute bottom-2 left-0 w-full h-2 bg-secondary/40 -z-10"></span>
-          </span> orasidagi <br />
+          </span> <br />
           <span class="relative inline-block">
-            ishonchli ko'prik
+            {translations.title.highlight}
             <span class="absolute bottom-2 left-0 w-full h-2 bg-secondary/40 -z-10"></span>
           </span>
         </h1>
         
         <p class="mt-6 text-gray-700 text-lg leading-relaxed max-w-lg fade-in" style="--delay: 0.45s">
-          O'zbek talabalar uchun Xitoyning eng yaxshi universitetlarida ta'lim. 
-          Hujjatlarni topshirishdan to diplom olishgacha to'liq yo'l-yo'riq ko'rsatish.
+          {translations.description}
         </p>
         
         <div class="fade-in mt-8" style="--delay: 0.6s">
-          <HeroButtons onOpenForm={handleOpenForm} />
+          <HeroButtons onOpenForm={handleOpenForm} translations={translations.buttons} />
         </div>
         
         <div class="fade-in mt-12" style="--delay: 0.75s">
-          <StatsSection />
+          <StatsSection translations={translations.stats} />
         </div>
       </div>
       
       <!-- Right Side - Scrolling Testimonials -->
       <div class="lg:col-span-5 relative min-h-[400px] lg:min-h-[600px] mt-8 lg:mt-16">
-        <TestimonialCards />
+        <TestimonialCards testimonials={translations.testimonials} />
         
         <!-- Glowing accent behind testimonials -->
         <div class="absolute top-[5%] right-[5%] w-full h-full -z-10">

@@ -1,12 +1,16 @@
 ---
 import type { BlogPost } from '@/lib/blog';
 import { AlertCircle, Twitter, Facebook, Linkedin, Link2 } from 'lucide-astro';
+import { getBlogCommonTranslations } from '@/i18n/features/blog/common';
+import type { Lang } from '@/i18n/langUtils';
 
 interface Props {
   post: BlogPost;
+  lang?: Lang;
 }
 
-const { post } = Astro.props;
+const { post, lang = 'uz' as Lang } = Astro.props;
+const t = getBlogCommonTranslations(lang);
 ---
 
 <article class="max-w-4xl mx-auto animate-fade-in">
@@ -18,8 +22,8 @@ const { post } = Astro.props;
       <div class="py-10 text-center">
         <div class="inline-block p-6 bg-blue-50 rounded-xl">
           <AlertCircle class="h-10 w-10 text-blue-500 mb-4 mx-auto" />
-          <h3 class="text-lg font-medium text-blue-800">Контент в разработке</h3>
-          <p class="mt-2 text-blue-600">Полная статья скоро будет доступна. Возвращайтесь позже!</p>
+          <h3 class="text-lg font-medium text-blue-800">{t.article.content.inDevelopment.title}</h3>
+          <p class="mt-2 text-blue-600">{t.article.content.inDevelopment.description}</p>
         </div>
       </div>
     )}
@@ -28,34 +32,37 @@ const { post } = Astro.props;
   <!-- Social sharing buttons -->
   <div class="flex justify-center mt-12 pb-10 gap-4">
     <button class="share-btn" data-platform="twitter">
-      <span class="sr-only">Поделиться в Twitter</span>
+      <span class="sr-only">{t.article.content.share.twitter}</span>
       <Twitter class="h-6 w-6 text-[#1DA1F2]" />
     </button>
     
     <button class="share-btn" data-platform="facebook">
-      <span class="sr-only">Поделиться в Facebook</span>
+      <span class="sr-only">{t.article.content.share.facebook}</span>
       <Facebook class="h-6 w-6 text-[#1877F2]" />
     </button>
     
     <button class="share-btn" data-platform="linkedin">
-      <span class="sr-only">Поделиться в LinkedIn</span>
+      <span class="sr-only">{t.article.content.share.linkedin}</span>
       <Linkedin class="h-6 w-6 text-[#0A66C2]" />
     </button>
     
     <button id="copyLinkBtn" class="copy-link-btn">
-      <span class="sr-only">Копировать ссылку</span>
+      <span class="sr-only">{t.article.content.share.copyLink}</span>
       <Link2 class="h-6 w-6 text-gray-600" />
     </button>
   </div>
 </article>
 
-<script>
+<script define:vars={{ t }}>
   // Handle social sharing
   function setupSocialSharing() {
     const shareBtns = document.querySelectorAll('.share-btn');
     const copyLinkBtn = document.getElementById('copyLinkBtn');
     const pageUrl = window.location.href;
     const pageTitle = document.title;
+    
+    // Use translations passed via define:vars
+    const translations = t;
     
     shareBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -87,7 +94,7 @@ const { post } = Astro.props;
         
         // Show a temporary tooltip
         const tooltip = document.createElement('div');
-        tooltip.textContent = 'Ссылка скопирована!';
+        tooltip.textContent = translations.article.content.share.linkCopied;
         tooltip.classList.add('copy-tooltip');
         document.body.appendChild(tooltip);
         

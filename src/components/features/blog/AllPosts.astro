@@ -4,28 +4,29 @@ import BlogCard from './BlogCard.astro';
 import CategoryFilter from './CategoryFilter.astro';
 import SearchBar from './SearchBar.astro';
 import { ChevronLeft, ChevronRight } from 'lucide-astro';
+import { getBlogCommonTranslations } from '@/i18n/features/blog/common';
+import type { Lang } from '@/i18n/langUtils';
 
 interface Props {
-  lang?: string;
+  lang?: Lang;
   selectedCategory?: string;
 }
 
-const { lang = 'uz', selectedCategory = 'all' } = Astro.props;
+const { lang = 'uz' as Lang, selectedCategory = 'all' } = Astro.props;
 const allPosts = selectedCategory === 'all' ? blogPosts : getPostsByCategory(selectedCategory as BlogCategory);
 const postsPerPage = 9;
-
-// Client-side filtering and pagination will be handled by the script
+const t = getBlogCommonTranslations(lang);
 ---
 
 <div class="animate-fade-in">
   <div class="mb-8 space-y-6">
-    <SearchBar />
-    <CategoryFilter selectedCategory={selectedCategory} />
+    <SearchBar lang={lang} />
+    <CategoryFilter selectedCategory={selectedCategory} lang={lang} />
   </div>
   
   <div id="no-results-message" class="hidden text-center p-6 bg-blue-50 rounded-lg text-blue-700 mb-6">
-    <p class="text-lg font-medium">Статьи не найдены</p>
-    <p class="text-sm mt-2">Попробуйте изменить поисковый запрос или выбрать другую категорию</p>
+    <p class="text-lg font-medium">{t.pagination.noResults.title}</p>
+    <p class="text-sm mt-2">{t.pagination.noResults.description}</p>
   </div>
   
   <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8 mt-6">
@@ -48,7 +49,7 @@ const postsPerPage = 9;
     </button>
     
     <span id="paginationInfo" class="text-sm text-gray-500">
-      Страница <span id="currentPage">1</span> из <span id="totalPages">1</span>
+      {t.pagination.page} <span id="currentPage">1</span> {t.pagination.of} <span id="totalPages">1</span>
     </span>
     
     <button id="nextPage" class="pagination-btn px-3 py-1 border border-blue-200 rounded text-blue-700 hover:bg-blue-50 transition-colors">
@@ -57,7 +58,7 @@ const postsPerPage = 9;
   </div>
 </div>
 
-<script>
+<script define:vars={{ t, lang }}>
   document.addEventListener('astro:page-load', function() {
     interface CustomEventWithDetail extends CustomEvent {
       detail: {
@@ -69,16 +70,17 @@ const postsPerPage = 9;
     let currentCategory = 'all';
     let currentSearchQuery = '';
     let currentPage = 1;
-    let filteredPosts: HTMLElement[] = [];
+    let filteredPosts = [];
     const postsPerPage = 9;
+    const translations = t;
     
     // Get elements
     const postsContainer = document.getElementById('postsContainer');
-    const prevPageBtn = document.getElementById('prevPage') as HTMLButtonElement | null;
-    const nextPageBtn = document.getElementById('nextPage') as HTMLButtonElement | null;
+    const prevPageBtn = document.getElementById('prevPage');
+    const nextPageBtn = document.getElementById('nextPage');
     const currentPageEl = document.getElementById('currentPage');
     const totalPagesEl = document.getElementById('totalPages');
-    const postItems = document.querySelectorAll<HTMLElement>('.post-item');
+    const postItems = document.querySelectorAll('.post-item');
     const noResultsMessage = document.getElementById('no-results-message');
     const searchResultsCount = document.getElementById('search-results-count');
     
@@ -101,8 +103,8 @@ const postsPerPage = 9;
     renderCurrentPage();
     
     // Listen for category change events
-    document.addEventListener('category-changed', (e: Event) => {
-      const event = e as CustomEventWithDetail;
+    document.addEventListener('category-changed', (e) => {
+      const event = e;
       if (event.detail && event.detail.category) {
         currentCategory = event.detail.category;
         currentPage = 1;
@@ -113,8 +115,8 @@ const postsPerPage = 9;
     });
     
     // Listen for search events
-    document.addEventListener('search-query-changed', (e: Event) => {
-      const event = e as CustomEventWithDetail;
+    document.addEventListener('search-query-changed', (e) => {
+      const event = e;
       if (event.detail && event.detail.query !== undefined) {
         currentSearchQuery = event.detail.query;
         currentPage = 1;
@@ -173,7 +175,7 @@ const postsPerPage = 9;
       
       // Update search results count
       if (searchResultsCount && currentSearchQuery) {
-        searchResultsCount.textContent = `Найдено результатов: ${filteredPosts.length}`;
+        searchResultsCount.textContent = translations.search.resultsCount.replace('{0}', filteredPosts.length.toString());
         searchResultsCount.classList.remove('hidden');
       } else if (searchResultsCount) {
         searchResultsCount.classList.add('hidden');

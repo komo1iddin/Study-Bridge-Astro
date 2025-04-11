@@ -2,26 +2,29 @@
 import { formatDate } from '@/lib/blog';
 import type { BlogPost } from '@/lib/blog';
 import { cn } from '@/lib/utils';
+import type { Lang } from '@/i18n/langUtils';
+import { getBlogCommonTranslations } from '@/i18n/features/blog/common';
 
 interface Props {
   post: BlogPost;
   variant?: 'default' | 'featured' | 'minimal';
   className?: string;
-  lang?: string;
+  lang?: Lang;
 }
 
 const { post, variant = 'default', className, lang = 'uz' } = Astro.props;
 const isMinimal = variant === 'minimal';
 const isFeatured = variant === 'featured';
+const t = getBlogCommonTranslations(lang);
 
-// Helper function to map category IDs to display names
+// Use the category translations from i18n
 function getCategoryLabel(category: string): string {
   switch (category) {
-    case 'academic': return 'Академические';
-    case 'study-tips': return 'Советы по учебе';
-    case 'career': return 'Карьера';
-    case 'student-life': return 'Студенческая жизнь';
-    case 'technology': return 'Технологии';
+    case 'academic': return t.categories.academic;
+    case 'study-tips': return t.categories.studyTips;
+    case 'career': return t.categories.career;
+    case 'student-life': return t.categories.studentLife;
+    case 'technology': return t.categories.technology;
     default: return category;
   }
 }
