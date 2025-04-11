@@ -5,7 +5,7 @@
   export let className: string = '';
   
   // These props will be filled by the slot props from the parent Sheet
-  export let open: boolean = false;
+  export const open = false;
   export let handleOpenChange: (open: boolean) => void = () => {};
   
   function handleClick() {

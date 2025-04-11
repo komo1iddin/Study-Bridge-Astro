@@ -6,7 +6,7 @@
   
   export let currentPage: number = 1;
   export let totalPages: number = 5;
-  export let maxVisiblePages: number = 5;
+  export const maxVisiblePages: number = 5;
   export let className: string = '';
   
   const dispatch = createEventDispatcher();
@@ -56,7 +56,6 @@
 </script>
 
 <nav 
-  role="navigation" 
   aria-label="pagination" 
   class={cn("mx-auto flex w-full justify-center", className)}
   {...$$restProps}

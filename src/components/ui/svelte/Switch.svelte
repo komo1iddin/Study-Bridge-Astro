@@ -31,7 +31,7 @@
     on:click={handleChange}
     {...$$restProps}
   >
-    <span class={switchTheme.thumb} data-state={checked ? "checked" : "unchecked"} />
+    <span class={switchTheme.thumb} data-state={checked ? "checked" : "unchecked"}></span>
   </button>
   <input
     type="checkbox"

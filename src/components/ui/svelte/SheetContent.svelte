@@ -43,8 +43,10 @@
   <div 
     class={sheetTheme.overlay}
     on:click={handleOutsideClick}
+    on:keydown={handleKeyDown}
+    role="presentation"
     transition:fade={{ duration: 200 }}
-  />
+  ></div>
   
   <!-- Content -->
   <div

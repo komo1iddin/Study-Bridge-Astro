@@ -6,8 +6,8 @@ import { getCollection } from 'astro:content';
 import GrantsDetailPage from '@/components/features/grants/GrantsDetailPage/GrantsDetailPage.svelte';
 import { transformGrantData } from '@/lib/transformers/grantTransformer';
 
-// Server-side render this page
-export const prerender = false;
+// Prerender this page during build
+export const prerender = true;
 
 export async function getStaticPaths() {
   try {

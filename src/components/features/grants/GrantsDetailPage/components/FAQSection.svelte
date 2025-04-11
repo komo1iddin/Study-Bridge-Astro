@@ -34,21 +34,17 @@
     color: #2563eb;
   }
   
-  .faq-icon {
+  :global(.faq-chevron-icon) {
     transition: transform 0.3s ease;
   }
   
-  .faq-icon.open {
+  :global(.faq-chevron-icon.open) {
     transform: rotate(180deg);
   }
   
   .faq-content {
     padding: 0.5rem 0 1.5rem 0;
     border-bottom: 1px solid #e2e8f0;
-  }
-  
-  .last-item {
-    border-bottom: none;
   }
 </style>
 
@@ -67,18 +63,19 @@
           {@const itemId = faq.id?.toString() || `faq-${index}`}
           {@const isLast = index === faqs.length - 1}
           
-          <div class={isLast ? 'last-item' : ''}>
+          <div>
             <button 
               class="faq-trigger" 
+              style={isLast ? "border-bottom: none;" : ""}
               on:click={() => toggleItem(itemId)}
               aria-expanded={openItemId === itemId}
             >
               <span class="faq-question text-slate-800 font-medium">{faq.question || ''}</span>
-              <ChevronDown class={`faq-icon h-5 w-5 ${openItemId === itemId ? 'open' : ''}`} />
+              <ChevronDown class={`faq-chevron-icon h-5 w-5 ${openItemId === itemId ? 'open' : ''}`} />
             </button>
             
             {#if openItemId === itemId}
-              <div class="faq-content" transition:slide={{ duration: 300 }}>
+              <div class="faq-content" style={isLast ? "border-bottom: none;" : ""} transition:slide={{ duration: 300 }}>
                 <div class="text-slate-600 whitespace-pre-wrap">
                   {faq.answer || ''}
                 </div>

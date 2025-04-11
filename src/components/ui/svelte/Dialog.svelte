@@ -27,6 +27,12 @@
     }
   }
   
+  function handleOverlayKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      closeDialog();
+    }
+  }
+  
   onMount(() => {
     mounted = true;
     document.addEventListener('keydown', handleKeydown);
@@ -50,6 +56,8 @@
     <div 
       class={dialogTheme.overlay}
       on:click={handleOverlayClick}
+      on:keydown={handleOverlayKeydown}
+      role="presentation"
       data-state={open ? 'open' : 'closed'}
     ></div>
     

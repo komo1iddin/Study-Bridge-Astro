@@ -21,6 +21,14 @@
       dispatch('change', { checked });
     }
   }
+  
+  function handleKeyDown(event: KeyboardEvent) {
+    if (!disabled && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      checked = !checked;
+      dispatch('change', { checked });
+    }
+  }
 </script>
 
 <div class="flex items-center space-x-2">
@@ -40,6 +48,7 @@
       )}
       data-state={checked ? "checked" : "unchecked"}
       on:click={handleClick}
+      on:keydown={handleKeyDown}
       role="checkbox"
       aria-checked={checked}
       tabindex={disabled ? undefined : 0}

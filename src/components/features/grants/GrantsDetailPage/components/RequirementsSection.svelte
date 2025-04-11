@@ -37,11 +37,11 @@
     background-color: #f1f5f9;
   }
   
-  .accordion-icon {
+  :global(.accordion-chevron-icon) {
     transition: transform 0.3s ease;
   }
   
-  .accordion-icon.open {
+  :global(.accordion-chevron-icon.open) {
     transform: rotate(180deg);
   }
   
@@ -95,7 +95,7 @@
     <div class="w-full">
       <button class="accordion-trigger" on:click={toggleAccordion}>
         <span class="text-slate-800 font-medium">Kerakli hujjatlar ro'yxati</span>
-        <ChevronDown class={`accordion-icon h-5 w-5 ${isOpen ? 'open' : ''}`} />
+        <ChevronDown class={`accordion-chevron-icon h-5 w-5 ${isOpen ? 'open' : ''}`} />
       </button>
       
       {#if isOpen}

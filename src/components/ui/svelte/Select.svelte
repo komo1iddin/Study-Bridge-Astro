@@ -87,6 +87,7 @@
     role="combobox" 
     aria-expanded={open}
     aria-haspopup="listbox"
+    aria-controls={id ? `${id}-listbox` : "select-listbox"}
     {disabled}
     {id}
     class={cn(selectTheme.trigger, "[&>span]:line-clamp-1", "select-trigger")}
@@ -109,6 +110,7 @@
       )}
       style="top: calc(100% + 4px); left: 0; width: 100%;"
       role="listbox"
+      id={id ? `${id}-listbox` : "select-listbox"}
       data-state="open"
       data-side="bottom"
       bind:this={contentEl}
