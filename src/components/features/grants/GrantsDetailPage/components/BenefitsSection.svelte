@@ -5,7 +5,7 @@
   import type { Lang } from '@/i18n/langUtils';
 
   export let grant: TransformedGrantData;
-  export let lang: Lang;
+  export const lang: Lang = 'en';
 
   // Ensure benefits exists with default fallback
   $: benefits = grant?.benefits || [];

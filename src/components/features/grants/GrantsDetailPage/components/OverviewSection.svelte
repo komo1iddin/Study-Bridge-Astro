@@ -14,7 +14,7 @@
   }
 
   export let grant: TransformedGrantData;
-  export let lang: Lang;
+  export const lang: Lang = 'en';
 </script>
 
 <Card class="border-none shadow-md">

@@ -6,7 +6,7 @@
   import { slide } from 'svelte/transition';
 
   export let grant: TransformedGrantData;
-  export let lang: Lang;
+  export const lang: Lang = 'en';
 
   $: requirements = grant?.requirements || [];
   $: documents = grant?.documents?.split(', ') || [];

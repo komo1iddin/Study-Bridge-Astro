@@ -3,8 +3,8 @@
   import type { TransformedGrantData } from '@/lib/transformers/grantTransformer';
   import type { Lang } from '@/i18n/langUtils';
 
-  export let grant: TransformedGrantData;
-  export let lang: Lang;
+  export const grant: TransformedGrantData = {} as TransformedGrantData;
+  export const lang: Lang = 'en';
 
   const stats = [
     {

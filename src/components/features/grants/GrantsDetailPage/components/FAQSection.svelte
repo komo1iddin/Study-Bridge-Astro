@@ -6,7 +6,7 @@
   import type { Lang } from '@/i18n/langUtils';
 
   export let grant: TransformedGrantData;
-  export let lang: Lang;
+  export const lang: Lang = 'en';
 
   $: faqs = grant?.faq || [];
   
