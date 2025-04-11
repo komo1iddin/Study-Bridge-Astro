@@ -4,6 +4,7 @@ import { useTranslations } from '@/i18n/utils';
 
 const { lang = 'uz' } = Astro.props;
 const t = useTranslations(lang);
+const successMessage = t('contact.form.success') || 'Your message has been sent successfully!';
 ---
 
 <div id="contactModal" class="modal" data-modal>
@@ -16,7 +17,7 @@ const t = useTranslations(lang);
     <div class="modal-body">
       <p class="modal-description">{t('contact.modal.description')}</p>
       
-      <form id="contactForm">
+      <form id="contactForm" data-success-message={successMessage}>
         <div class="form-group">
           <label for="name">{t('contact.form.name')}</label>
           <input type="text" class="form-control" id="name" placeholder={t('contact.form.name.placeholder')} required>
@@ -52,7 +53,7 @@ const t = useTranslations(lang);
     if (!modal) return;
 
     if (state.isContactModalOpen) {
-      modal.style.display = 'block';
+      (modal as HTMLElement).style.display = 'block';
       document.body.style.overflow = 'hidden';
       setTimeout(() => {
         modal.querySelector('.modal-content')?.classList.add('modal-visible');
@@ -60,7 +61,7 @@ const t = useTranslations(lang);
     } else {
       modal.querySelector('.modal-content')?.classList.remove('modal-visible');
       setTimeout(() => {
-        modal.style.display = 'none';
+        (modal as HTMLElement).style.display = 'none';
         document.body.style.overflow = '';
       }, 300);
     }
@@ -92,13 +93,14 @@ const t = useTranslations(lang);
         console.log('Validated form data:', validatedData);
       
         // Show success message
+        const successMessage = (contactForm as HTMLElement).dataset.successMessage || 'Your message has been sent successfully!';
         alert(successMessage);
       
         // Close modal
         uiStore.toggleContactModal(false);
       
         // Reset form
-        contactForm.reset();
+        (contactForm as HTMLFormElement).reset();
       } catch (error) {
         console.error('Form submission error:', error);
         alert('An error occurred. Please try again.');
@@ -109,7 +111,6 @@ const t = useTranslations(lang);
 
 
 <style>
-  /* Стили остаются без изменений */
   .modal {
     display: none;
     position: fixed;

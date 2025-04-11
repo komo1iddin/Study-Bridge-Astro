@@ -5,3 +5,5 @@ declare global {
     uiStore: typeof UIStore;
   }
 }
+
+declare module 'aos';
