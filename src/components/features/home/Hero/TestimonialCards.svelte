@@ -160,10 +160,6 @@
     border-color: rgba(59, 130, 246, 0.2);
     box-shadow: 0 10px 25px rgba(59, 130, 246, 0.08);
   }
-  
-  .student-card:hover .stat-icon {
-    transform: scale(1.1);
-  }
 
   .student-card:hover h3 {
     @apply text-blue-700;

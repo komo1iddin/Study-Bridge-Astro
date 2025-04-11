@@ -1,12 +1,12 @@
 ---
 import { getAllTestimonials, type Testimonial } from '@/lib/fileSystemReader';
 import { getLangFromUrl } from '@/i18n/langUtils';
-import { useTranslations } from '@/i18n/utils';
+import { getTestimonialsTranslations } from '@/i18n/features/shared/testimonials';
 import { Star } from 'lucide-astro';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 
 const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const t = getTestimonialsTranslations(lang);
 const testimonials: Testimonial[] = await getAllTestimonials(lang);
 console.log('Loaded testimonials:', testimonials);
 
@@ -19,8 +19,8 @@ console.log('Featured testimonials:', featuredTestimonials);
 
         <!-- Header -->
         <SectionHeader
-        title={t('testimonials.main.title')}
-        subtitle={t('testimonials.main.subtitle')}
+        title={t.main.title}
+        subtitle={t.main.subtitle}
       />
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">

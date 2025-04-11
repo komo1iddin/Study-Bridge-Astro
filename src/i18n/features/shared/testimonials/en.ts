@@ -9,6 +9,10 @@ export const testimonialsEn: TestimonialsTranslations = {
       button: 'Contact us',
     },
   },
+  main: {
+    title: 'What Our Students Say',
+    subtitle: 'Real experiences from our students studying in China',
+  },
   stats: {
     satisfiedClients: {
       value: '98%',

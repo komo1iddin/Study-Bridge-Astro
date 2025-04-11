@@ -1,0 +1,42 @@
+---
+import Footer from '@/components/layout/Footer.astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getFooterTranslations } from './index';
+
+// Example of how to use the footer translations in a component
+const lang = getLangFromUrl(Astro.url);
+const t = getFooterTranslations(lang);
+---
+
+<!-- Example usage of the Footer component with translations -->
+<div class="prose max-w-none">
+  <h2>Example Footer Translation Usage</h2>
+  
+  <h3>Company Description</h3>
+  <p>{t.company.description}</p>
+  
+  <h3>Navigation</h3>
+  <p>Section Title: {t.navigation.title}</p>
+  
+  <h3>Resources</h3>
+  <p>Section Title: {t.resources.title}</p>
+  
+  <h3>Contact</h3>
+  <p>Section Title: {t.contact.title}</p>
+  <p>Address: {t.contact.address}</p>
+  
+  <h3>Newsletter</h3>
+  <p>Title: {t.newsletter.title}</p>
+  <p>Placeholder: {t.newsletter.placeholder}</p>
+  <p>Button: {t.newsletter.subscribe}</p>
+  <p>Description: {t.newsletter.description}</p>
+  
+  <h3>Copyright</h3>
+  <p>Rights: {t.copyright.rights}</p>
+  <p>Privacy: {t.copyright.privacy}</p>
+  <p>Terms: {t.copyright.terms}</p>
+  <p>Sitemap: {t.copyright.sitemap}</p>
+</div>
+
+<!-- Full Footer Component Example -->
+<Footer /> 

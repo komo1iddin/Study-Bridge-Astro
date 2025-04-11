@@ -1,0 +1,36 @@
+---
+import CTASection from '@/components/ui/CTASection.astro';
+---
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTA Component Example</title>
+</head>
+<body>
+  <!-- Testing with Uzbek language (default) -->
+  <div>
+    <h2>Uzbek (Default)</h2>
+    <CTASection lang="uz" />
+  </div>
+
+  <!-- Testing with English language -->
+  <div class="mt-20">
+    <h2>English</h2>
+    <CTASection lang="en" />
+  </div>
+
+  <!-- Testing with Russian language -->
+  <div class="mt-20">
+    <h2>Russian</h2>
+    <CTASection lang="ru" />
+  </div>
+
+  <!-- Testing with custom phone number -->
+  <div class="mt-20">
+    <h2>Custom Phone Number</h2>
+    <CTASection lang="uz" phoneNumber="+998 71 234 5678" />
+  </div>
+</body>
+</html> 

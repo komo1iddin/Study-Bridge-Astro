@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte";
   import { Menu, X, ChevronDown, Globe, Phone, Mail, Languages, Check } from "lucide-svelte";
   import { slide, fly } from "svelte/transition";
-  import { quintOut } from "svelte/easing";
+  import { quintOut, cubicOut, quartOut } from "svelte/easing";
 
   // Import from @/ paths
   import { cn } from "@/lib/utils";
@@ -189,13 +189,18 @@
     <div
       class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[51]"
       on:click={closeMenu}
-      transition:fly|local={{ duration: 180, opacity: 0, easing: quintOut }}
+      on:keydown={(e) => e.key === 'Enter' && closeMenu()}
+      role="button"
+      tabindex="0"
+      in:fly|local={{ duration: 180, opacity: 0, easing: quintOut }}
+      out:fly|local={{ duration: 100, opacity: 0, easing: quartOut }}
     ></div>
     
     <!-- Menu container with optimized transitions -->
     <div
       class="mobile-menu-container fixed inset-y-0 right-0 w-[85%] max-w-[400px] bg-white z-[52] flex flex-col shadow-xl h-[100dvh]"
-      transition:fly|local={{ duration: 200, x: 300, opacity: 1, easing: quintOut }}
+      in:fly|local={{ duration: 200, x: 300, opacity: 1, easing: quintOut }}
+      out:fly|local={{ duration: 120, x: 300, easing: quartOut }}
     >
       <div class="flex items-center justify-between p-4 border-b">
         <h2 class="text-xl font-medium">{t?.mobileMenu.menu || "Menu"}</h2>
@@ -229,7 +234,10 @@
                     </button>
                     
                     {#if expandedItem === item.name}
-                      <ul class="pl-4 space-y-1 py-2" transition:slide|local={{ duration: 200, easing: quintOut }}>
+                      <ul class="pl-4 space-y-1 py-2" 
+                        in:slide|local={{ duration: 200, easing: quintOut }}
+                        out:slide|local={{ duration: 100, easing: quartOut }}
+                      >
                         {#each item.items as subItem (subItem.name)}
                           <li>
                             <a
@@ -294,7 +302,10 @@
           </button>
           
           {#if showLanguages}
-            <div class="mt-2 space-y-1 px-3" transition:slide|local={{ duration: 200, easing: quintOut }}>
+            <div class="mt-2 space-y-1 px-3" 
+              in:slide|local={{ duration: 200, easing: quintOut }}
+              out:slide|local={{ duration: 100, easing: quartOut }}
+            >
               {#each languagesList as language (language.code)}
                 <a
                   href={getPathForLang(language.code)}

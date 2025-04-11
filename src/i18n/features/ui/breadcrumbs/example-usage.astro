@@ -1,0 +1,57 @@
+---
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import { getBreadcrumbsTranslations } from '@/i18n/features/ui/breadcrumbs';
+
+// Get the translations for each language
+const uzT = getBreadcrumbsTranslations('uz');
+const enT = getBreadcrumbsTranslations('en');
+const ruT = getBreadcrumbsTranslations('ru');
+---
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breadcrumbs Component Example</title>
+</head>
+<body class="p-8">
+  <!-- Testing with Uzbek language (default) -->
+  <div>
+    <h2>Uzbek (Default)</h2>
+    <Breadcrumbs 
+      lang="uz" 
+      items={[
+        { label: uzT.home, href: '/uz/' },
+        { label: uzT.common?.universities || 'Universitetlar', href: '/uz/universities' },
+        { label: 'Peking University', href: '/uz/universities/peking', active: true }
+      ]} 
+    />
+  </div>
+
+  <!-- Testing with English language -->
+  <div class="mt-10">
+    <h2>English</h2>
+    <Breadcrumbs 
+      lang="en" 
+      items={[
+        { label: enT.home, href: '/en/' },
+        { label: enT.common?.universities || 'Universities', href: '/en/universities' },
+        { label: 'Peking University', href: '/en/universities/peking', active: true }
+      ]} 
+    />
+  </div>
+
+  <!-- Testing with Russian language -->
+  <div class="mt-10">
+    <h2>Russian</h2>
+    <Breadcrumbs 
+      lang="ru" 
+      items={[
+        { label: ruT.home, href: '/ru/' },
+        { label: ruT.common?.universities || 'Университеты', href: '/ru/universities' },
+        { label: 'Пекинский Университет', href: '/ru/universities/peking', active: true }
+      ]} 
+    />
+  </div>
+</body>
+</html> 

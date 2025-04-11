@@ -1,17 +1,19 @@
 ---
 import { GraduationCap, BookOpen, Building, Users, CheckCircle2, ChevronDown } from "lucide-astro";
-import { useTranslations } from '@/i18n/utils';
 import type { Lang } from '@/i18n/langUtils';
 import ButtonView from '@/components/ui/astro/ButtonView.astro'
 import CTA from '@/components/ui/CTA.astro'
 import SectionHeader from "@/components/ui/SectionHeader.astro";
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getComparisonTranslations } from '@/i18n/features/home/comparison';
 
 interface Props {
   lang?: Lang;
 }
 
 const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
+const currentLang = getLangFromUrl(Astro.url);
+const t = getComparisonTranslations(currentLang || lang);
 
 const cn = (...classes: (string | undefined | boolean)[]) => {
   return classes.filter(Boolean).join(' ');
@@ -20,31 +22,31 @@ const cn = (...classes: (string | undefined | boolean)[]) => {
 const categories = [
   {
     id: "education",
-    title: "Oliy ta'lim",
+    title: t.categories.education.title,
     icon: GraduationCap,
-    china: ["Top 500 ga kiruvchi 50+ universitet", "Xalqaro tan olingan diplomlar", "Ko'p tilli ta'lim muhiti"],
-    uzb: ["Mahalliy akkreditatsiya", "Milliy diplomlar", "O'zbek va rus tillarida ta'lim"],
+    china: t.categories.education.china,
+    uzb: t.categories.education.uzb,
   },
   {
     id: "programs",
-    title: "O'quv dasturlari",
+    title: t.categories.programs.title,
     icon: BookOpen,
-    china: ["Xalqaro standartlarga mos", "Zamonaviy o'quv materiallari", "Online ta'lim platformalari"],
-    uzb: ["Milliy standartlar asosida", "An'anaviy o'quv materiallari", "Cheklangan online resurslar"],
+    china: t.categories.programs.china,
+    uzb: t.categories.programs.uzb,
   },
   {
     id: "infrastructure",
-    title: "Infratuzilma",
+    title: t.categories.infrastructure.title,
     icon: Building,
-    china: ["Zamonaviy kampuslar", "To'liq jihozlangan laboratoriyalar", "Yuqori tezlikdagi internet"],
-    uzb: ["Rivojlanayotgan kampuslar", "Bazaviy laboratoriyalar", "O'rta tezlikdagi internet"],
+    china: t.categories.infrastructure.china,
+    uzb: t.categories.infrastructure.uzb,
   },
   {
     id: "teachers",
-    title: "O'qituvchilar",
+    title: t.categories.teachers.title,
     icon: Users,
-    china: ["Xalqaro ekspertlar", "Yuqori malakali kadrlar", "Doimiy malaka oshirish"],
-    uzb: ["Mahalliy mutaxassislar", "O'rta malakali kadrlar", "Davriy malaka oshirish"],
+    china: t.categories.teachers.china,
+    uzb: t.categories.teachers.uzb,
   },
 ];
 
@@ -56,14 +58,14 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
   <div class="container px-4 md:px-6">
     <!-- Header -->
     <SectionHeader
-    title={t('comparison.title')}
-    subtitle={t('comparison.subtitle')}
-  />
+      title={t.title}
+      subtitle={t.subtitle}
+    />
 
     <!-- Category Selector - Mobile -->
     <div class="md:hidden mb-8">
       <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg">
-        <div class="text-base font-medium">Kategoriyani tanlang</div>
+        <div class="text-base font-medium">{t.selectCategory}</div>
         <div class="relative w-full">
           <select 
             id="category-select-mobile"
@@ -107,7 +109,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
           <div class="bg-muted/10 border-b pb-3 p-6">
             <div class="flex items-center justify-between">
               <h3 class="font-medium text-xl">{activeItem.title}</h3>
-              <div class="text-sm text-muted-foreground">Qiyosiy tahlil</div>
+              <div class="text-sm text-muted-foreground">{t.compareAnalysis}</div>
             </div>
           </div>
 
@@ -118,7 +120,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
                 <div class="h-6 w-6 rounded-full bg-[#DE2910] flex items-center justify-center text-white text-xs font-bold">
                   CN
                 </div>
-                <h4 class="font-medium text-lg">Xitoy</h4>
+                <h4 class="font-medium text-lg">{t.countries.china}</h4>
               </div>
               <hr class="mb-4" />
               <ul class="space-y-4">
@@ -137,7 +139,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
                 <div class="h-6 w-6 rounded-full bg-[#1A5BE1] flex items-center justify-center text-white text-xs font-bold">
                   UZ
                 </div>
-                <h4 class="font-medium text-lg">O'zbekiston</h4>
+                <h4 class="font-medium text-lg">{t.countries.uzbekistan}</h4>
               </div>
               <hr class="mb-4" />
               <ul class="space-y-4">
@@ -152,7 +154,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
           </div>
 
           <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
-            Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
+            {t.dataFrom}
           </div>
         </div>
       </div>
@@ -163,7 +165,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
       <div class="text-center mt-12">
         <ButtonView
           href={`/${lang}/blog`} 
-          text={t("Maqolani o'\qing")} 
+          text={t.readArticle} 
           variant="mobile" 
           showOnDesktop={false} 
         />
@@ -173,71 +175,80 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
       <div class="text-center mt-12">
         <ButtonView
           href={`/${lang}/blog`} 
-          text={t("Maqolani o'\qing")} 
+          text={t.readArticle} 
           variant="desktop" 
           showOnMobile={false} 
         />
       </div>
     </div>
 
-   <CTA class="px-4 sm:px-6 lg:px-8" />
+   <div class="px-4 sm:px-6 lg:px-8">
+     <CTA />
+   </div>
 
   </div>
 </section>
 
 <script>
-  function updateContent(category) {
-    // Категория маълумотлари
+  import type { ComparisonTranslations } from '@/i18n/features/home/comparison/types';
+  
+  // This function will be called when a category is selected
+  function updateContent(category: string) {
+    // Get the translations from the window object (populated during SSR)
+    const t = (window as any).__comparisonTranslations as ComparisonTranslations;
+    if (!t) return;
+    
+    // Categories data structure
     const categories = {
       education: {
-        title: "Oliy ta'lim",
-        china: ["Top 500 ga kiruvchi 50+ universitet", "Xalqaro tan olingan diplomlar", "Ko'p tilli ta'lim muhiti"],
-        uzb: ["Mahalliy akkreditatsiya", "Milliy diplomlar", "O'zbek va rus tillarida ta'lim"]
+        title: t.categories.education.title,
+        china: t.categories.education.china,
+        uzb: t.categories.education.uzb
       },
       programs: {
-        title: "O'quv dasturlari",
-        china: ["Xalqaro standartlarga mos", "Zamonaviy o'quv materiallari", "Online ta'lim platformalari"],
-        uzb: ["Milliy standartlar asosida", "An'anaviy o'quv materiallari", "Cheklangan online resurslar"]
+        title: t.categories.programs.title,
+        china: t.categories.programs.china,
+        uzb: t.categories.programs.uzb
       },
       infrastructure: {
-        title: "Infratuzilma",
-        china: ["Zamonaviy kampuslar", "To'liq jihozlangan laboratoriyalar", "Yuqori tezlikdagi internet"],
-        uzb: ["Rivojlanayotgan kampuslar", "Bazaviy laboratoriyalar", "O'rta tezlikdagi internet"]
+        title: t.categories.infrastructure.title,
+        china: t.categories.infrastructure.china,
+        uzb: t.categories.infrastructure.uzb
       },
       teachers: {
-        title: "O'qituvchilar",
-        china: ["Xalqaro ekspertlar", "Yuqori malakali kadrlar", "Doimiy malaka oshirish"],
-        uzb: ["Mahalliy mutaxassislar", "O'rta malakali kadrlar", "Davriy malaka oshirish"]
+        title: t.categories.teachers.title,
+        china: t.categories.teachers.china,
+        uzb: t.categories.teachers.uzb
       }
     };
 
-    const activeItem = categories[category];
+    const activeItem = categories[category as keyof typeof categories];
     if (!activeItem) return;
 
-    // URL ни янгилаш
+    // Update URL
     const url = new URL(window.location.href);
     url.searchParams.set('category', category);
     history.pushState({}, '', url);
 
-    // Актив табни янгилаш
+    // Update active tab
     document.querySelectorAll('[data-category]').forEach(el => {
-  const isActive = el.dataset.category === category;
-  if (isActive) {
-    el.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-    el.classList.remove('hover:bg-gray-100', 'text-gray-600');
-  } else {
-    el.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-    el.classList.add('hover:bg-gray-100', 'text-gray-600');
-  }
-});
+      const isActive = (el as HTMLElement).dataset.category === category;
+      if (isActive) {
+        el.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+        el.classList.remove('hover:bg-gray-100', 'text-gray-600');
+      } else {
+        el.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+        el.classList.add('hover:bg-gray-100', 'text-gray-600');
+      }
+    });
 
-    // Контентни янгилаш
+    // Update content
     const newContent = `
       <div class="border-2 rounded-xl shadow-sm overflow-hidden">
         <div class="bg-muted/10 border-b pb-3 p-6">
           <div class="flex items-center justify-between">
             <h3 class="font-medium text-xl">${activeItem.title}</h3>
-            <div class="text-sm text-muted-foreground">Qiyosiy tahlil</div>
+            <div class="text-sm text-muted-foreground">${t.compareAnalysis}</div>
           </div>
         </div>
 
@@ -248,7 +259,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
               <div class="h-6 w-6 rounded-full bg-[#DE2910] flex items-center justify-center text-white text-xs font-bold">
                 CN
               </div>
-              <h4 class="font-medium text-lg">Xitoy</h4>
+              <h4 class="font-medium text-lg">${t.countries.china}</h4>
             </div>
             <hr class="mb-4" />
             <ul class="space-y-4">
@@ -269,7 +280,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
               <div class="h-6 w-6 rounded-full bg-[#1A5BE1] flex items-center justify-center text-white text-xs font-bold">
                 UZ
               </div>
-              <h4 class="font-medium text-lg">O'zbekiston</h4>
+              <h4 class="font-medium text-lg">${t.countries.uzbekistan}</h4>
             </div>
             <hr class="mb-4" />
             <ul class="space-y-4">
@@ -286,30 +297,50 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
         </div>
 
         <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
-          Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
+          ${t.dataFrom}
         </div>
       </div>
     `;
 
-    document.getElementById('comparison-content').innerHTML = newContent;
+    const contentElement = document.getElementById('comparison-content');
+    if (contentElement) {
+      contentElement.innerHTML = newContent;
+    }
   }
 
-  // Десктоп таблар учун
-  document.querySelectorAll('[data-category]').forEach(button => {
-    button.addEventListener('click', (e) => {
-      const category = button.dataset.category;
-      if (category) {
-        updateContent(category);
+  // Store translations in the window object for client-side use
+  document.addEventListener('DOMContentLoaded', () => {
+    const translationsScript = document.getElementById('comparison-translations');
+    if (translationsScript) {
+      try {
+        (window as any).__comparisonTranslations = JSON.parse(translationsScript.textContent || '{}');
+      } catch (e) {
+        console.error('Error parsing comparison translations:', e);
       }
+    }
+    
+    // Desktop tabs
+    document.querySelectorAll('[data-category]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const category = (button as HTMLElement).dataset.category;
+        if (category) {
+          updateContent(category);
+        }
+      });
     });
-  });
 
-  // Мобил селект учун
-  const categorySelect = document.getElementById('category-select-mobile');
-  if (categorySelect) {
-    categorySelect.addEventListener('change', (e) => {
-      const category = (e.target as HTMLSelectElement).value;
-      updateContent(category);
-    });
-  }
+    // Mobile select
+    const categorySelect = document.getElementById('category-select-mobile');
+    if (categorySelect) {
+      categorySelect.addEventListener('change', (e) => {
+        const category = (e.target as HTMLSelectElement).value;
+        updateContent(category);
+      });
+    }
+  });
+</script>
+
+<!-- Embed translations for client-side use -->
+<script id="comparison-translations" type="application/json">
+  {JSON.stringify(t)}
 </script>

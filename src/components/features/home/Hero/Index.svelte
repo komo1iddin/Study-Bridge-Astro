@@ -10,16 +10,16 @@
   }
 </script>
 
-<div class="hero-container min-h-screen w-full overflow-hidden relative pt-[66px]">
+<div class="hero-container min-h-screen w-full overflow-hidden relative pt-[22px]">
   <!-- Static background elements -->
   <div class="hero-bg absolute inset-0 -z-20 overflow-hidden">
     <!-- Main gradient background -->
     <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-100/50"></div>
     
     <!-- Blurred gradient background elements -->
-    <div class="absolute -top-[10%] -right-[15%] w-[60%] h-[60%] bg-primary-300/10 rounded-full blur-3xl" style="animation: pulseSlow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite reverse;"></div>
-    <div class="absolute bottom-[0%] -left-[10%] w-[50%] h-[50%] bg-secondary/10 rounded-full blur-3xl" style="animation: pulseSlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></div>
-    <div class="absolute top-[30%] right-[10%] w-[35%] h-[35%] bg-primary-200/15 rounded-full blur-3xl" style="animation: floatSlow 10s ease-in-out infinite;"></div>
+    <div class="absolute -top-[10%] -right-[15%] w-[60%] h-[60%] bg-primary-300/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-[0%] -left-[10%] w-[50%] h-[50%] bg-secondary/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-[30%] right-[10%] w-[35%] h-[35%] bg-primary-200/15 rounded-full blur-3xl"></div>
     <div class="absolute bottom-[15%] right-[5%] w-[30%] h-[30%] bg-blue-300/10 rounded-full blur-3xl"></div>
     
     <!-- Subtle grid pattern -->
@@ -27,10 +27,10 @@
   </div>
   
   <!-- Floating decorative elements -->
-  <div class="absolute top-[15%] right-[8%] w-8 h-8 bg-primary-500/20 rounded-full" style="animation: float 6s ease-in-out infinite;"></div>
-  <div class="absolute bottom-[25%] left-[7%] w-5 h-5 bg-secondary/40 rounded-full" style="animation: float 6s ease-in-out 1s infinite;"></div>
-  <div class="absolute top-[40%] left-[18%] w-6 h-6 bg-primary-400/15 rounded-full" style="animation: float 6s ease-in-out 2s infinite;"></div>
-  <div class="absolute bottom-[35%] right-[10%] w-10 h-10 bg-blue-400/15 rounded-full" style="animation: float 6s ease-in-out 0.5s infinite;"></div>
+  <div class="absolute top-[15%] right-[8%] w-8 h-8 bg-primary-500/20 rounded-full"></div>
+  <div class="absolute bottom-[25%] left-[7%] w-5 h-5 bg-secondary/40 rounded-full"></div>
+  <div class="absolute top-[40%] left-[18%] w-6 h-6 bg-primary-400/15 rounded-full"></div>
+  <div class="absolute bottom-[35%] right-[10%] w-10 h-10 bg-blue-400/15 rounded-full"></div>
   
   <!-- Hero Section -->
   <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

@@ -1,6 +1,6 @@
 ---
-import { useTranslations } from '@/i18n/utils';
 import type { Lang } from '@/i18n/langUtils';
+import { getSectionTranslations } from '@/i18n/features/ui/section';
 
 interface Props {
   lang?: Lang;
@@ -24,7 +24,8 @@ const {
   maxWidth = "800px"
 } = Astro.props;
 
-const t = useTranslations(lang);
+// Get potential default section translations if needed
+const sectionT = getSectionTranslations(lang);
 ---
 
 <div 

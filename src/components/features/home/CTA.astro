@@ -1,7 +1,7 @@
 ---
 import { ArrowRight, Phone, Mail, MessageSquare } from 'lucide-astro'
 import { getLangFromUrl } from '@/i18n/langUtils';
-import { getTranslations } from '@/i18n/features';
+import { getCTATranslations } from '@/i18n/features/home/cta';
 import type { Lang } from '@/i18n/langUtils';
 
 interface Props {
@@ -10,26 +10,26 @@ interface Props {
 
 const { lang = 'uz' } = Astro.props;
 const currentLang = getLangFromUrl(Astro.url);
-const t = getTranslations.contact(currentLang || lang);
+const t = getCTATranslations(currentLang || lang);
 ---
 
 <div class="cta-section">
     <a href="#contact" class="flex items-center space-x-2">
-        <span>{t.cta.contactUs}</span>
+        <span>{t.contactUs}</span>
         <ArrowRight class="w-5 h-5" />
     </a>
     <div class="contact-methods flex space-x-4">
         <a href="tel:+1234567890" class="flex items-center">
             <Phone class="w-5 h-5 mr-2" />
-            <span>{t.cta.callUs}</span>
+            <span>{t.callUs}</span>
         </a>
         <a href="mailto:info@example.com" class="flex items-center">
             <Mail class="w-5 h-5 mr-2" />
-            <span>{t.cta.emailUs}</span>
+            <span>{t.emailUs}</span>
         </a>
         <a href="https://wa.me/1234567890" class="flex items-center">
             <MessageSquare class="w-5 h-5 mr-2" />
-            <span>{t.cta.whatsApp}</span>
+            <span>{t.whatsApp}</span>
         </a>
     </div>
 </div>

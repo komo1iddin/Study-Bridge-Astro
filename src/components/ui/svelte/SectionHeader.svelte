@@ -23,5 +23,5 @@
     </p>
   {/if}
   
-  <div class={sectionHeaderTheme.divider} />
+  <div class={sectionHeaderTheme.divider}></div>
 </div> 

@@ -1,0 +1,42 @@
+---
+import SectionHeader from '@/components/ui/SectionHeader.astro';
+---
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section Component Example</title>
+</head>
+<body>
+  <!-- Testing with Uzbek language (default) -->
+  <div>
+    <h2>Uzbek (Default)</h2>
+    <SectionHeader 
+      lang="uz" 
+      title="Bizning xizmatlar" 
+      subtitle="Xitoyda o'qish bo'yicha barcha xizmatlar" 
+    />
+  </div>
+
+  <!-- Testing with English language -->
+  <div class="mt-20">
+    <h2>English</h2>
+    <SectionHeader 
+      lang="en" 
+      title="Our Services" 
+      subtitle="All services for studying in China" 
+    />
+  </div>
+
+  <!-- Testing with Russian language -->
+  <div class="mt-20">
+    <h2>Russian</h2>
+    <SectionHeader 
+      lang="ru" 
+      title="Наши услуги" 
+      subtitle="Все услуги для обучения в Китае" 
+    />
+  </div>
+</body>
+</html> 

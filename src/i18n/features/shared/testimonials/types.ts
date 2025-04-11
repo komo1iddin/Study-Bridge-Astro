@@ -7,6 +7,10 @@ export interface TestimonialsTranslations {
       button: string;
     };
   };
+  main: {
+    title: string;
+    subtitle: string;
+  };
   stats: {
     satisfiedClients: {
       value: string;

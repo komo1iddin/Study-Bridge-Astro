@@ -5,7 +5,7 @@ import UniversityDetailPage from '@/components/features/university/UniversityDet
 import ContactModal from '@/components/features/contact/ContactModal.astro';
 
 // Server-side render this page
-export const prerender = false;
+export const prerender = true;
 
 interface University {
   id: string;
@@ -182,7 +182,7 @@ try {
   const universitiesEntries = await getUniversityEntries();
   
   // Find the university with the matching ID
-  const entry = universitiesEntries.find(entry => {
+  const entry = universitiesEntries.find((entry: { id: string | number; data?: any }) => {
     const entryId = typeof entry.id === 'string' ? entry.id.replace(/\.(md|yaml)$/, '') : entry.id;
     return entryId === id;
   });

@@ -1,5 +1,7 @@
 ---
 import { ChevronRight } from 'lucide-astro';
+import type { Lang } from '@/i18n/langUtils';
+import { getBreadcrumbsTranslations } from '@/i18n/features/ui/breadcrumbs';
 
 interface BreadcrumbItem {
   label: string;
@@ -9,12 +11,14 @@ interface BreadcrumbItem {
 
 interface Props {
   items: BreadcrumbItem[];
+  lang?: Lang;
 }
 
-const { items } = Astro.props;
+const { items, lang = 'uz' } = Astro.props;
+const t = getBreadcrumbsTranslations(lang);
 ---
 
-<nav class="flex mb-8" aria-label="Breadcrumb">
+<nav class="flex mb-8" aria-label={t.ariaLabel || "Breadcrumb Navigation"}>
   <ol class="inline-flex items-center space-x-1 md:space-x-3">
     {items.map((item, index) => (
       <li class={index === 0 ? "inline-flex items-center" : ""}>

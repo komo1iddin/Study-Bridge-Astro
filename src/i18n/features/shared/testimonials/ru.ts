@@ -6,8 +6,12 @@ export const testimonialsRu: TestimonialsTranslations = {
     subtitle: 'Узнайте, что говорят о нас студенты, которые уже учатся в Китае',
     cta: {
       title: 'Готовы начать свой путь?',
-      button: 'Связаться с нами',
+      button: 'Свяжитесь с нами',
     },
+  },
+  main: {
+    title: 'Что говорят наши студенты',
+    subtitle: 'Реальный опыт наших студентов, обучающихся в Китае',
   },
   stats: {
     satisfiedClients: {
@@ -16,11 +20,11 @@ export const testimonialsRu: TestimonialsTranslations = {
     },
     successfulEnrollments: {
       value: '500+',
-      label: 'Успешных поступлений',
+      label: 'Успешных зачислений',
     },
     partnerUniversities: {
       value: '50+',
-      label: 'Университетов-партнеров',
+      label: 'Партнерских университетов',
     },
   },
 }; 

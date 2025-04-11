@@ -4,24 +4,40 @@ import { heroTranslations, getHeroTranslations } from './home/hero';
 import { whyTranslations, getWhyTranslations } from './home/whyChina';
 import { missionStatsTranslations, getMissionStatsTranslations } from './home/missionStats';
 import { ourTeamTranslations, getOurTeamTranslations } from './home/ourTeam';
+import { howWeWorkTranslations, getHowWeWorkTranslations } from './home/howWeWork';
+import { ctaTranslations, getCTATranslations } from './home/cta';
+import { comparisonTranslations, getComparisonTranslations } from './home/comparison';
 import { universityDetailTranslations, getUniversityDetailTranslations } from './university/universityDetail';
 import { universityPageTranslations, getUniversityPageTranslations } from './university/universityPage';
 import { getContactTranslations } from './contact';
 import { getUITranslations } from './shared/ui';
 import { testimonialsTranslations, getTestimonialsTranslations } from './shared/testimonials';
 import { getProgramsTranslations } from './programs';
+import { ctaTranslations as uiCtaTranslations, getCTATranslations as getUICTATranslations } from './ui/cta';
+import { sectionTranslations, getSectionTranslations } from './ui/section';
+import { breadcrumbsTranslations, getBreadcrumbsTranslations } from './ui/breadcrumbs';
+import { languageSelectorTranslations, getLanguageSelectorTranslations } from './ui/language';
+import { navigationTranslations, getNavigationTranslations } from './navigation';
 import type { PartnersTranslations } from './home/partners';
 import type { SuccessPathTranslations, Step, StepBenefit } from './home/successPath';
 import type { HeroTranslations } from './home/hero';
 import type { WhyTranslations } from './home/whyChina';
 import type { MissionStatsTranslations } from './home/missionStats';
 import type { OurTeamTranslations } from './home/ourTeam';
+import type { HowWeWorkTranslations } from './home/howWeWork';
+import type { CTATranslations } from './home/cta';
+import type { ComparisonTranslations } from './home/comparison';
 import type { UniversityDetailTranslations } from './university/universityDetail';
 import type { UniversityPageTranslations } from './university/universityPage';
 import type { ContactTranslations } from './contact';
 import type { UITranslations } from './shared/ui';
 import type { TestimonialsTranslations } from './shared/testimonials';
 import type { ProgramsTranslations } from './programs';
+import type { CTATranslations as UICTATranslations } from './ui/cta';
+import type { SectionTranslations } from './ui/section';
+import type { BreadcrumbsTranslations } from './ui/breadcrumbs';
+import type { LanguageSelectorTranslations } from './ui/language';
+import type { NavigationTranslations } from './navigation';
 import type { Lang } from '@/i18n/langUtils';
 
 // Re-export types
@@ -34,12 +50,20 @@ export type {
   WhyTranslations,
   MissionStatsTranslations,
   OurTeamTranslations,
+  HowWeWorkTranslations,
+  CTATranslations,
+  ComparisonTranslations,
   UniversityDetailTranslations,
   UniversityPageTranslations,
   ContactTranslations,
   UITranslations,
   TestimonialsTranslations,
-  ProgramsTranslations
+  ProgramsTranslations,
+  UICTATranslations,
+  SectionTranslations,
+  BreadcrumbsTranslations,
+  LanguageSelectorTranslations,
+  NavigationTranslations
 };
 
 // Export translations by feature
@@ -50,9 +74,17 @@ export const featureTranslations = {
   whyChina: whyTranslations,
   missionStats: missionStatsTranslations,
   ourTeam: ourTeamTranslations,
+  howWeWork: howWeWorkTranslations,
+  homeCta: ctaTranslations,
+  comparison: comparisonTranslations,
   universityDetail: universityDetailTranslations,
   universityPage: universityPageTranslations,
-  testimonials: testimonialsTranslations
+  testimonials: testimonialsTranslations,
+  uiCta: uiCtaTranslations,
+  section: sectionTranslations,
+  breadcrumbs: breadcrumbsTranslations,
+  languageSelector: languageSelectorTranslations,
+  navigation: navigationTranslations
 };
 
 // Export helper functions to get translations by feature and language
@@ -63,12 +95,20 @@ export const getTranslations = {
   whyChina: getWhyTranslations,
   missionStats: getMissionStatsTranslations,
   ourTeam: getOurTeamTranslations,
+  howWeWork: getHowWeWorkTranslations,
+  homeCta: getCTATranslations,
+  comparison: getComparisonTranslations,
   universityDetail: getUniversityDetailTranslations,
   universityPage: getUniversityPageTranslations,
   contact: getContactTranslations,
   ui: getUITranslations,
   testimonials: getTestimonialsTranslations,
-  programs: getProgramsTranslations
+  programs: getProgramsTranslations,
+  uiCta: getUICTATranslations,
+  section: getSectionTranslations,
+  breadcrumbs: getBreadcrumbsTranslations,
+  languageSelector: getLanguageSelectorTranslations,
+  navigation: getNavigationTranslations
 };
 
 // This can be used to access all translations in a flat structure:

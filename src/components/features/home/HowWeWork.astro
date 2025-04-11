@@ -1,34 +1,42 @@
 ---
 import { UserRound, Files, Languages, Send } from 'lucide-astro';
-import { useTranslations } from '@/i18n/utils';
 import type { Lang } from '@/i18n/langUtils';
 import CTA from '@/components/ui/CTA.astro';
 import { getCollection } from 'astro:content';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getHowWeWorkTranslations } from '@/i18n/features/home/howWeWork';
 
 interface Props {
   lang?: Lang;
 }
 
 const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
+const currentLang = getLangFromUrl(Astro.url);
+const t = getHowWeWorkTranslations(currentLang || lang);
 
 // Get features from content collection
 const features = await getCollection('features');
-// Sort by order if specified
-const sortedFeatures = features.sort((a, b) => 
-  (a.data.order || 0) - (b.data.order || 0)
-);
 
-// Массив импортированных иконок
+// Sort based on title if order property is not available
+const sortedFeatures = features
+  .filter(feature => feature.data.title && feature.data.description)
+  .sort((a, b) => {
+    // Use any property that can serve as a sorting key
+    const aTitle = a.data.title[lang] || '';
+    const bTitle = b.data.title[lang] || '';
+    return aTitle.localeCompare(bTitle);
+  });
+
+// Use our step translations if we have no or insufficient features from the content collection
 const Icons = [UserRound, Files, Languages, Send];
 ---
 
 <section class="section-container">
     <!-- Section Title -->
     <SectionHeader
-        title={t('howWeWork.title')}
-        subtitle={t('howWeWork.subtitle')}
+        title={t.title}
+        subtitle={t.subtitle}
     />
     
     <div class="flex flex-col md:flex-row flex-wrap gap-8 relative max-w-sm md:max-w-none mx-auto">
@@ -38,34 +46,90 @@ const Icons = [UserRound, Files, Languages, Send];
         <!-- Progress Line - Mobile -->
         <div class="md:hidden absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-0.5 bg-gray-200 z-0" />
         
-        {sortedFeatures.map((feature, index) => {
-            // Используем иконку из массива импортированных иконок
-            const Icon = Icons[index % Icons.length];
-            
-            return (
+        {sortedFeatures.length > 0 ? (
+            sortedFeatures.map((feature, index) => {
+                const Icon = Icons[index % Icons.length];
+                
+                return (
+                    <div class="group relative bg-white p-4 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 z-10 flex-1 min-w-[calc(25%-24px)]">
+                        <div class="absolute -top-4 -left-4">
+                            <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
+                                {index + 1}
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col items-center text-center pt-4">
+                            <div class="p-3 bg-blue-100 rounded-full mb-3 group-hover:bg-blue-500 transition-colors duration-300">
+                                <Icon 
+                                    class="w-5 h-5 text-blue-500 group-hover:text-white transition-colors duration-300"
+                                />
+                            </div>
+                            <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">
+                                {feature.data.title[lang]}
+                            </h3>
+                            <p class="text-sm md:text-base text-gray-600 leading-snug">
+                                {feature.data.description[lang]}
+                            </p>
+                        </div>
+                    </div>
+                )
+            })
+        ) : (
+            <>
+                {/* Fallback to our static translations if content collection is empty */}
                 <div class="group relative bg-white p-4 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 z-10 flex-1 min-w-[calc(25%-24px)]">
                     <div class="absolute -top-4 -left-4">
-                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
-                            {index + 1}
-                        </div>
+                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">1</div>
                     </div>
-                    
                     <div class="flex flex-col items-center text-center pt-4">
                         <div class="p-3 bg-blue-100 rounded-full mb-3 group-hover:bg-blue-500 transition-colors duration-300">
-                            <Icon 
-                                class="w-5 h-5 text-blue-500 group-hover:text-white transition-colors duration-300"
-                            />
+                            <UserRound class="w-5 h-5 text-blue-500 group-hover:text-white transition-colors duration-300" />
                         </div>
-                        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">
-                            {feature.data.title[lang]}
-                        </h3>
-                        <p class="text-sm md:text-base text-gray-600 leading-snug">
-                            {feature.data.description[lang]}
-                        </p>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">{t.steps.step1.title}</h3>
+                        <p class="text-sm md:text-base text-gray-600 leading-snug">{t.steps.step1.description}</p>
                     </div>
                 </div>
-            )
-        })}
+                
+                <div class="group relative bg-white p-4 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 z-10 flex-1 min-w-[calc(25%-24px)]">
+                    <div class="absolute -top-4 -left-4">
+                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">2</div>
+                    </div>
+                    <div class="flex flex-col items-center text-center pt-4">
+                        <div class="p-3 bg-blue-100 rounded-full mb-3 group-hover:bg-blue-500 transition-colors duration-300">
+                            <Files class="w-5 h-5 text-blue-500 group-hover:text-white transition-colors duration-300" />
+                        </div>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">{t.steps.step2.title}</h3>
+                        <p class="text-sm md:text-base text-gray-600 leading-snug">{t.steps.step2.description}</p>
+                    </div>
+                </div>
+                
+                <div class="group relative bg-white p-4 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 z-10 flex-1 min-w-[calc(25%-24px)]">
+                    <div class="absolute -top-4 -left-4">
+                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">3</div>
+                    </div>
+                    <div class="flex flex-col items-center text-center pt-4">
+                        <div class="p-3 bg-blue-100 rounded-full mb-3 group-hover:bg-blue-500 transition-colors duration-300">
+                            <Languages class="w-5 h-5 text-blue-500 group-hover:text-white transition-colors duration-300" />
+                        </div>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">{t.steps.step3.title}</h3>
+                        <p class="text-sm md:text-base text-gray-600 leading-snug">{t.steps.step3.description}</p>
+                    </div>
+                </div>
+                
+                <div class="group relative bg-white p-4 md:p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 z-10 flex-1 min-w-[calc(25%-24px)]">
+                    <div class="absolute -top-4 -left-4">
+                        <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-semibold">4</div>
+                    </div>
+                    <div class="flex flex-col items-center text-center pt-4">
+                        <div class="p-3 bg-blue-100 rounded-full mb-3 group-hover:bg-blue-500 transition-colors duration-300">
+                            <Send class="w-5 h-5 text-blue-500 group-hover:text-white transition-colors duration-300" />
+                        </div>
+                        <h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">{t.steps.step4.title}</h3>
+                        <p class="text-sm md:text-base text-gray-600 leading-snug">{t.steps.step4.description}</p>
+                    </div>
+                </div>
+            </>
+        )}
     </div>
     <CTA />
 </section>

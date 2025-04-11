@@ -1,13 +1,14 @@
 ---
 import { ChevronDown, MoreHorizontal } from 'lucide-astro';
-import { getNavigation } from '@/data/constants/navigation';
+import { getModularNavigation } from '@/data/helpers/navigation';
+import type { Lang } from '@/i18n/langUtils';
 
-// Получаем текущий язык из URL
+// Get the current language from the URL
 const currentPath = Astro.url.pathname;
-const currentLang = currentPath.split('/')[1] || 'uz';
+const currentLang = (currentPath.split('/')[1] || 'uz') as Lang;
 
-// Получаем навигацию для текущего языка
-const navigation = getNavigation(currentLang);
+// Get navigation for the current language using the modular translation system
+const navigation = getModularNavigation(currentLang);
 ---
 
 <nav class="flex items-center">
