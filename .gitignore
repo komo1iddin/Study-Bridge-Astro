@@ -37,10 +37,14 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
+# Front Matter CMS
+.frontmatter/
+.frontformatter/
+
+# Cursor editor
+.cursor/
+
 # Temporary files
 .tmp/
 .temp/
 .cache/
-
-# Front Matter CMS
-.frontmatter/database/
