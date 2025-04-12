@@ -32,8 +32,8 @@
   export let lang = 'uz';
   
   // Performance optimization: initially disable animations
-  let animationsEnabled = false;
-  let showTestimonials = false;
+  let animationsEnabled = true;
+  let showTestimonials = true;
 
   function handleOpenForm() {
     // Since we're not using ApplicationForm, we'll just show an alert instead
@@ -42,13 +42,8 @@
   
   // Phase in animations and non-critical content
   onMount(() => {
-    // Enable critical animations immediately
-    animationsEnabled = true;
-    
-    // Delay loading testimonials which are below the fold
-    setTimeout(() => {
-      showTestimonials = true;
-    }, 200);
+    // Handle any post-mount logic if needed
+    // But keep everything visible from the start
   });
 </script>
 

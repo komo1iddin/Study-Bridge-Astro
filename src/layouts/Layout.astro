@@ -113,7 +113,9 @@ const criticalIcons = [
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 
+    <!-- 
     <ViewTransitions />
+    -->
   </head>
   <body class="min-h-screen flex flex-col">
     <div class="flex flex-col min-h-screen">
@@ -231,8 +233,9 @@ const criticalIcons = [
         }
       }
       
-      /* Optimize rendering with content-visibility */
-      .section, .section-divider-new {
+      /* Optimize rendering with content-visibility but exempt hero components */
+      .section:not(.hero-container, [class*="hero"]), 
+      .section-divider-new:not(.hero-container, [class*="hero"]) {
         content-visibility: auto;
         contain-intrinsic-size: 1px 5000px;
       }
