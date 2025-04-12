@@ -28,18 +28,21 @@ pnpm-debug.log*
 .netlify/
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+.vscode/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
+# Front Matter CMS
+.frontmatter/
+.frontformatter/
+
+# Cursor editor
+.cursor/
+
 # Temporary files
 .tmp/
 .temp/
 .cache/
-
-# Front Matter CMS
-.frontmatter/database/
