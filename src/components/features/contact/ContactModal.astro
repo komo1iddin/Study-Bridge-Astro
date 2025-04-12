@@ -1,44 +1,46 @@
 ---
 // src/components/contact/ContactModal.astro
-import { useTranslations } from '@/i18n/utils';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getTranslation } from '@/i18n/translationUtils';
 
 const { lang = 'uz' } = Astro.props;
-const t = useTranslations(lang);
-const successMessage = t('contact.form.success') || 'Your message has been sent successfully!';
+const currentLang = getLangFromUrl(Astro.url);
+const t = (key: string) => getTranslation(currentLang || lang, key);
+const successMessage = t('contact:form.success') || 'Your message has been sent successfully!';
 ---
 
 <div id="contactModal" class="modal" data-modal>
   <div class="modal-backdrop"></div>
   <div class="modal-content">
     <div class="modal-header">
-      <div class="modal-title">{t('contact.modal.title')}</div>
+      <div class="modal-title">{t('contact:modal.title')}</div>
       <button class="modal-close" onclick="window.uiStore.toggleContactModal(false)">&times;</button>
     </div>
     <div class="modal-body">
-      <p class="modal-description">{t('contact.modal.description')}</p>
+      <p class="modal-description">{t('contact:modal.description')}</p>
       
-      <form id="contactForm" data-success-message={successMessage}>
-        <div class="form-group">
-          <label for="name">{t('contact.form.name')}</label>
-          <input type="text" class="form-control" id="name" placeholder={t('contact.form.name.placeholder')} required>
+      <form id="contact-form" data-success-message={successMessage}>
+        <div class="mb-3">
+          <label for="name">{t('contact:form.name')}</label>
+          <input type="text" class="form-control" id="name" placeholder={t('contact:form.name.placeholder')} required>
         </div>
         
-        <div class="form-group">
-          <label for="phone">{t('contact.form.phone')}</label>
-          <input type="tel" class="form-control" id="phone" placeholder={t('contact.form.phone.placeholder')} required>
+        <div class="mb-3">
+          <label for="phone">{t('contact:form.phone')}</label>
+          <input type="tel" class="form-control" id="phone" placeholder={t('contact:form.phone.placeholder')} required>
         </div>
         
-        <div class="form-group">
-          <label for="email">{t('contact.form.email')}</label>
-          <input type="email" class="form-control" id="email" placeholder={t('contact.form.email.placeholder')}>
+        <div class="mb-3">
+          <label for="email">{t('contact:form.email')}</label>
+          <input type="email" class="form-control" id="email" placeholder={t('contact:form.email.placeholder')}>
         </div>
         
-        <button type="submit" class="btn submit-btn">{t('contact.form.submit')}</button>
-        
-        <div class="form-text privacy-notice">
-          {t('contact.form.privacy.text')} <a href="#">{t('contact.form.privacy.link')}</a>
-        </div>
+        <button type="submit" class="btn submit-btn">{t('contact:form.submit')}</button>
       </form>
+      
+      <div class="privacy-policy">
+        {t('contact:form.privacy.text')} <a href="#">{t('contact:form.privacy.link')}</a>
+      </div>
     </div>
   </div>
 </div>
@@ -78,7 +80,7 @@ const successMessage = t('contact.form.success') || 'Your message has been sent 
   });
 
   // Handle form submission
-  const contactForm = document.getElementById('contactForm');
+  const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
