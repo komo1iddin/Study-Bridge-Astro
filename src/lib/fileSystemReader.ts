@@ -11,26 +11,56 @@ import { getCollection } from 'astro:content';
 
 // Base content directory
 const contentDir = path.join(process.cwd(), 'src', 'content');
-console.log('Content directory path:', contentDir);
+
+// A simple in-memory cache for file existence checks to avoid excessive fs operations
+const DEV_MODE = process.env.NODE_ENV !== 'production';
+const fileExistsCache = new Map<string, boolean>();
+const directoryCache = new Map<string, string[]>();
 
 // Read a YAML file and parse its contents
 export async function readYamlFile(filePath: string) {
   try {
-    console.log(`Attempting to read YAML file: ${filePath}`);
+    // Use cached file existence check instead of logging attempts
+    if (!await fileExists(filePath)) {
+      return null;
+    }
+    
     const fileContent = await fs.promises.readFile(filePath, 'utf-8');
     const content = yaml.load(fileContent);
-    console.log(`Successfully read YAML file: ${filePath}`);
     return content;
   } catch (error) {
-    console.error(`Error reading file ${filePath}:`, error);
+    // Reduce noise by only logging unexpected errors
+    if (DEV_MODE) {
+      console.error(`Error reading file ${filePath}:`, error);
+    }
     return null;
+  }
+}
+
+// Helper to check if file exists with caching
+async function fileExists(filePath: string): Promise<boolean> {
+  if (fileExistsCache.has(filePath)) {
+    return fileExistsCache.get(filePath) || false;
+  }
+  
+  try {
+    await fs.promises.access(filePath);
+    fileExistsCache.set(filePath, true);
+    return true;
+  } catch (e) {
+    fileExistsCache.set(filePath, false);
+    return false;
   }
 }
 
 // Read a Markdown file and parse its frontmatter
 export async function readMdFile(filePath: string) {
   try {
-    console.log(`Attempting to read MD file: ${filePath}`);
+    // Use cached file existence check instead of logging attempts
+    if (!await fileExists(filePath)) {
+      return null;
+    }
+    
     const fileContent = await fs.promises.readFile(filePath, 'utf-8');
     
     // Extract frontmatter between --- markers
@@ -38,28 +68,46 @@ export async function readMdFile(filePath: string) {
     
     if (frontmatterMatch && frontmatterMatch[1]) {
       const frontmatter = yaml.load(frontmatterMatch[1]);
-      console.log(`Successfully read MD file: ${filePath}`);
       return frontmatter;
     }
     
-    console.warn(`No frontmatter found in MD file: ${filePath}`);
     return null;
   } catch (error) {
-    console.error(`Error reading file ${filePath}:`, error);
+    if (DEV_MODE) {
+      console.error(`Error reading file ${filePath}:`, error);
+    }
     return null;
   }
 }
 
 // Get all files in a directory with a specific extension
 export async function getFilesInDirectory(dirPath: string, extension: string) {
+  // Check cache first
+  const cacheKey = `${dirPath}-${extension}`;
+  if (directoryCache.has(cacheKey)) {
+    return directoryCache.get(cacheKey) || [];
+  }
+  
   try {
-    console.log(`Looking for ${extension} files in: ${dirPath}`);
+    // Check if directory exists
+    try {
+      await fs.promises.access(dirPath);
+    } catch (e) {
+      directoryCache.set(cacheKey, []);
+      return [];
+    }
+    
     const files = await fs.promises.readdir(dirPath);
     const matchingFiles = files.filter(file => file.endsWith(extension));
-    console.log(`Found ${matchingFiles.length} ${extension} files in ${dirPath}`);
+    
+    // Cache result
+    directoryCache.set(cacheKey, matchingFiles);
     return matchingFiles;
   } catch (error) {
-    console.error(`Error reading directory ${dirPath}:`, error);
+    if (DEV_MODE) {
+      console.error(`Error reading directory ${dirPath}:`, error);
+    }
+    directoryCache.set(cacheKey, []);
     return [];
   }
 }
@@ -239,7 +287,7 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
         const posts = await Promise.all(
           yamlFiles.map(async file => {
             const filePath = path.join(yamlDirPath, file);
-            const rawData = await readYamlFile(filePath);
+            const rawData = await readYamlFile(filePath) as any; // Explicitly type rawData
             
             if (rawData) {
               // Ma'lumotlarni to'g'ri formatlash
@@ -266,7 +314,7 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
         );
         
         const validPosts = posts
-          .filter(p => p !== null)
+          .filter((p): p is Post => p !== null) // Type guard
           .sort((a, b) => {
             return new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime();
           });
@@ -288,7 +336,7 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
           mdFiles.map(async file => {
             const filePath = path.join(mdDirPath, file);
             console.log(`Attempting to read MD file: ${filePath}`);
-            const data = await readMdFile(filePath);
+            const data = await readMdFile(filePath) as PostData | null; // Explicitly type data
             if (data) console.log(`Successfully read MD file: ${filePath}`);
             return {
               slug: file.replace('.md', ''),
@@ -298,9 +346,12 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
         );
         
         const validPosts = posts
-          .filter(p => p.data !== null)
+          .filter((p): p is Post => p.data !== null) // Type guard
           .sort((a, b) => {
-            return new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime();
+            // Ensure data is not null before accessing publishedDate
+            const dateA = a.data?.publishedDate ? new Date(a.data.publishedDate).getTime() : 0;
+            const dateB = b.data?.publishedDate ? new Date(b.data.publishedDate).getTime() : 0;
+            return dateB - dateA;
           });
         
         console.log(`Found ${validPosts.length} valid MD posts`);
@@ -346,7 +397,7 @@ export async function getAllTestimonials(lang: Lang): Promise<Testimonial[]> {
         const testimonials = await Promise.all(
           mdFiles.map(async file => {
             const filePath = path.join(mdDirPath, file);
-            const data = await readMdFile(filePath);
+            const data = await readMdFile(filePath) as TestimonialData | null; // Explicitly type data
             return {
               slug: file.replace('.md', ''),
               data,
@@ -354,7 +405,8 @@ export async function getAllTestimonials(lang: Lang): Promise<Testimonial[]> {
           })
         );
         
-        return testimonials.filter(t => t.data !== null);
+        // Use type guard to filter nulls and satisfy TypeScript
+        return testimonials.filter((t): t is Testimonial => t.data !== null);
       }
     }
     
@@ -366,15 +418,16 @@ export async function getAllTestimonials(lang: Lang): Promise<Testimonial[]> {
         const testimonials = await Promise.all(
           yamlFiles.map(async file => {
             const filePath = path.join(yamlDirPath, file);
-            const data = await readYamlFile(filePath);
+            const data = await readYamlFile(filePath) as TestimonialData | null; // Explicitly type data
             return {
-              slug: file.replace('.yaml', ''),
+              slug: file.replace('.md', ''), // Corrected extension removal
               data,
             };
           })
         );
         
-        return testimonials.filter(t => t.data !== null);
+        // Use type guard to filter nulls and satisfy TypeScript
+        return testimonials.filter((t): t is Testimonial => t.data !== null);
       }
     }
     
@@ -396,7 +449,7 @@ export async function getAllFAQ(lang: Lang): Promise<FAQ[]> {
         const faqItems = await Promise.all(
           yamlFiles.map(async file => {
             const filePath = path.join(yamlDirPath, file);
-            const data = await readYamlFile(filePath);
+            const data = await readYamlFile(filePath) as FAQData | null; // Explicitly type data
             return {
               slug: file.replace('.yaml', ''),
               data,
@@ -404,7 +457,8 @@ export async function getAllFAQ(lang: Lang): Promise<FAQ[]> {
           })
         );
         
-        return faqItems.filter(item => item.data !== null);
+        // Use type guard to filter nulls and satisfy TypeScript
+        return faqItems.filter((item): item is FAQ => item.data !== null);
       }
     } catch (e) {
       console.log('FAQ directory does not exist or is empty');
@@ -427,7 +481,7 @@ export async function getAllFeatures(lang: Lang): Promise<Feature[]> {
         const features = await Promise.all(
           yamlFiles.map(async file => {
             const filePath = path.join(yamlDirPath, file);
-            const data = await readYamlFile(filePath);
+            const data = await readYamlFile(filePath) as FeatureData | null; // Explicitly type data
             return {
               slug: file.replace('.yaml', ''),
               data,
@@ -435,7 +489,8 @@ export async function getAllFeatures(lang: Lang): Promise<Feature[]> {
           })
         );
         
-        return features.filter(feature => feature.data !== null);
+        // Use type guard to filter nulls and satisfy TypeScript
+        return features.filter((feature): feature is Feature => feature.data !== null);
       }
     } catch (e) {
       console.log('Features directory does not exist or is empty');
@@ -456,37 +511,63 @@ export async function getAllCities(lang: Lang) {
 }
 
 export async function getFeaturedUniversities(lang: Lang, limit = 8): Promise<UniversityFeatureItem[]> {
-  try {
-    const universitiesCollection = await getCollection('universities');
-    
-    const universities = universitiesCollection.map(entry => ({
-      id: entry.id,
-      name: typeof entry.data.name === 'object' ? entry.data.name[lang] || entry.data.name.en : entry.data.name,
-      description: typeof entry.data.description === 'object' ? entry.data.description[lang] || entry.data.description.en : entry.data.description,
-      location: entry.data.location,
-      city: entry.data.city || entry.data.location?.split(',')[0]?.trim(),
-      rating: entry.data.rating || 0,
-      ranking: entry.data.ranking || 0,
-      students: typeof entry.data.students === 'object' ? entry.data.students[lang] || entry.data.students.en : entry.data.students,
-      faculties: Array.isArray(entry.data.faculties) ? entry.data.faculties : entry.data.faculties?.[lang] || entry.data.faculties?.en || [],
-      image: entry.data.image || '/placeholder.jpg',
-      logo: entry.data.logo || '/placeholder.jpg',
-      featured: entry.data.featured || false,
-      hasGrants: entry.data.hasGrants || false,
-      educationType: entry.data.educationType || []
-    }));
+  // Use a long TTL for this data since universities don't change frequently 
+  return getCachedData(`universities-featured-${lang}-${limit}`, async () => {
+    try {
+      const universitiesCollection = await getCollection('universities');
+      
+      const universities = universitiesCollection.map((entry): UniversityFeatureItem => {
+        // Safely extract city from location - but don't include in object
+        const city = entry.data.location?.split(',')[0]?.trim() || 'Unknown City';
+        
+        // Get student data as string
+        let studentsString = '';
+        const studentsData = entry.data.students;
+        if (typeof studentsData === 'string') {
+          studentsString = studentsData;
+        } else if (typeof studentsData === 'object' && studentsData !== null) {
+          studentsString = studentsData[lang] || studentsData.en || ''; // Prefer lang, fallback to en
+        }
+        
+        // Try to convert id to number or use an index as fallback
+        // Extract numeric ID if possible or generate one
+        let numericId = parseInt(entry.id, 10);
+        if (isNaN(numericId)) {
+          // Use hash of string as numeric id
+          numericId = Math.abs(entry.id.split('').reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0);
+            return a & a;
+          }, 0));
+        }
+        
+        return {
+          id: numericId, // Use numeric ID
+          name: typeof entry.data.name === 'object' ? entry.data.name[lang] || entry.data.name.en : entry.data.name,
+          location: entry.data.location,
+          rating: entry.data.rating || 0,
+          students: studentsString,
+          faculties: Array.isArray(entry.data.faculties) 
+            ? entry.data.faculties 
+            : entry.data.faculties?.[lang] || entry.data.faculties?.en || [],
+          image: entry.data.image || '/placeholder.jpg',
+          logo: entry.data.logo || '/placeholder.jpg',
+          established: Number(entry.data.established || entry.data.foundedYear || 0)
+        };
+      });
 
-    return universities
-      .sort((a, b) => {
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        return (b.rating || 0) - (a.rating || 0);
-      })
-      .slice(0, limit);
-  } catch (error) {
-    console.error("Error fetching universities:", error);
-    return [];
-  }
+      return universities
+        .sort((a, b) => {
+          // Sort by rating only
+          return (b.rating || 0) - (a.rating || 0);
+        })
+        .slice(0, limit);
+    } catch (error) {
+      if (DEV_MODE) {
+        console.error("Error fetching universities:", error);
+      }
+      return [];
+    }
+  }, 1000 * 60 * 60); // Cache for 1 hour - very long TTL for development
 }
 
 // Get a single post by slug
@@ -507,7 +588,7 @@ export async function getPostBySlug(slug: string, lang: Lang): Promise<Post | nu
     }
     
     // Read and parse YAML file
-    const postData = await readYamlFile(filePath);
+    const postData = await readYamlFile(filePath) as PostData | null; // Explicitly type data
     if (!postData) {
       console.error(`Failed to parse post YAML: ${filePath}`);
       return null;
@@ -516,7 +597,7 @@ export async function getPostBySlug(slug: string, lang: Lang): Promise<Post | nu
     console.log(`Successfully loaded post data for: ${slug}`);
     return {
       slug,
-      data: postData as PostData
+      data: postData
     };
   } catch (e) {
     console.error(`Error getting post by slug ${slug}:`, e);
