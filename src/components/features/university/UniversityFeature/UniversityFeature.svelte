@@ -25,6 +25,7 @@
   let selectedIndex = 0;
   let swipeAnimationActive = true;
   let carouselContainer: HTMLElement;
+  let cleanupFunction: () => void;
   
   // DOM refs
   let emblaRef;
@@ -36,27 +37,36 @@
     // Check if mobile
     const checkIfMobile = () => {
       isMobile = window.innerWidth <= 768;
-      
-      // Reset and reinitialize carousel on screen size change
       if (emblaApi) {
-        emblaApi.destroy();
+        cleanupCarousel();
         initializeCarousel();
       }
     };
     
+    // Debounce resize for better performance
+    let resizeTimer;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(checkIfMobile, 150);
+    };
+    
     checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
+    window.addEventListener('resize', handleResize, { passive: true });
     
     // Load universities immediately without delay
     try {
-      visibleUniversities = universities || [];
+      visibleUniversities = universities.map(university => ({
+        ...university,
+        // Preprocess faculty data to avoid runtime processing
+        faculties: university.faculties.slice(0, isMobile ? 3 : 5)
+      }));
       loading = false;
     } catch (err) {
       error = t.error || 'Маълумотларни юклашда хатолик юз берди';
       loading = false;
     }
     
-    // Start swipe animation - disable on mobile to save resources
+    // Start swipe animation on desktop only
     let animInterval;
     if (!isMobile) {
       animInterval = setInterval(() => {
@@ -64,52 +74,66 @@
       }, 2000);
     }
     
-    // Apply performance optimizations for touch devices
-    if (carouselContainer) {
-      carouselContainer.style.willChange = 'transform';
-      carouselContainer.style.transform = 'translateZ(0)';
-      carouselContainer.style.backfaceVisibility = 'hidden';
-      
-      // Improve touch handling
-      carouselContainer.style.touchAction = 'pan-y';
-    }
-    
     // Initialize carousel
     initializeCarousel();
     
+    // Apply hardware acceleration to container elements
+    if (document.documentElement.classList) {
+      document.documentElement.classList.add('has-carousel');
+    }
+    
     // Cleanup function
     return () => {
-      window.removeEventListener('resize', checkIfMobile);
-      if (animInterval) clearInterval(animInterval);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimer);
       
-      if (emblaApi) emblaApi.destroy();
-      if (autoplay && autoplay.stop) autoplay.stop();
+      if (animInterval) clearInterval(animInterval);
+      cleanupCarousel();
+      
+      if (document.documentElement.classList) {
+        document.documentElement.classList.remove('has-carousel');
+      }
     };
   });
   
   // Function to initialize carousel with proper settings
   function initializeCarousel() {
-    // Initialize carousel immediately
-    ({ emblaApi, autoplay } = createEmblaCarousel(emblaRef, {
+    const result = createEmblaCarousel(emblaRef, {
       loop: true,
       align: "start",
       slidesToScroll: 1,
-      skipSnaps: false,
-      inViewThreshold: isMobile ? 0.1 : 0.7,
+      inViewThreshold: isMobile ? 0 : 0.5,
       startIndex: 0,
       dragFree: isMobile,
-      containScroll: "trimSnaps",
-      watchDrag: true,
-      speed: isMobile ? 15 : 20, // Slower on mobile for smoother performance
+      speed: isMobile ? 10 : 15, 
       delay: 4000, // Autoplay delay
-    }));
+    });
+    
+    emblaApi = result.emblaApi;
+    autoplay = result.autoplay;
+    cleanupFunction = result.cleanup;
     
     if (emblaApi) {
       emblaApi.on("select", () => {
         selectedIndex = emblaApi.selectedScrollSnap();
       });
       emblaApi.scrollTo(0);
+      
+      // Prefetch next slides to avoid jank when scrolling
+      setTimeout(() => {
+        emblaApi.scrollNext();
+        setTimeout(() => emblaApi.scrollPrev(), 50);
+      }, 100);
     }
+  }
+  
+  // Cleanup the carousel
+  function cleanupCarousel() {
+    if (cleanupFunction) cleanupFunction();
+    if (emblaApi) emblaApi.destroy();
+    if (autoplay && autoplay.stop) autoplay.stop();
+    emblaApi = null;
+    autoplay = null;
   }
   
   // Carousel navigation functions
@@ -120,9 +144,13 @@
   function scrollPrev() {
     if (emblaApi) emblaApi.scrollPrev();
   }
+  
+  onDestroy(() => {
+    cleanupCarousel();
+  });
 </script>
 
-<div class="w-full bg-[#F5F9FB] py-12 relative" bind:this={carouselContainer}>
+<div class="university-carousel-wrapper w-full bg-[#F5F9FB] py-12 relative" bind:this={carouselContainer}>
   <BackgroundDecoration />
   <div class="w-full max-w-[1920px] mx-auto px-4 relative z-10">
     <div data-animate="slideDown" data-duration="0.6">
@@ -229,11 +257,27 @@
     transform: translate3d(0, 0, 0);
     will-change: transform;
     backface-visibility: hidden;
+    contain: content;
   }
   
   :global(.carousel-slide) {
     contain: content;
     will-change: transform;
     transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  :global(.has-carousel) {
+    /* Prevent page jank by forcing GPU rendering on mobile */
+    @media (max-width: 768px) {
+      overflow-x: hidden;
+    }
+  }
+  
+  /* Force hardware acceleration for the carousel wrapper */
+  .university-carousel-wrapper {
+    transform: translateZ(0);
+    will-change: transform;
+    contain: content;
   }
 </style>

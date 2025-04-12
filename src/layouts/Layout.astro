@@ -78,8 +78,8 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
       hreflang="x-default"
     />
     
-    <!-- Preload Motion script for faster loading -->
-    <link rel="preload" href="/scripts/motion.js" as="script" />
+    <!-- Inline Motion.js for immediate availability -->
+    <script is:inline src="/scripts/motion.js" defer></script>
     
     <!-- Preconnect to important domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -111,6 +111,14 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
       
       /* Reduce content layout shift */
       img, svg { max-width: 100%; height: auto; }
+      
+      /* Critical optimizations for carousel performance */
+      .carousel-container, .carousel-slide {
+        -webkit-overflow-scrolling: touch;
+        will-change: transform;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+      }
       
       /* Reduce motion if user prefers */
       @media (prefers-reduced-motion: reduce) {
@@ -156,25 +164,20 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
       // Load critical scripts immediately
       import '../components/scripts/transitions';
       
-      // Load Motion immediately - essential for animations
+      // Initialize Motion immediately after DOM is ready
       document.addEventListener('DOMContentLoaded', () => {
-        // Use dynamic import for Motion
-        import('motion').catch(() => {
-          // Fallback to CDN if local import fails
-          const script = document.createElement('script');
-          script.type = 'module';
-          script.src = 'https://cdn.jsdelivr.net/npm/motion@11.0.0/+esm';
-          document.body.appendChild(script);
-        }).then(() => {
-          // Init animations once Motion is loaded
-          import('../components/scripts/motion-init');
-        });
+        import('../components/scripts/motion-init');
         
         // Load icon optimizer with slight delay
         setTimeout(() => {
           import('../components/scripts/icon-optimizer');
         }, 200);
       });
+      
+      // Optimize scroll performance for carousel on mobile
+      if (window.innerWidth <= 768) {
+        document.documentElement.classList.add('has-carousel-page');
+      }
       
       // Lazy load images with proper TypeScript typing
       if ('loading' in HTMLImageElement.prototype) {
@@ -213,5 +216,29 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
         document.documentElement.classList.add('reduce-motion');
       }
     </script>
+    
+    <style is:global>
+      /* Global styles for carousel performance */
+      .has-carousel-page {
+        overflow-x: hidden;
+      }
+      
+      @media (max-width: 768px) {
+        /* Improve scroll performance on mobile */
+        body {
+          overflow-x: hidden;
+          -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Force hardware acceleration for all carousels */
+        .carousel-container {
+          transform: translate3d(0, 0, 0);
+          will-change: transform;
+          backface-visibility: hidden;
+          contain: content;
+          touch-action: pan-x;
+        }
+      }
+    </style>
   </body>
 </html>
