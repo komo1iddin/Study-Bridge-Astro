@@ -1,11 +1,14 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import svelte from '@astrojs/svelte';
-import vercel from '@astrojs/vercel';
+import vercel from '@astrojs/vercel/static';
 import compress from 'astro-compress';
 
 export default defineConfig({
   output: 'static',
+  adapter: vercel({
+    analytics: true,
+  }),
   integrations: [
     tailwind(),
     svelte(),
@@ -123,5 +126,4 @@ export default defineConfig({
       noExternal: []
     }
   },
-  adapter: vercel(),
 });
