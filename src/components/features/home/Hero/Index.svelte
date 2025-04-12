@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import OzbekTypingBadge from './OzbekTypingBadge.svelte';
   import TestimonialCards from './TestimonialCards.svelte';
   import HeroButtons from './HeroButtons.svelte';
@@ -29,11 +30,26 @@
   };
   
   export let lang = 'uz';
+  
+  // Performance optimization: initially disable animations
+  let animationsEnabled = false;
+  let showTestimonials = false;
 
   function handleOpenForm() {
     // Since we're not using ApplicationForm, we'll just show an alert instead
     alert("Ariza yuborish uchun: +998 XX XXX XX XX");
   }
+  
+  // Phase in animations and non-critical content
+  onMount(() => {
+    // Enable critical animations immediately
+    animationsEnabled = true;
+    
+    // Delay loading testimonials which are below the fold
+    setTimeout(() => {
+      showTestimonials = true;
+    }, 200);
+  });
 </script>
 
 <div class="hero-container min-h-screen w-full overflow-hidden relative pt-[22px]">
@@ -52,22 +68,25 @@
     <div class="absolute inset-0 bg-grid opacity-[0.06]"></div>
   </div>
   
-  <!-- Floating decorative elements -->
-  <div class="absolute top-[15%] right-[8%] w-8 h-8 bg-primary-500/20 rounded-full"></div>
-  <div class="absolute bottom-[25%] left-[7%] w-5 h-5 bg-secondary/40 rounded-full"></div>
-  <div class="absolute top-[40%] left-[18%] w-6 h-6 bg-primary-400/15 rounded-full"></div>
-  <div class="absolute bottom-[35%] right-[10%] w-10 h-10 bg-blue-400/15 rounded-full"></div>
+  <!-- Optimized: Only show decorative elements after core content is visible -->
+  {#if animationsEnabled}
+    <!-- Floating decorative elements -->
+    <div class="absolute top-[15%] right-[8%] w-8 h-8 bg-primary-500/20 rounded-full"></div>
+    <div class="absolute bottom-[25%] left-[7%] w-5 h-5 bg-secondary/40 rounded-full"></div>
+    <div class="absolute top-[40%] left-[18%] w-6 h-6 bg-primary-400/15 rounded-full"></div>
+    <div class="absolute bottom-[35%] right-[10%] w-10 h-10 bg-blue-400/15 rounded-full"></div>
+  {/if}
   
   <!-- Hero Section -->
   <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 py-12 lg:py-20">
       <!-- Left Content -->
       <div class="lg:col-span-7 z-10">
-        <div class="fade-in" style="--delay: 0.15s">
+        <div class={animationsEnabled ? "fade-in" : "visible-immediately"} style="--delay: 0.15s">
           <OzbekTypingBadge badgeText={translations.badge.enrollment} />
         </div>
         
-        <h1 class="fancy-heading text-4xl md:text-5xl lg:text-6xl mt-6 leading-tight fade-in" style="--delay: 0.3s">
+        <h1 class="fancy-heading text-4xl md:text-5xl lg:text-6xl mt-6 leading-tight visible-immediately">
           <span class="text-[#2463EB]">{translations.title.first}</span> <br />
           <span class="relative inline-block">
             {translations.title.connector}
@@ -79,27 +98,29 @@
           </span>
         </h1>
         
-        <p class="mt-6 text-gray-700 text-lg leading-relaxed max-w-lg fade-in" style="--delay: 0.45s">
+        <p class="mt-6 text-gray-700 text-lg leading-relaxed max-w-lg visible-immediately">
           {translations.description}
         </p>
         
-        <div class="fade-in mt-8" style="--delay: 0.6s">
+        <div class="visible-immediately mt-8">
           <HeroButtons onOpenForm={handleOpenForm} translations={translations.buttons} />
         </div>
         
-        <div class="fade-in mt-12" style="--delay: 0.75s">
+        <div class={animationsEnabled ? "fade-in mt-12" : "visible-immediately mt-12"} style="--delay: 0.75s">
           <StatsSection translations={translations.stats} />
         </div>
       </div>
       
-      <!-- Right Side - Scrolling Testimonials -->
+      <!-- Right Side - Scrolling Testimonials - conditionally loaded -->
       <div class="lg:col-span-5 relative min-h-[400px] lg:min-h-[600px] mt-8 lg:mt-16">
-        <TestimonialCards testimonials={translations.testimonials} />
-        
-        <!-- Glowing accent behind testimonials -->
-        <div class="absolute top-[5%] right-[5%] w-full h-full -z-10">
-          <div class="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-primary-300/10 rounded-full blur-[70px]" style="animation: pulseSlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></div>
-        </div>
+        {#if showTestimonials}
+          <TestimonialCards testimonials={translations.testimonials} />
+          
+          <!-- Glowing accent behind testimonials -->
+          <div class="absolute top-[5%] right-[5%] w-full h-full -z-10">
+            <div class="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-primary-300/10 rounded-full blur-[70px]" style="animation: pulseSlow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></div>
+          </div>
+        {/if}
       </div>
     </div>
   </div>
@@ -117,6 +138,12 @@
       linear-gradient(to right, rgba(36, 99, 235, 0.1) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(36, 99, 235, 0.1) 1px, transparent 1px);
     background-size: 40px 40px;
+  }
+  
+  /* Performance optimization: add visible-immediately class */
+  .visible-immediately {
+    opacity: 1;
+    transform: translateY(0);
   }
   
   /* Entrance animations */

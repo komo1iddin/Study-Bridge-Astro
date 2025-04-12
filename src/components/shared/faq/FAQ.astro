@@ -100,7 +100,7 @@ function getIcon(category: string = '') {
                 <div class="pl-16 pr-4 pb-4 text-gray-600 faq-content">
                   {
                     // Format the answer with proper styling if it contains line breaks
-                    item.data.answer[lang].includes('\n') ? (
+                    item.data.answer && item.data.answer[lang] && item.data.answer[lang].includes('\n') ? (
                       <div class="formatted-answer">
                         {item.data.answer[lang].split('\n').map((line, _index) => {
                           // Handle bullet points

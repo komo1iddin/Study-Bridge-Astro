@@ -1,23 +1,49 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { Menu, X, ChevronDown, Globe, Phone, Mail, Languages, Check } from "lucide-svelte";
-  import { slide, fly } from "svelte/transition";
-  import { quintOut, cubicOut, quartOut } from "svelte/easing";
-
+  import { Menu } from "lucide-svelte";
+  import type { ComponentType } from "svelte";
+  
+  // Only import additional icons when needed (performance optimization)
+  let X: ComponentType;
+  let ChevronDown: ComponentType;
+  let Globe: ComponentType;
+  let Phone: ComponentType;
+  let Mail: ComponentType;
+  let Languages: ComponentType;
+  let Check: ComponentType;
+  
   // Import from @/ paths
   import { cn } from "@/lib/utils";
-  import { getNavigation, getLocalizedLanguages } from "@/data/constants/navigation";
   import { getLangFromUrl, type Lang } from "@/i18n/langUtils";
   import { getHeaderTranslations } from "@/i18n/features/layout/header";
-  import { getLanguageSelectorTranslations } from '@/i18n/features/shared/languageSelector';
-  import type { HeaderTranslations } from "@/i18n/features/layout/header/types";
+  
+  // Will load later for better performance
+  let getNavigation: Function;
+  let getLocalizedLanguages: Function;
+  let getLanguageSelectorTranslations: Function;
+  
+  // Animation utilities
+  import type { TransitionConfig } from "svelte/transition";
+  type TransitionFn = (node: Element, options: any) => TransitionConfig;
+  type EasingFn = (t: number) => number;
+  
+  let slide: TransitionFn;
+  let fly: TransitionFn;
+  let quintOut: EasingFn;
+  let cubicOut: EasingFn;
+  let quartOut: EasingFn;
 
-  // Types
-  type NavigationItem = {
+  // Types for menu items
+  interface NavigationItem {
     name: string;
     href?: string;
     items?: NavigationItem[];
-  };
+  }
+
+  interface LanguageItem {
+    code: string;
+    name: string;
+  }
 
   // Props
   export let currentPath: string;
@@ -30,6 +56,9 @@
   let expandedItem: string | null = null;
   let showLanguages = false;
   let browser = false;
+  let fullyLoaded = false;
+  let menuItems: NavigationItem[] = [];
+  let languagesList: LanguageItem[] = [];
   
   // Store original body styles to restore them later
   let originalBodyStyles = {
@@ -42,17 +71,54 @@
   let currentLanguage = lang;
   
   // Translations and menu data
-  let t: HeaderTranslations;
-  let languageT = getLanguageSelectorTranslations(currentLang);
-  $: menuItems = getNavigation(lang);
-  $: languagesList = getLocalizedLanguages(lang);
+  let t: any;
+  let languageT: any;
 
-  // Client-side rendering check
-  onMount(() => {
+  // Dynamically import components and data when needed
+  async function loadFullFunctionality() {
+    if (fullyLoaded) return;
+    
+    // Import animation utilities
+    const animUtils = await import("svelte/transition");
+    slide = animUtils.slide;
+    fly = animUtils.fly;
+    
+    const easingUtils = await import("svelte/easing");
+    quintOut = easingUtils.quintOut;
+    quartOut = easingUtils.quartOut;
+    
+    // Import icon components
+    const icons = await import("lucide-svelte");
+    X = icons.X;
+    ChevronDown = icons.ChevronDown;
+    Globe = icons.Globe;
+    Phone = icons.Phone;
+    Mail = icons.Mail;
+    Languages = icons.Languages;
+    Check = icons.Check;
+    
+    // Import navigation data
+    const navUtils = await import("@/data/constants/navigation");
+    getNavigation = navUtils.getNavigation;
+    getLocalizedLanguages = navUtils.getLocalizedLanguages;
+    
+    // Import language selector translations
+    const langSelTranslations = await import('@/i18n/features/shared/languageSelector');
+    getLanguageSelectorTranslations = langSelTranslations.getLanguageSelectorTranslations;
+    
+    languageT = getLanguageSelectorTranslations(currentLang);
+    menuItems = getNavigation(lang) as NavigationItem[];
+    languagesList = getLocalizedLanguages(lang) as LanguageItem[];
+    
+    fullyLoaded = true;
+  }
+
+  // Client-side rendering check - minimal initial functionality
+  onMount(async () => {
     isClient = true;
     browser = typeof window !== 'undefined';
     
-    // Get translations
+    // Minimal initial load - just get header translations
     t = getHeaderTranslations(lang);
     
     // Store original body styles
@@ -63,25 +129,10 @@
       };
     }
 
-    // Add keyboard event handler for language switching
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey) {
-        const key = e.key.toLowerCase();
-        if (key === 'u') { // Uzbek
-          window.location.href = getPathForLang('uz');
-        } else if (key === 'r') { // Russian
-          window.location.href = getPathForLang('ru');
-        } else if (key === 'e') { // English
-          window.location.href = getPathForLang('en');
-        }
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    // Pre-load full functionality with a slight delay to prioritize initial render
+    setTimeout(() => {
+      loadFullFunctionality();
+    }, 100);
   });
   
   // Clean up when component is destroyed
@@ -91,8 +142,13 @@
   });
 
   // Handle menu state changes
-  function openMenu() {
+  async function openMenu() {
     if (!isClient) return;
+    
+    // Make sure all functionality is loaded when menu opens
+    if (!fullyLoaded) {
+      await loadFullFunctionality();
+    }
     
     isOpen = true;
     
@@ -179,12 +235,12 @@
   <button
     on:click={openMenu}
     class="menu-trigger p-2 text-gray-700 hover:bg-gray-100 rounded-full transition-colors duration-150"
-    aria-label={t?.mobileMenu.menu || "Menu"}
+    aria-label={t?.mobileMenu?.menu || "Menu"}
   >
     <Menu class="h-6 w-6" />
   </button>
 
-  {#if isOpen}
+  {#if isOpen && fullyLoaded}
     <!-- Overlay -->
     <div
       class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[51]"
@@ -203,13 +259,13 @@
       out:fly|local={{ duration: 120, x: 300, easing: quartOut }}
     >
       <div class="flex items-center justify-between p-4 border-b">
-        <h2 class="text-xl font-medium">{t?.mobileMenu.menu || "Menu"}</h2>
+        <h2 class="text-xl font-medium">{t?.mobileMenu?.menu || "Menu"}</h2>
         <button
           on:click={closeMenu}
           class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-150"
-          aria-label={t?.mobileMenu.close || "Close"}
+          aria-label={t?.mobileMenu?.close || "Close"}
         >
-          <X class="h-5 w-5" />
+          <svelte:component this={X} class="h-5 w-5" />
         </button>
       </div>
 
@@ -225,7 +281,8 @@
                       class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150"
                     >
                       <span class="font-medium">{item.name}</span>
-                      <ChevronDown
+                      <svelte:component 
+                        this={ChevronDown}
                         class={cn(
                           "h-5 w-5 text-gray-500 transition-transform duration-200",
                           expandedItem === item.name && "rotate-180"
@@ -253,13 +310,16 @@
                     {/if}
                   </div>
                 {:else}
-                  <a
-                    href={item.href}
-                    class="block mx-2 p-3 rounded-lg font-medium hover:bg-gray-50 active:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
-                    on:click={closeMenu}
-                  >
-                    {item.name}
-                  </a>
+                  <div class="px-2">
+                    <a
+                      href={item.href}
+                      class="flex items-center w-full p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150"
+                      class:text-blue-600={currentPath === item.href}
+                      on:click={closeMenu}
+                    >
+                      <span class="font-medium">{item.name}</span>
+                    </a>
+                  </div>
                 {/if}
               </li>
             {/each}
@@ -267,79 +327,81 @@
         </nav>
       </div>
 
-      <!-- Footer section -->
-      <div class="mt-auto border-t">
-        <!-- Contact info -->
-        <div class="p-4 space-y-3">
-          <a
-            href="tel:+998901234567"
-            class="flex items-center gap-3 hover:text-blue-600 active:text-blue-700 transition-colors duration-150"
-          >
-            <Phone class="h-5 w-5 text-gray-500" />
-            <span class="text-gray-600">+998 90 123-45-67</span>
-          </a>
-          <a
-            href="mailto:info@company.uz"
-            class="flex items-center gap-3 hover:text-blue-600 active:text-blue-700 transition-colors duration-150"
-          >
-            <Mail class="h-5 w-5 text-gray-500" />
-            <span class="text-gray-600">info@company.uz</span>
-          </a>
-        </div>
-        
-        <!-- Language selector -->
-        <div class="px-4 py-3 border-t">
+      <!-- Bottom section with language selector -->
+      <div class="mt-auto p-4 border-t">
+        <div class="px-2">
           <button
             on:click={() => showLanguages = !showLanguages}
-            class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150"
+            class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150"
           >
-            <Globe class="h-5 w-5 text-gray-500" />
-            <span class="font-medium">Select Language</span>
-            <ChevronDown class={cn(
-              "ml-auto h-5 w-5 text-gray-500 transition-transform duration-200",
-              showLanguages && "rotate-180"
-            )} />
+            <div class="flex items-center">
+              <svelte:component this={Globe} class="h-5 w-5 mr-3 text-gray-500" />
+              <span class="font-medium">{t?.language?.title || "Language"}</span>
+            </div>
+            <svelte:component
+              this={ChevronDown}
+              class={cn(
+                "h-5 w-5 text-gray-500 transition-transform duration-200",
+                showLanguages && "rotate-180"
+              )}
+            />
           </button>
           
           {#if showLanguages}
-            <div class="mt-2 space-y-1 px-3" 
+            <ul class="mt-2 space-y-1" 
               in:slide|local={{ duration: 200, easing: quintOut }}
               out:slide|local={{ duration: 100, easing: quartOut }}
             >
-              {#each languagesList as language (language.code)}
-                <a
-                  href={getPathForLang(language.code)}
-                  class={cn(
-                    "flex items-center px-3 py-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150",
-                    currentLanguage === language.code ? "bg-gray-100 text-blue-600" : "text-gray-600 hover:text-blue-600"
-                  )}
-                  on:click={(e) => {
-                    e.preventDefault();
-                    handleLanguageSelect(language.code);
-                  }}
-                >
-                  {language.name}
-                </a>
+              {#each languagesList as lang (lang.code)}
+                <li>
+                  <button
+                    on:click={() => handleLanguageSelect(lang.code)}
+                    class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150"
+                  >
+                    <span>{lang.name}</span>
+                    {#if currentLanguage === lang.code}
+                      <svelte:component this={Check} class="h-5 w-5 text-blue-600" />
+                    {/if}
+                  </button>
+                </li>
               {/each}
-            </div>
+            </ul>
           {/if}
-        </div>
-
-        <!-- CTA button -->
-        <div class="p-4">
-          <button
-            class="w-full bg-blue-600 text-white py-3 rounded-xl text-sm font-medium hover:bg-blue-700 active:bg-blue-800 transition-all duration-150 hover:shadow-md"
-            on:click={showApplicationForm}
-          >
-            {t?.cta.applyButton || "Apply Now"}
-          </button>
         </div>
       </div>
     </div>
+  {:else if isOpen}
+    <!-- Simple loading state while waiting for full functionality -->
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[51]"></div>
+    <div class="fixed inset-y-0 right-0 w-[85%] max-w-[400px] bg-white z-[52] flex flex-col shadow-xl h-[100dvh]">
+      <div class="flex items-center justify-between p-4 border-b">
+        <h2 class="text-xl font-medium">{t?.mobileMenu?.menu || "Menu"}</h2>
+        <button
+          on:click={closeMenu}
+          class="p-2 hover:bg-gray-100 rounded-full transition-colors duration-150"
+        >
+          <div class="h-5 w-5">×</div>
+        </button>
+      </div>
+      <div class="flex-1 flex items-center justify-center">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
   {/if}
-{:else}
-  <!-- SSR fallback -->
-  <button class="menu-trigger p-2 text-gray-700" aria-label="Open Menu">
-    <Menu class="h-6 w-6" />
-  </button>
-{/if} 
+{/if}
+
+<style>
+  /* Mobile menu loading spinner */
+  .loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #2463EB;
+    animation: spin 0.8s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style> 
