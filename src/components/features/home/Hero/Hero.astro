@@ -11,6 +11,9 @@ interface Props {
 const { lang = 'uz' } = Astro.props;
 const translations = getHeroTranslations(lang);
 
+// Add this console.log to debug component loading
+console.log('Hero component is loading with language:', lang);
+
 // Don't add fallback testimonials here - they should come from translations
 // If there are no testimonials in the translations, create a minimal set using the placeholder image
 if (!translations.testimonials || translations.testimonials.length === 0) {
@@ -43,4 +46,5 @@ if (!translations.testimonials || translations.testimonials.length === 0) {
 }
 ---
 
+<div id="hero-debug" class="bg-red-200 p-2 text-center">Hero Debug: Component is rendering</div>
 <HeroComponent lang={lang} translations={translations} client:load /> 
