@@ -1,0 +1,126 @@
+id: "master-program"
+type: "master"
+title:
+  uz: "Magistratura dasturi"
+  ru: "Программа магистратуры"
+  en: "Master's Program"
+description:
+  uz: "Xitoyning yetakchi universitetlarida magistratura va doktorantura dasturlari"
+  ru: "Программы магистратуры и докторантуры в ведущих университетах Китая"
+  en: "Master's and doctoral programs at China's leading universities"
+duration: "2-3 yil"
+features:
+  uz:
+    - "Ilmiy tadqiqot imkoniyatlari"
+    - "Grant va stipendiya dasturlari"
+    - "Zamonaviy laboratoriyalar"
+    - "Xalqaro konferensiyalarda ishtirok"
+    - "Ilmiy maqolalar chop etish"
+    - "Professional aloqalar o'rnatish"
+  ru:
+    - "Возможности научных исследований"
+    - "Программы грантов и стипендий"
+    - "Современные лаборатории"
+    - "Участие в международных конференциях"
+    - "Публикация научных статей"
+    - "Установление профессиональных связей"
+  en:
+    - "Research opportunities"
+    - "Grant and scholarship programs"
+    - "Modern laboratories"
+    - "Participation in international conferences"
+    - "Publication of scientific articles"
+    - "Professional networking"
+studyProcess:
+  uz:
+    - title: "Nazariy kurslar"
+      description: "Maxsus fanlar bo'yicha chuqurlashtirilgan ma'ruzalar"
+      hours: "Haftasiga 15 soat"
+    - title: "Ilmiy tadqiqot"
+      description: "Individual tadqiqot loyihalari"
+      hours: "Haftasiga 20 soat"
+    - title: "Seminarlar"
+      description: "Ilmiy seminar va konferensiyalar"
+      hours: "Haftasiga 5 soat"
+  ru:
+    - title: "Теоретические курсы"
+      description: "Углубленные лекции по специальным предметам"
+      hours: "15 часов в неделю"
+    - title: "Научные исследования"
+      description: "Индивидуальные исследовательские проекты"
+      hours: "20 часов в неделю"
+    - title: "Семинары"
+      description: "Научные семинары и конференции"
+      hours: "5 часов в неделю"
+  en:
+    - title: "Theoretical courses"
+      description: "Advanced lectures on specialized subjects"
+      hours: "15 hours per week"
+    - title: "Research"
+      description: "Individual research projects"
+      hours: "20 hours per week"
+    - title: "Seminars"
+      description: "Scientific seminars and conferences"
+      hours: "5 hours per week"
+careerOpportunities:
+  uz:
+    - position: "Oliy ta'lim muassasasi o'qituvchisi"
+      salary: "$3,000 - $6,000"
+      companies: ["Universitetlar", "Ilmiy markazlar"]
+    - position: "Tadqiqotchi"
+      salary: "$3,500 - $7,000"
+      companies: ["Ilmiy-tadqiqot institutlari", "Xalqaro laboratoriyalar"]
+    - position: "Yuqori darajadagi mutaxassis"
+      salary: "$4,000 - $8,000"
+      companies: ["Xalqaro kompaniyalar", "Davlat idoralari"]
+  ru:
+    - position: "Преподаватель высшего учебного заведения"
+      salary: "$3,000 - $6,000"
+      companies: ["Университеты", "Научные центры"]
+    - position: "Исследователь"
+      salary: "$3,500 - $7,000"
+      companies: ["Научно-исследовательские институты", "Международные лаборатории"]
+    - position: "Специалист высшего уровня"
+      salary: "$4,000 - $8,000"
+      companies: ["Международные компании", "Государственные учреждения"]
+  en:
+    - position: "Higher Education Teacher"
+      salary: "$3,000 - $6,000"
+      companies: ["Universities", "Research Centers"]
+    - position: "Researcher"
+      salary: "$3,500 - $7,000"
+      companies: ["Research Institutes", "International Laboratories"]
+    - position: "Senior Specialist"
+      salary: "$4,000 - $8,000"
+      companies: ["International Companies", "Government Agencies"]
+testimonials:
+  uz:
+    - name: "Dilshod Rahimov"
+      program: "Kompyuter fanlari magistri - 2023"
+      quote: "Magistratura davomida olib borgan tadqiqotlarim asosida bir nechta ilmiy maqolalar chop etdim."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Nilufar Karimova"
+      program: "Biznes boshqaruvi magistri - 2023"
+      quote: "Xitoyning yetakchi universitetida o'qish menga keng xalqaro aloqalar o'rnatish imkonini berdi."
+      image: "/images/testimonials/placeholder.jpeg"
+  ru:
+    - name: "Дилшод Рахимов"
+      program: "Магистр компьютерных наук - 2023"
+      quote: "На основе исследований, проведенных во время магистратуры, я опубликовал несколько научных статей."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Нилуфар Каримова"
+      program: "Магистр управления бизнесом - 2023"
+      quote: "Обучение в ведущем университете Китая позволило мне установить широкие международные связи."
+      image: "/images/testimonials/placeholder.jpeg"
+  en:
+    - name: "Dilshod Rahimov"
+      program: "Master of Computer Science - 2023"
+      quote: "Based on my research during my master's studies, I published several scientific papers."
+      image: "/images/testimonials/placeholder.jpeg"
+    - name: "Nilufar Karimova"
+      program: "Master of Business Administration - 2023"
+      quote: "Studying at a leading Chinese university allowed me to establish broad international connections."
+      image: "/images/testimonials/placeholder.jpeg"
+icon: "graduation-cap"
+bgColor: "from-purple-50 to-purple-100"
+language: "English"

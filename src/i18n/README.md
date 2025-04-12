@@ -1,132 +1,90 @@
-# i18n Translation System
+# Astro i18n System
 
-This document explains the new modular approach to managing translations in the application.
+This directory contains the internationalization (i18n) system for our Astro project.
 
-## Table of Contents
+## Key Features
 
-- [Overview](#overview)
-- [Directory Structure](#directory-structure)
-- [Usage Examples](#usage-examples)
-- [Adding New Translations](#adding-new-translations)
-- [Migration Guide](#migration-guide)
-
-## Overview
-
-The translation system is designed to be modular and maintainable, organizing translations by feature rather than by language. This helps with:
-
-- **Maintainability**: Easier to find and update translations related to specific components
-- **Scalability**: New features can add their own translations without affecting the main type definitions
-- **Developer Experience**: Work on translations specific to the feature you're developing
+- **Feature-based translations**: Organized by component/feature for better maintainability
+- **Type-safe API**: Full TypeScript support for all translations
+- **Optimized for performance**: Minimal JavaScript overhead
+- **Component-specific translation files**: Makes it easier to find and update translations
 
 ## Directory Structure
 
 ```
 src/i18n/
-├── index.ts             # Main export
-├── types.ts             # Core types (simplified)
-├── utils.ts             # Helper functions
-├── features/            # Feature-specific translations
-│   ├── common/          # Common UI elements
-│   │   ├── index.ts     # Export all common translations
-│   │   ├── en.ts        # English translations for common elements
-│   │   ├── ru.ts        # Russian translations for common elements
-│   │   └── uz.ts        # Uzbek translations for common elements
-│   ├── home/            # Home page specific features
-│   │   ├── hero/        # Hero section
-│   │   │   ├── index.ts # Export 
-│   │   │   ├── en.ts    # English translations
-│   │   │   ├── ru.ts    # Russian translations
-│   │   │   └── uz.ts    # Uzbek translations
-│   │   ├── partners/    # Partners section
-│   │   │   ├── index.ts
-│   │   │   ├── en.ts
-│   │   │   ├── ru.ts
-│   │   │   └── uz.ts
-│   │   └── ... (other home components)
-│   ├── universities/
-│   │   ├── index.ts
-│   │   ├── en.ts
-│   │   ├── ru.ts
-│   │   └── uz.ts
-│   └── ... (other features)
-└── translations.ts      # Aggregates all translations
+├── features/           # Feature-specific translations organized by component
+│   ├── blog/           # Blog-related translations
+│   ├── home/           # Home page features translations
+│   ├── shared/         # Shared component translations
+│   ├── ui/             # UI component translations
+│   └── index.ts        # Export all feature translations
+├── langUtils.ts        # Language utility functions
+├── translationUtils.ts # Translation utility functions
+├── types.ts            # TypeScript types for translations
+└── utils.ts            # Miscellaneous utility functions
 ```
 
-## Usage Examples
+## Usage
 
 ### In Astro Components
 
 ```astro
 ---
-import { getPartnersTranslations } from '@/i18n/features/home/partners';
-import type { Lang } from '@/i18n/langUtils';
+import { getLangFromUrl } from '@/i18n/langUtils';
+import { getTranslations } from '@/i18n/features';
 
-const { lang = 'uz' } = Astro.props;
-
-// Get all translations for this component at once
-const translations = getPartnersTranslations(lang);
+const lang = getLangFromUrl(Astro.url);
+const t = getTranslations.hero(lang);
 ---
 
-<YourComponent translations={translations} />
+<h1>{t.title}</h1>
+<p>{t.description}</p>
 ```
 
-### In Svelte Components
+### In TypeScript/JSX Components
 
-```svelte
-<script>
-  // Import directly in Svelte component
-  import { getPartnersTranslations } from '@/i18n/features/home/partners';
+```tsx
+import { useTranslation } from '@/i18n/hooks';
+
+function HeroComponent() {
+  const t = useTranslation('hero');
   
-  export let lang;
-  
-  const translations = getPartnersTranslations(lang);
-</script>
-
-<div>
-  <h2>{translations.title}</h2>
-  <p>{translations.description}</p>
-</div>
-```
-
-### Using the Unified Interface
-
-You can also use the unified interface to access all translations:
-
-```js
-import { getFeatureTranslation } from '@/i18n/features';
-
-// Access translations by feature, language, and key
-const title = getFeatureTranslation('partners', 'en', 'title');
+  return (
+    <div>
+      <h1>{t.title}</h1>
+      <p>{t.description}</p>
+    </div>
+  );
+}
 ```
 
 ## Adding New Translations
 
-To add translations for a new feature:
+1. **Create a new feature directory**: `src/i18n/features/your-feature/`
+2. **Add language files**: Create `en.ts`, `ru.ts`, and `uz.ts` in your feature directory
+3. **Create a types file**: Add `types.ts` to define your translation interface
+4. **Create an index file**: Add `index.ts` to export your translations and getter function
+5. **Update the main features index**: Import and export your feature in `src/i18n/features/index.ts`
 
-1. Create a new directory under `src/i18n/features/[section]/[feature]`
-2. Create type definition in `types.ts`
-3. Add language-specific files (en.ts, ru.ts, uz.ts)
-4. Create an index.ts file with a helper function
-5. Import and register in `src/i18n/features/index.ts`
+### Example
 
-Example:
-
-```ts
-// src/i18n/features/yourSection/yourFeature/types.ts
+```typescript
+// src/i18n/features/your-feature/types.ts
 export interface YourFeatureTranslations {
   title: string;
   description: string;
 }
 
-// src/i18n/features/yourSection/yourFeature/en.ts
+// src/i18n/features/your-feature/en.ts
 import type { YourFeatureTranslations } from './types';
 
 export const yourFeatureEn: YourFeatureTranslations = {
-  title: "Your Feature Title",
-  description: "Your feature description"
+  title: 'Your Feature Title',
+  description: 'Your feature description in English',
 };
 
-// src/i18n/features/yourSection/yourFeature/index.ts
+// src/i18n/features/your-feature/index.ts
 import { yourFeatureEn } from './en';
 import { yourFeatureRu } from './ru';
 import { yourFeatureUz } from './uz';
@@ -135,25 +93,30 @@ import type { Lang } from '@/i18n/langUtils';
 
 export type { YourFeatureTranslations };
 
+// Export translations by language
 export const yourFeatureTranslations: Record<Lang, YourFeatureTranslations> = {
   en: yourFeatureEn,
   ru: yourFeatureRu,
   uz: yourFeatureUz
 };
 
+// Getter function
 export function getYourFeatureTranslations(lang: Lang): YourFeatureTranslations {
-  return yourFeatureTranslations[lang] || yourFeatureUz;
+  return yourFeatureTranslations[lang] || yourFeatureTranslations.uz;
 }
 ```
 
-## Migration Guide
+## Best Practices
 
-To migrate from the old system to the new one:
+1. **Organize by component**: Keep translations close to the components that use them
+2. **Use TypeScript**: Define interfaces for all translations to catch errors early
+3. **Provide fallbacks**: Always fall back to another language if a translation is missing
+4. **Handle pluralization**: For complex pluralization, use utility functions
+5. **Keep keys consistent**: Use the same keys across all languages
+6. **Comment unclear phrases**: Add comments for translators about context
 
-1. Identify components that use translations
-2. Extract relevant translations from the large language files
-3. Create feature-specific translations following the pattern above
-4. Update components to use the new translation functions
-5. Update any imports
+## Migration Notes
 
-We recommend migrating one component at a time to reduce the risk of issues. 
+We have migrated from a monolithic translation system to a feature-based system for better maintainability and performance. The old system is deprecated and will be removed in a future update.
+
+Use the `cleanup.ts` script to identify files that can be safely removed and check for any missing translations in the feature-based system. 

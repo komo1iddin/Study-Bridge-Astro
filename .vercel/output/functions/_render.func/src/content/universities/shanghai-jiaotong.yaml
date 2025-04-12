@@ -1,0 +1,63 @@
+name:
+  uz: 'Shanghai Jiao Tong universiteti'
+  ru: 'Шанхайский университет Цзяо Тонг'
+  en: 'Shanghai Jiao Tong University'
+location: 'Shanghai, China'
+rating: 4.6
+ranking: 4.6
+students:
+  uz: '42,000+'
+  ru: '42,000+ студентов'
+  en: '42,000+ students'
+faculties:
+  uz:
+    - 'Muhandislik'
+    - 'Tibbiyot'
+    - 'Iqtisodiyot'
+  ru:
+    - 'Инженерия'
+    - 'Медицина'
+    - 'Экономика'
+  en:
+    - 'Engineering'
+    - 'Medicine'
+    - 'Economics'
+image: 'https://www.china-admissions.com/wp-content/uploads/2023/12/SJTU-campus-1.png?auto=format%2Cenhance%2Ccompress?height=400&width=600'
+logo: 'https://upload.wikimedia.org/wikipedia/en/d/da/Sjtu-logo-standard-red.png?height=80&width=80'
+foundedYear: 1896
+established: 1896
+featured: true
+annualFee: 4500
+priceRange: '4,500 - 9,000'
+programs:
+  - 'Language Course'
+  - 'Bachelor'
+  - 'Master'
+  - 'Doctor'
+careerOpportunities:
+  companies:
+    - "Huawei, Alibaba, SAIC Motor"
+    - "Xitoy davlat tashkilotlari"
+    - "Xalqaro muhandislik kompaniyalari"
+  salaryRanges:
+    - "Boshlang'ich: ¥120,000-180,000/yil"
+    - "3-5 yildan so'ng: ¥200,000-300,000/yil"
+    - "Senior darajada: ¥400,000+/yil"
+costs:
+  tuition:
+    - "Bakalavr: ¥25,000-30,000/yil"
+    - "Magistratura: ¥30,000-40,000/yil"
+    - "Doktorantura: ¥40,000-45,000/yil"
+  additional:
+    - "Yotoqxona: ¥10,000-15,000/yil"
+    - "Ovqatlanish: ¥12,000-18,000/yil"
+    - "Boshqa xarajatlar: ¥8,000-12,000/yil"
+scholarships:
+  - name: "CSC Scholarship"
+    description: "Xitoy hukumati tomonidan beriladigan to'liq grant. Xalqaro talabalar uchun"
+  - name: "SJTU Excellence Scholarship"
+    description: "O'qish to'lovi va oylik stipendiya. Yuqori akademik ko'rsatkichli talabalar uchun"
+  - name: "Shanghai Government Scholarship"
+    description: "Shanxay hukumati tomonidan beriladigan stipendiya. Xalqaro talabalar uchun"
+description: |
+  Shanxay Jiao Tong universiteti (SJTU) 1896 yilda tashkil etilgan bo'lib, Xitoyning eng qadimiy va nufuzli universitetlaridan biridir. U muhandislik dasturlari, ayniqsa dengiz arxitekturasi va mexanik muhandislik sohasida mashhur. Universitet doimiy ravishda Osiyoning eng yaxshi ta'lim muassasalari qatoriga kiradi va butun dunyo bo'ylab sanoat hamkorlari bilan mustahkam aloqalarga ega. SJTU 43,000 dan ortiq talabaga ega bo'lib, ulardan 2,800 ga yaqini xalqaro talabalardir.

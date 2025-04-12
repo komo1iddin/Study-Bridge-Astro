@@ -1,0 +1,67 @@
+title:
+  uz: Universitet granti
+  ru: Университетский грант
+  en: University Scholarship
+description:
+  uz: Top universitetlar tomonidan a'lo o'qiydigan talabalarga beriladigan grant
+  ru: Грант от ведущих университетов для отличников учебы
+  en: Scholarship from top universities for excellent students
+type: Merit-based Scholarship
+coverage:
+  uz:
+    - O'qish to'lovining 50-100%
+    - Yotoqxona to'lovi
+    - Kutubxonadan foydalanish
+  ru:
+    - 50-100% стоимости обучения
+    - Проживание в общежитии
+    - Доступ к библиотеке
+  en:
+    - 50-100% tuition fee
+    - Accommodation
+    - Library access
+deadline: "2024-05-01"
+requirements:
+  uz:
+    - O'rtacha ball 4.0/5.0 dan yuqori
+    - Ingliz yoki xitoy tilini bilish
+    - Ilmiy faoliyat tajribasi
+  ru:
+    - Средний балл выше 4.0/5.0
+    - Знание английского или китайского языка
+    - Опыт научной деятельности
+  en:
+    - GPA above 4.0/5.0
+    - English or Chinese proficiency
+    - Research experience
+documents:
+  uz:
+    - Diplom va ilovasi
+    - Ilmiy ishlar ro'yxati
+    - Til sertifikati
+    - Tavsiya xatlari
+  ru:
+    - Диплом и приложение
+    - Список научных работ
+    - Языковой сертификат
+    - Рекомендательные письма
+  en:
+    - Diploma and transcript
+    - List of publications
+    - Language certificate
+    - Recommendation letters
+benefits:
+  uz:
+    - O'qish to'lovidan qisman yoki to'liq ozod etish
+    - Bepul yotoqxona
+    - Kutubxonadan foydalanish
+  ru:
+    - Частичное или полное освобождение от оплаты
+    - Бесплатное проживание
+    - Доступ к библиотеке
+  en:
+    - Partial or full tuition waiver
+    - Free accommodation
+    - Library access
+image: /images/grants/university.jpg
+color: green

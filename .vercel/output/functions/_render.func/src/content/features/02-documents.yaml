@@ -1,0 +1,10 @@
+title:
+  uz: "Hujjatlarni tayyorlash"
+  ru: "Подготовка документов"
+  en: "Document Preparation"
+description:
+  uz: "Barcha zarur hujjatlarni yig'ish va rasmiylashtirishda yordam ko'rsatamiz"
+  ru: "Оказываем помощь в сборе и оформлении всех необходимых документов"
+  en: "We assist in collecting and preparing all necessary documents"
+icon: "mdi:file-document"
+order: 2

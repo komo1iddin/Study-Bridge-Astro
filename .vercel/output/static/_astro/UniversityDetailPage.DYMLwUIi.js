@@ -1,0 +1,1 @@
+import{a as e}from"./university-features.DP0UcCg2.js";import"./svelte-vendor.B13N8CGG.js";import"./vendor.Dthssyay.js";import"./ui.9AR3zU3C.js";import"./icons.BAS3LVZa.js";import"./utils.CWD2anMO.js";export{e as default};

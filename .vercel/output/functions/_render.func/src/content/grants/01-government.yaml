@@ -1,0 +1,64 @@
+title:
+  uz: "Xitoy hukumati granti"
+  ru: "Грант правительства Китая"
+  en: "Chinese Government Scholarship"
+description:
+  uz: "Xitoy hukumati tomonidan xorijiy talabalar uchun ajratilgan to'liq grant"
+  ru: "Полная стипендия от правительства Китая для иностранных студентов"
+  en: "Full scholarship from Chinese government for international students"
+type: "Full Scholarship"
+coverage:
+  uz: ["O'qish to'lovi", "Yotoqxona to'lovi"]
+  ru: ["Стоимость обучения", "Проживание в общежитии"]
+  en: ["Tuition fee", "Accommodation"]
+deadline: "2024-12-31"
+requirements:
+  uz:
+    - 18-25 yosh oralig'ida bo'lish
+    - O'rta ma'lumot haqidagi hujjat (diploma)
+    - Sog'liq haqida ma'lumotnoma
+    - Ingliz yoki xitoy tilini bilish
+  ru:
+    - Возраст от 18 до 25 лет
+    - Аттестат о среднем образовании
+    - Справка о состоянии здоровья
+    - Знание английского или китайского языка
+  en:
+    - Age between 18-25 years
+    - High school diploma
+    - Health certificate
+    - English or Chinese language proficiency
+documents:
+  uz:
+    - Pasport nusxasi
+    - Diplom va ilovasi
+    - Motivatsion xat
+    - Til sertifikati
+  ru:
+    - Копия паспорта
+    - Диплом и приложение
+    - Мотивационное письмо
+    - Языковой сертификат
+  en:
+    - Passport copy
+    - Diploma and transcript
+    - Motivation letter
+    - Language certificate
+benefits:
+  uz:
+    - Bepul o'qish
+    - Bepul yotoqxona
+    - Oylik stipendiya
+    - Tibbiy sug'urta
+  ru:
+    - Бесплатное обучение
+    - Бесплатное проживание
+    - Ежемесячная стипендия
+    - Медицинская страховка
+  en:
+    - Free tuition
+    - Free accommodation
+    - Monthly stipend
+    - Medical insurance
+image: /images/grants/government.jpg
+color: blue

@@ -1,15 +1,3 @@
-/**
- * Component Lazy Loading Utilities
- * 
- * This module provides utilities for optimizing component loading performance
- * with advanced lazy loading techniques beyond Astro's built-in directives.
- */
-
-import { onMount } from 'svelte';
-
-/**
- * Configuration for manual lazy loading
- */
 export interface LazyLoadOptions {
   rootMargin?: string;
   threshold?: number;
@@ -17,10 +5,6 @@ export interface LazyLoadOptions {
   once?: boolean;
 }
 
-/**
- * A Svelte action to lazy load component content when it's visible in the viewport
- * Usage: <div use:lazyLoadAction={{rootMargin: '200px'}}>Content to lazy load</div>
- */
 export function lazyLoadAction(node: HTMLElement, options: LazyLoadOptions = {}) {
   const {
     rootMargin = '200px',
@@ -105,10 +89,6 @@ export function registerComponentLoad(componentName: string) {
   }
 }
 
-/**
- * Hook for lazy loading in Svelte components
- * Usage: <div use:useLazyLoad={'component-name'}>Content</div>
- */
 export function useLazyLoad(componentName: string, options: LazyLoadOptions = {}) {
   return function(node: HTMLElement) {
     // Register the component name

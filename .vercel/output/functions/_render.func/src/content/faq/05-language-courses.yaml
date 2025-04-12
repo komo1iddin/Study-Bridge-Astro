@@ -1,0 +1,37 @@
+id: "price-language-courses"
+categoryId: "language"
+order: 1
+question:
+  uz: "Xitoy tili kurslarining darajalari va narxlari qanday?"
+  ru: "Какие уровни и цены на курсы китайского языка?"
+  en: "What are the levels and prices for Chinese language courses?"
+answer:
+  uz: |
+    Xitoy tili kurslari darajalari (HSK bo'yicha):
+
+    1. HSK 1-2 (Boshlang'ich)
+       - Davomiyligi: 6 oy
+       - Narxi: 8000-12000 yuan/semestr
+       - Haftasiga 20 soat dars
+       
+    2. HSK 3-4 (O'rta)
+       - Davomiyligi: 6-12 oy
+       - Narxi: 10000-15000 yuan/semestr
+       - Haftasiga 25 soat dars
+       
+    3. HSK 5-6 (Yuqori)
+       - Davomiyligi: 12 oy
+       - Narxi: 12000-18000 yuan/semestr
+       - Haftasiga 30 soat dars
+
+    Kurs narxiga kiritilgan:
+    - Darsliklar
+    - HSK imtihoniga tayyorgarlik
+    - Amaliy mashg'ulotlar
+    - Madaniy tadbirlar
+
+    Qo'shimcha imkoniyatlar:
+    - Yozgi intensiv kurslar
+    - Individual darslar
+    - Online kurslar
+lastUpdated: "2024-03-15"

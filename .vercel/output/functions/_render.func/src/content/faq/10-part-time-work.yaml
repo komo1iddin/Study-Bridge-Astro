@@ -1,0 +1,39 @@
+id: "can-work-while-study"
+categoryId: "life"
+order: 2
+question:
+  uz: "Xitoyda o'qish davrida ishlash mumkinmi?"
+  ru: "Можно ли работать во время учебы в Китае?"
+  en: "Can I work while studying in China?"
+answer:
+  uz: |
+    Xitoyda o'qish davrida ishlash imkoniyatlari:
+
+    1. Qonuniy talablar:
+       - Talaba vizasi bilan haftasiga 20 soatgacha ishlash mumkin
+       - Universitetdan ruxsat olish kerak
+       - Ish beruvchi kompaniyadan taklif xati
+       
+    2. Kampus ichidagi ishlar:
+       - Kutubxonada
+       - Laboratoriyalarda
+       - Ma'muriy bo'limlarda
+       - Sport markazlarida
+       
+    3. Til o'qitish:
+       - Xususiy repetitorlik
+       - Til markazlarida
+       - Online darslar
+       
+    4. Tarjimonlik:
+       - Kompaniyalarda
+       - Ko'rgazmalarda
+       - Tadbirlarda
+       
+    5. Internship:
+       - Xalqaro kompaniyalarda
+       - Start-uplarda
+       - Texnologik firmalarda
+
+    Muhim: Noqonuniy ishlash viza bekor qilinishiga olib kelishi mumkin!
+lastUpdated: "2024-03-15"

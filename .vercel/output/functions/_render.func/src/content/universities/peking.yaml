@@ -1,0 +1,29 @@
+name:
+  uz: 'Peking universiteti'
+  ru: 'Пекинский университет'
+  en: 'Peking University'
+location: 'Beijing, China'
+rating: 4.8
+ranking: 4.8
+students:
+  uz: '45,000+'
+  ru: '45,000+ студентов'
+  en: '45,000+ students'
+faculties:
+  uz:
+    - 'Tibbiyot'
+    - 'Huquq'
+    - 'Iqtisodiyot'
+  ru:
+    - 'Медицина'
+    - 'Право'
+    - 'Экономика'
+  en:
+    - 'Medicine'
+    - 'Law'
+    - 'Economics'
+image: 'https://facts.net/wp-content/uploads/2023/09/15-captivating-facts-about-peking-university-1695573947.jpg?height=400&width=600'
+logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Peking_University_seal.svg/2048px-Peking_University_seal.svg.png?height=80&width=80'
+foundedYear: 1898
+established: 1898
+featured: false

@@ -1,5 +1,3 @@
-// src/i18n/index.ts
-
 // Core language utilities
 export * from './langUtils';
 
@@ -8,5 +6,5 @@ export * from './translationUtils';
 export * from './types';
 export * from './utils';
 
-// Export translations
-export * from './translations/new-index';
+// Export feature translations system
+export * from './features/index';

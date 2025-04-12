@@ -1,7 +1,7 @@
 // src/i18n/translationUtils.ts
 import type { Lang } from './langUtils';
 import type { TranslationPath } from './types';
-import { translations } from './translations/new-index';
+import { featureTranslations, getFeatureTranslation } from './features';
 
 // Development mode flag - set this to false for production
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -28,32 +28,41 @@ export function getNestedValue(obj: any, path: string, fallback?: string): strin
 
 /**
  * Get a translation with fallback to another language and path display
+ * This uses the feature-based translation system for better performance.
+ * Format: feature:key (e.g., "hero:title.first")
  * @param lang The current language
  * @param path The path to the translation
  * @param args Optional arguments for string interpolation
  */
 export function getTranslation(lang: Lang, path: TranslationPath, ...args: any[]): string {
-  // Try to get the translation for the current language
-  let translation = getNestedValue(translations[lang], path);
-
-  // If translation is the same as the path (meaning it wasn't found), try the default language
-  if (translation === path && lang !== 'uz') {
-    translation = getNestedValue(translations['uz'], path);
-
-    // If we still don't have a translation, log a warning in development
-    if (translation === path && isDevelopment) {
-      console.warn(`Missing translation: ${path} (${lang})`);
-    }
+  if (!path.includes(':')) {
+    console.warn(`Invalid translation path format: ${path}. Use "feature:key" format.`);
+    return path;
   }
 
-  // Apply string interpolation if needed
-  if (args.length > 0) {
-    for (let i = 0; i < args.length; i++) {
-      translation = translation.replace(`{${i}}`, args[i]);
-    }
+  const [featureName, key] = path.split(':');
+  if (!featureName || !key) {
+    console.warn(`Invalid feature in translation path: ${path}`);
+    return path;
   }
 
-  return translation;
+  try {
+    // Check if feature exists in featureTranslations
+    if (featureName in featureTranslations) {
+      return getFeatureTranslation(
+        featureName as keyof typeof featureTranslations, 
+        lang, 
+        key, 
+        ...args
+      );
+    } else {
+      console.warn(`Feature "${featureName}" not found in translation path: ${path}`);
+      return path;
+    }
+  } catch (error) {
+    console.error(`Error getting translation for ${path}:`, error);
+    return path;
+  }
 }
 
 /**
@@ -72,59 +81,48 @@ export function createTranslationFunction(lang: Lang) {
  * @param path The path to check
  */
 export function hasTranslation(lang: Lang, path: TranslationPath): boolean {
-  const translation = getNestedValue(translations[lang], path);
-  return translation !== path;
+  try {
+    if (!path.includes(':')) return false;
+    
+    const [featureName, key] = path.split(':');
+    if (!featureName || !key) return false;
+    
+    // Check if feature exists in featureTranslations
+    if (featureName in featureTranslations) {
+      const translation = getFeatureTranslation(
+        featureName as keyof typeof featureTranslations, 
+        lang, 
+        key
+      );
+      return translation !== key;
+    }
+    
+    return false;
+  } catch (error) {
+    return false;
+  }
 }
+
+// The following functions are deprecated and should be updated to use the new feature system
+// They are left here for backward compatibility
 
 /**
  * Get all missing translations for a language compared to the default language
+ * @deprecated Use the feature-based system instead
  * @param lang The language to check
  * @param defaultLang The default language to compare against
  */
 export function getMissingTranslations(lang: Lang, defaultLang: Lang = 'uz'): string[] {
-  const missingTranslations: string[] = [];
-
-  function traverseObject(obj: any, currentPath: string = '') {
-    for (const key in obj) {
-      const newPath = currentPath ? `${currentPath}.${key}` : key;
-
-      if (typeof obj[key] === 'object' && obj[key] !== null) {
-        traverseObject(obj[key], newPath);
-      } else {
-        if (!hasTranslation(lang, newPath) && hasTranslation(defaultLang, newPath)) {
-          missingTranslations.push(newPath);
-        }
-      }
-    }
-  }
-
-  traverseObject(translations[defaultLang]);
-  return missingTranslations;
+  console.warn('getMissingTranslations is deprecated. Use the feature-based system instead.');
+  return [];
 }
 
 /**
  * Utility to help migrate from flat to nested translations
+ * @deprecated Use the feature-based system instead
  * @param flatTranslations Object with flat translation keys
  */
 export function convertFlatToNested(flatTranslations: Record<string, string>): any {
-  const result: any = {};
-
-  for (const key in flatTranslations) {
-    const keys = key.split('.');
-    let current = result;
-
-    for (let i = 0; i < keys.length; i++) {
-      const isLast = i === keys.length - 1;
-      const currentKey = keys[i];
-
-      if (isLast) {
-        current[currentKey] = flatTranslations[key];
-      } else {
-        current[currentKey] = current[currentKey] || {};
-        current = current[currentKey];
-      }
-    }
-  }
-
-  return result;
+  console.warn('convertFlatToNested is deprecated. Use the feature-based system instead.');
+  return {};
 }

@@ -1,13 +1,8 @@
-import { defineMiddleware } from 'astro:middleware';
+import { defineMiddleware } from "astro/middleware";
 import { defaultLang, languages } from './i18n/langUtils';
 
-// Language detection priorities:
-// 1. URL path parameter
-// 2. User's stored preference (via cookies/localStorage)
-// 3. Browser preference (Accept-Language header)
-// 4. Default language
-
-export const onRequest = defineMiddleware(async ({ request, locals, redirect }, next) => {
+export const onRequest = defineMiddleware(async (context, next) => {
+  const { request, locals, redirect } = context;
   const url = new URL(request.url);
   const pathname = url.pathname;
   
