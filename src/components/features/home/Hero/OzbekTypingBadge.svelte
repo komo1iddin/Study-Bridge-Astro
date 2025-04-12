@@ -4,33 +4,40 @@
   // Accept translations from parent
   export let badgeText = "";
 
-  const messages = badgeText ? [badgeText] : ["Qabul ochiq", "2025-yil uchun qabul", "Stipendiyalar mavjud"];
+  // Ensure badgeText is a string
+  $: safeBadgeText = typeof badgeText === 'string' ? badgeText : '';
+  $: messages = safeBadgeText ? [safeBadgeText] : ["Qabul ochiq", "2025-yil uchun qabul", "Stipendiyalar mavjud"];
+  
   let currentMessageIndex = 0;
   let displayText = "";
   let isDeleting = false;
   let timeout;
 
   function typeEffect() {
-    const currentMessage = messages[currentMessageIndex];
+    const currentMessage = messages[currentMessageIndex] || '';
 
     timeout = setTimeout(
       () => {
         if (!isDeleting) {
-          displayText = currentMessage.substring(0, displayText.length + 1);
+          if (currentMessage && typeof currentMessage === 'string') {
+            displayText = currentMessage.substring(0, displayText.length + 1);
 
-          if (displayText.length === currentMessage.length) {
-            isDeleting = true;
-            setTimeout(() => {
-              typeEffect();
-            }, 1500);
-            return;
+            if (displayText.length === currentMessage.length) {
+              isDeleting = true;
+              setTimeout(() => {
+                typeEffect();
+              }, 1500);
+              return;
+            }
           }
         } else {
-          displayText = currentMessage.substring(0, displayText.length - 1);
+          if (typeof displayText === 'string') {
+            displayText = displayText.substring(0, displayText.length - 1);
 
-          if (displayText.length === 0) {
-            isDeleting = false;
-            currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+            if (displayText.length === 0) {
+              isDeleting = false;
+              currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+            }
           }
         }
         typeEffect();
@@ -41,12 +48,16 @@
 
   onMount(() => {
     // Initialize with the first text in the array
-    displayText = messages[currentMessageIndex];
-    typeEffect();
+    if (messages && messages.length > 0) {
+      displayText = messages[currentMessageIndex] || '';
+      typeEffect();
+    }
   });
 
   onDestroy(() => {
-    clearTimeout(timeout);
+    if (timeout) {
+      clearTimeout(timeout);
+    }
   });
 </script>
 

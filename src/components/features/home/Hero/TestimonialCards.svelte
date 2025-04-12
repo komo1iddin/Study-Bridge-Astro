@@ -26,8 +26,11 @@
     }
   ];
   
+  // Ensure testimonials is an array to prevent errors
+  $: safeTestimonials = Array.isArray(testimonials) ? testimonials : [];
+  
   // Add id to each testimonial for key tracking
-  const processedTestimonials = testimonials.map((t, index) => ({
+  $: processedTestimonials = safeTestimonials.map((t, index) => ({
     ...t,
     id: index + 1
   }));
@@ -36,33 +39,40 @@
   let leftColumnCards = [];
   let rightColumnCards = [];
   
-  // If there's an odd number of testimonials, duplicate the last one to balance columns
-  if (processedTestimonials.length % 2 !== 0) {
-    const balancedTestimonials = [...processedTestimonials];
-    if (balancedTestimonials.length > 0) {
-      const lastItem = {...balancedTestimonials[balancedTestimonials.length - 1]};
-      lastItem.id = lastItem.id + 1000; // Ensure unique key
-      balancedTestimonials.push(lastItem);
+  $: {
+    // If there's an odd number of testimonials, duplicate the last one to balance columns
+    if (processedTestimonials.length % 2 !== 0) {
+      const balancedTestimonials = [...processedTestimonials];
+      if (balancedTestimonials.length > 0) {
+        const lastItem = {...balancedTestimonials[balancedTestimonials.length - 1]};
+        lastItem.id = lastItem.id + 1000; // Ensure unique key
+        balancedTestimonials.push(lastItem);
+      }
+      
+      // Distribute cards evenly
+      leftColumnCards = balancedTestimonials.filter((_, idx) => idx % 2 === 0);
+      rightColumnCards = balancedTestimonials.filter((_, idx) => idx % 2 === 1);
+    } else {
+      // If even number, just distribute evenly
+      leftColumnCards = processedTestimonials.filter((_, idx) => idx % 2 === 0);
+      rightColumnCards = processedTestimonials.filter((_, idx) => idx % 2 === 1);
     }
-    
-    // Distribute cards evenly
-    leftColumnCards = balancedTestimonials.filter((_, idx) => idx % 2 === 0);
-    rightColumnCards = balancedTestimonials.filter((_, idx) => idx % 2 === 1);
-  } else {
-    // If even number, just distribute evenly
-    leftColumnCards = processedTestimonials.filter((_, idx) => idx % 2 === 0);
-    rightColumnCards = processedTestimonials.filter((_, idx) => idx % 2 === 1);
   }
   
-  // Clone cards for seamless loop
-  const getClonedCards = (cards) => [...cards, ...cards, ...cards.slice(0, 2)];
+  // Clone cards for seamless loop - with defensive coding
+  function getClonedCards(cards) {
+    if (!Array.isArray(cards) || cards.length === 0) return [];
+    return [...cards, ...cards, ...cards.slice(0, 2)];
+  }
   
-  const clonedLeftCards = getClonedCards(leftColumnCards);
-  const clonedRightCards = getClonedCards(rightColumnCards);
+  $: clonedLeftCards = getClonedCards(leftColumnCards);
+  $: clonedRightCards = getClonedCards(rightColumnCards);
   
   // Handle image errors by replacing with placeholder
   function handleImageError(event) {
-    event.target.src = placeholderImage;
+    if (event && event.target) {
+      event.target.src = placeholderImage;
+    }
   }
 </script>
 
@@ -77,17 +87,17 @@
         >
           <div class="flex items-center gap-3 mb-3">
             <img
-              src={testimonial.image}
-              alt={testimonial.name}
+              src={testimonial.image || placeholderImage}
+              alt={testimonial.name || 'Student'}
               class="w-11 h-11 rounded-full object-cover border border-gray-100 shadow-sm"
               on:error={handleImageError}
             />
             <div>
-              <h3 class="font-semibold text-slate-800 text-sm">{testimonial.name}</h3>
-              <p class="text-blue-600 text-xs font-medium">{testimonial.role}</p>
+              <h3 class="font-semibold text-slate-800 text-sm">{testimonial.name || 'Student'}</h3>
+              <p class="text-blue-600 text-xs font-medium">{testimonial.role || 'University'}</p>
             </div>
           </div>
-          <p class="text-slate-700 text-sm leading-relaxed">{testimonial.quote}</p>
+          <p class="text-slate-700 text-sm leading-relaxed">{testimonial.quote || 'Testimonial'}</p>
         </div>
       {/each}
     </div>
@@ -103,17 +113,17 @@
         >
           <div class="flex items-center gap-3 mb-3">
             <img
-              src={testimonial.image}
-              alt={testimonial.name}
+              src={testimonial.image || placeholderImage}
+              alt={testimonial.name || 'Student'}
               class="w-11 h-11 rounded-full object-cover border border-gray-100 shadow-sm"
               on:error={handleImageError}
             />
             <div>
-              <h3 class="font-semibold text-slate-800 text-sm">{testimonial.name}</h3>
-              <p class="text-blue-600 text-xs font-medium">{testimonial.role}</p>
+              <h3 class="font-semibold text-slate-800 text-sm">{testimonial.name || 'Student'}</h3>
+              <p class="text-blue-600 text-xs font-medium">{testimonial.role || 'University'}</p>
             </div>
           </div>
-          <p class="text-slate-700 text-sm leading-relaxed">{testimonial.quote}</p>
+          <p class="text-slate-700 text-sm leading-relaxed">{testimonial.quote || 'Testimonial'}</p>
         </div>
       {/each}
     </div>

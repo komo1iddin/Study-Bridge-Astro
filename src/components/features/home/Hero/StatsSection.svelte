@@ -6,29 +6,36 @@
   export let translations = {
     universities: "Universitetlar",
     students: "Talabalar",
-    experience: "Yillik tajriba"
+    experience: "Yillik tajriba",
+    success: "Muvaffaqiyat"
   };
+  
+  // Ensure we have valid translation texts
+  $: safeTranslations = translations || {};
+  $: universitiesLabel = safeTranslations.universities || "Universitetlar";
+  $: studentsLabel = safeTranslations.students || "Talabalar";
+  $: experienceLabel = safeTranslations.experience || "Yillik tajriba";
   
   let mounted = false;
   
   // Stats data with animation information
-  const stats = [
+  $: stats = [
     { 
       icon: Users, 
       value: 5000, 
-      label: translations.students,
+      label: studentsLabel,
       animationDelay: "0ms"
     },
     { 
       icon: Building2, 
       value: 50, 
-      label: translations.universities,
+      label: universitiesLabel,
       animationDelay: "150ms"
     },
     { 
       icon: Clock, 
       value: 10, 
-      label: translations.experience,
+      label: experienceLabel,
       animationDelay: "300ms"
     }
   ];

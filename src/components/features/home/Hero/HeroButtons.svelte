@@ -1,20 +1,25 @@
 <script>
   import { Send, User } from 'lucide-svelte';
-  export let onOpenForm;
+  export let onOpenForm = () => {}; // Default no-op function
   export let translations = {
     apply: "Arizani qoldirish",
     programs: "Universitetlar"
   };
+
+  // Ensure we have valid translation texts
+  $: safeTranslations = translations || {};
+  $: applyText = safeTranslations.apply || "Ariza";
+  $: programsText = safeTranslations.programs || "Dasturlar";
 </script>
 
 <div class="flex flex-col sm:flex-row gap-4 sm:gap-5 mt-8 items-center sm:items-start mx-auto sm:mx-0">
   <!-- Primary Button - Blue background with paper plane icon -->
   <div class="flex-none">
     <button 
-      on:click={onOpenForm}
+      on:click={() => typeof onOpenForm === 'function' ? onOpenForm() : null}
       class="btn-primary group"
     >
-      <span class="relative z-10">{translations.apply}</span>
+      <span class="relative z-10">{applyText}</span>
       <span class="ml-2 inline-flex transition-all duration-300 group-hover:translate-x-1 group-hover:rotate-12">
         <Send size={20} class="h-5 w-5" />
       </span>
@@ -26,7 +31,7 @@
     <button 
       class="btn-secondary group"
     >
-      <span class="relative z-10">{translations.programs}</span>
+      <span class="relative z-10">{programsText}</span>
       <span class="ml-2 inline-flex transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
         <User size={20} class="h-5 w-5" />
       </span>

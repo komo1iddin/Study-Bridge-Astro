@@ -30,14 +30,27 @@
   };
   
   export let lang = 'uz';
+
+  // Ensure we have valid translations object even if passed undefined
+  $: safeTranslations = translations || {};
+  $: safeTitle = safeTranslations.title || { first: '', highlight: '', connector: '' };
+  $: safeButtons = safeTranslations.buttons || { apply: '', programs: '' };
+  $: safeBadge = safeTranslations.badge || { enrollment: '' };
+  $: safeStats = safeTranslations.stats || { universities: '', students: '', experience: '', success: '' };
+  $: safeTestimonials = Array.isArray(safeTranslations.testimonials) ? safeTranslations.testimonials : [];
   
   // Performance optimization: initially disable animations
   let animationsEnabled = true;
   let showTestimonials = true;
 
   function handleOpenForm() {
-    // Since we're not using ApplicationForm, we'll just show an alert instead
-    alert("Ariza yuborish uchun: +998 XX XXX XX XX");
+    // Only try to show the form if the function exists in the window
+    if (typeof window !== 'undefined' && window.showOfferPopup) {
+      window.showOfferPopup();
+    } else {
+      // Fallback if the function doesn't exist
+      console.warn('showOfferPopup function not found in window object');
+    }
   }
   
   // Phase in animations and non-critical content
@@ -78,38 +91,38 @@
       <!-- Left Content -->
       <div class="lg:col-span-7 z-10">
         <div class={animationsEnabled ? "fade-in" : "visible-immediately"} style="--delay: 0.15s">
-          <OzbekTypingBadge badgeText={translations.badge.enrollment} />
+          <OzbekTypingBadge badgeText={safeBadge.enrollment} />
         </div>
         
         <h1 class="fancy-heading text-4xl md:text-5xl lg:text-6xl mt-6 leading-tight visible-immediately">
-          <span class="text-[#2463EB]">{translations.title.first}</span> <br />
+          <span class="text-[#2463EB]">{safeTitle.first}</span> <br />
           <span class="relative inline-block">
-            {translations.title.connector}
+            {safeTitle.connector}
             <span class="absolute bottom-2 left-0 w-full h-2 bg-secondary/40 -z-10"></span>
           </span> <br />
           <span class="relative inline-block">
-            {translations.title.highlight}
+            {safeTitle.highlight}
             <span class="absolute bottom-2 left-0 w-full h-2 bg-secondary/40 -z-10"></span>
           </span>
         </h1>
         
         <p class="mt-6 text-gray-700 text-lg leading-relaxed max-w-lg visible-immediately">
-          {translations.description}
+          {safeTranslations.description || ''}
         </p>
         
         <div class="visible-immediately mt-8">
-          <HeroButtons onOpenForm={handleOpenForm} translations={translations.buttons} />
+          <HeroButtons onOpenForm={handleOpenForm} translations={safeButtons} />
         </div>
         
         <div class={animationsEnabled ? "fade-in mt-12" : "visible-immediately mt-12"} style="--delay: 0.75s">
-          <StatsSection translations={translations.stats} />
+          <StatsSection translations={safeStats} />
         </div>
       </div>
       
       <!-- Right Side - Scrolling Testimonials - conditionally loaded -->
       <div class="lg:col-span-5 relative min-h-[400px] lg:min-h-[600px] mt-8 lg:mt-16">
         {#if showTestimonials}
-          <TestimonialCards testimonials={translations.testimonials} />
+          <TestimonialCards testimonials={safeTestimonials} />
           
           <!-- Glowing accent behind testimonials -->
           <div class="absolute top-[5%] right-[5%] w-full h-full -z-10">
