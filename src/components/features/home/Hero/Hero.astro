@@ -1,5 +1,6 @@
 ---
 import HeroComponent from './Index.svelte';
+import SimplifiedHero from './SimplifiedHero.svelte';
 import type { Lang } from '@/i18n/langUtils';
 import { getHeroTranslations } from '@/i18n/features/home/hero';
 import './hero-styles.css';
@@ -47,4 +48,9 @@ if (!translations.testimonials || translations.testimonials.length === 0) {
 ---
 
 <div id="hero-debug" class="bg-red-200 p-2 text-center">Hero Debug: Component is rendering</div>
+
+<!-- First try with the simplified component -->
+<SimplifiedHero lang={lang} client:load />
+
+<!-- Original component -->
 <HeroComponent lang={lang} translations={translations} client:load /> 
