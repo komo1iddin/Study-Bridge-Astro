@@ -7,8 +7,45 @@ import Breadcrumbs from '@/components/shared/navigation/Breadcrumbs.astro';
 import ContactModal from '@/components/features/contact/ContactModal.astro';
 import { getTranslation } from '@/i18n/translationUtils';
 
+// Change to static generation mode
+export const prerender = true;
+
+// Add getStaticPaths function for dynamic routes
+export async function getStaticPaths() {
+  try {
+    const allPrograms = await getCollection('programs');
+    console.log(`Found ${allPrograms.length} total programs`);
+    
+    // Generate paths for each program and language
+    const paths = [];
+    
+    for (const lang of languages) {
+      for (const program of allPrograms) {
+        const type = program.data.type;
+        const id = program.id.replace(/\.(yaml|md)$/, '');
+        
+        paths.push({
+          params: { 
+            lang, 
+            type,
+            id
+          },
+          props: { programData: program.data }
+        });
+      }
+    }
+    
+    console.log(`Generated ${paths.length} static paths for programs`);
+    return paths;
+  } catch (error) {
+    console.error('Error generating static paths for programs:', error);
+    return [];
+  }
+}
+
 // Get the parameters from the URL
 const { lang, type, id } = Astro.params;
+const { programData } = Astro.props;
 
 // Validate the language parameter
 if (!lang || !languages.includes(lang as Lang)) {
@@ -18,36 +55,35 @@ if (!lang || !languages.includes(lang as Lang)) {
 // Initialize translation function
 const t = (key: string) => getTranslation(lang as Lang, key);
 
-// Set prerender to false to enable server-side rendering for all paths
-export const prerender = false;
-
-// Fetch program data directly
-let programData;
+// Fetch program data if not available from props (for example in development mode)
+let programInfo = programData;
 let slug = id || '';
 
-try {
-  console.log(`Fetching program data: type=${type}, id=${id}`);
-  const allPrograms = await getCollection('programs');
-  console.log(`Found ${allPrograms.length} total programs`);
-  
-  const matchedProgram = allPrograms.find(program => {
-    // Clean the ID by removing file extensions
-    const cleanId = program.id.replace(/\.(yaml|md)$/, '');
-    console.log(`Checking program: ${cleanId} vs ${id}, type: ${program.data.type} vs ${type}`);
-    return cleanId === id && program.data.type === type;
-  });
-  
-  if (!matchedProgram) {
-    console.error(`No matching program found for type=${type}, id=${id}`);
-    console.log('Available programs:', allPrograms.map(p => ({ id: p.id, type: p.data.type })));
+if (!programInfo) {
+  try {
+    console.log(`Fetching program data: type=${type}, id=${id}`);
+    const allPrograms = await getCollection('programs');
+    console.log(`Found ${allPrograms.length} total programs`);
+    
+    const matchedProgram = allPrograms.find(program => {
+      // Clean the ID by removing file extensions
+      const cleanId = program.id.replace(/\.(yaml|md)$/, '');
+      console.log(`Checking program: ${cleanId} vs ${id}, type: ${program.data.type} vs ${type}`);
+      return cleanId === id && program.data.type === type;
+    });
+    
+    if (!matchedProgram) {
+      console.error(`No matching program found for type=${type}, id=${id}`);
+      console.log('Available programs:', allPrograms.map(p => ({ id: p.id, type: p.data.type })));
+      return Astro.redirect(`/${lang}/404`);
+    }
+    
+    programInfo = matchedProgram.data;
+    console.log(`Successfully found program: ${matchedProgram.id}`);
+  } catch (error) {
+    console.error('Error fetching program data:', error);
     return Astro.redirect(`/${lang}/404`);
   }
-  
-  programData = matchedProgram.data;
-  console.log(`Successfully found program: ${matchedProgram.id}`);
-} catch (error) {
-  console.error('Error fetching program data:', error);
-  return Astro.redirect(`/${lang}/404`);
 }
 
 // Create type-safe accessors for multilingual content
@@ -57,8 +93,8 @@ const getLocalizedText = (obj: Record<string, any>, lang: string, fallbackLang =
 };
 
 // Get translated title and description
-const title = getLocalizedText(programData.title, lang);
-const description = getLocalizedText(programData.description, lang);
+const title = getLocalizedText(programInfo.title, lang);
+const description = getLocalizedText(programInfo.description, lang);
 
 // Set up breadcrumb items
 const breadcrumbItems = [
@@ -72,7 +108,7 @@ const programDetails = [
   {
     icon: Clock,
     label: 'Davomiyligi',
-    value: programData.duration
+    value: programInfo.duration
   },
   {
     icon: Users,
@@ -82,7 +118,7 @@ const programDetails = [
   {
     icon: GraduationCap,
     label: "O'qitish tili",
-    value: programData.language
+    value: programInfo.language
   },
   {
     icon: BookOpen,
@@ -92,7 +128,7 @@ const programDetails = [
 ];
 
 // Get localized features
-const features = programData.features ? getLocalizedText(programData.features, lang) : [];
+const features = programInfo.features ? getLocalizedText(programInfo.features, lang) : [];
 
 // Use requirements from content collection if available, otherwise use defaults
 const defaultRequirements = [
@@ -104,8 +140,8 @@ const defaultRequirements = [
 ];
 
 // Safely access potentially missing properties
-const requirements = (programData as any).requirements 
-  ? getLocalizedText((programData as any).requirements, lang) 
+const requirements = (programInfo as any).requirements 
+  ? getLocalizedText((programInfo as any).requirements, lang) 
   : defaultRequirements;
 
 // Use documents from content or default to these
@@ -210,7 +246,7 @@ const testimonials = [
           <!-- Program Header -->
           <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
             <div class="flex items-center gap-4 mb-6">
-              <div class={`p-3 rounded-lg ${programData.bgColor || 'bg-primary-100'}`}>
+              <div class={`p-3 rounded-lg ${programInfo.bgColor || 'bg-primary-100'}`}>
                 <GraduationCap class="w-8 h-8 text-primary-600" />
               </div>
               <div>
@@ -417,11 +453,11 @@ const testimonials = [
             </div>
 
             <!-- Program Levels -->
-            {(programData as any).levels && Array.isArray((programData as any).levels) && (programData as any).levels.length > 0 && (
+            {(programInfo as any).levels && Array.isArray((programInfo as any).levels) && (programInfo as any).levels.length > 0 && (
               <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
                 <h3 class="font-semibold text-gray-900 mb-4">O'qish darajalari</h3>
                 <div class="space-y-2">
-                  {((programData as any).levels as string[]).map((level: string) => (
+                  {((programInfo as any).levels as string[]).map((level: string) => (
                     <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                       <CheckCircle class="w-5 h-5 text-primary-600" />
                       <span class="text-gray-700">{level}</span>
@@ -432,11 +468,11 @@ const testimonials = [
             )}
 
             <!-- Fields of Study -->
-            {(programData as any).fields && Array.isArray((programData as any).fields) && (programData as any).fields.length > 0 && (
+            {(programInfo as any).fields && Array.isArray((programInfo as any).fields) && (programInfo as any).fields.length > 0 && (
               <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
                 <h3 class="font-semibold text-gray-900 mb-4">Mutaxassisliklar</h3>
                 <div class="space-y-2">
-                  {((programData as any).fields as string[]).map((field: string) => (
+                  {((programInfo as any).fields as string[]).map((field: string) => (
                     <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                       <CheckCircle class="w-5 h-5 text-primary-600" />
                       <span class="text-gray-700">{field}</span>

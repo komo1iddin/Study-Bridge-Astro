@@ -20,7 +20,15 @@ import ChinaVsUzbekistan from '@/components/features/home/ChinaVsUzbekistan.astr
 import WhyChina from '@/components/features/home/WhyChina.astro';
 import OfferPopup from '@/components/shared/popup/OfferPopup.astro';
 
-// Get the language from the URL parameter
+// Export getStaticPaths function for the dynamic [lang] parameter
+export function getStaticPaths() {
+  return languages.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+// Get the language from the URL parameter and props
 const { lang } = Astro.params;
 
 // Validate the language parameter
@@ -34,7 +42,7 @@ const meta = {
   description: "Xitoy universitetlariga kirish uchun yordam"
 };
 
-export const prerender = false;
+export const prerender = true;
 
 // Use the language parameter to get translations
 import { getTranslation } from '@/i18n/translationUtils';
