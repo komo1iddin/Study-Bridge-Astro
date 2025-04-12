@@ -1,0 +1,29 @@
+name:
+  uz: 'Zhejiang universiteti'
+  ru: 'Чжэцзянский университет'
+  en: 'Zhejiang University'
+location: 'Hangzhou, China'
+rating: 4.7
+ranking: 4.7
+students:
+  uz: '48,000+'
+  ru: '48,000+ студентов'
+  en: '48,000+ students'
+faculties:
+  uz:
+    - 'Kompyuter fanlari'
+    - 'Biznes'
+    - 'Huquq'
+  ru:
+    - 'Компьютерные науки'
+    - 'Бизнес'
+    - 'Право'
+  en:
+    - 'Computer Science'
+    - 'Business'
+    - 'Law'
+image: 'https://www.asiaeducationreview.com/uploaded_images/newstransfer/vxsuZhejiang0.jpg?height=400&width=600'
+logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnLsDL75kByxxDfJad0lalHsiydqY1Zvk1Yg&s?height=80&width=80'
+foundedYear: 1897
+established: 1897
+featured: false

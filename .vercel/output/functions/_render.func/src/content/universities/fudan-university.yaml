@@ -1,0 +1,66 @@
+name:
+  uz: 'Fudan universiteti'
+  ru: 'Фуданьский университет'
+  en: 'Fudan University'
+location: 'Shanghai, China'
+rating: 4.7
+students:
+  uz: '36,000+ talaba'
+  ru: '36,000+ студентов'
+  en: '36,000+ students'
+faculties:
+  uz:
+    - 'Tibbiyot'
+    - 'Iqtisodiyot'
+    - 'Menejment'
+    - 'Jurnalistika'
+    - 'Xalqaro munosabatlar'
+  ru:
+    - 'Медицина'
+    - 'Экономика'
+    - 'Менеджмент'
+    - 'Журналистика'
+    - 'Международные отношения'
+  en:
+    - 'Medicine'
+    - 'Economics'
+    - 'Management'
+    - 'Journalism'
+    - 'International Relations'
+annualFee: 4800
+priceRange: '4,800 - 9,500'
+image: '/images/universities/fudan-university/main.jpg'
+logo: 'https://cdn.imgbin.com/3/22/5/imgbin-fudan-university-funda-o-get-lio-vargas-insper-higher-education-school-QDi0N90DANWFVZ4PPrYAQfjtJ.jpg'
+featured: false
+programs:
+  - 'Language Course'
+  - 'Bachelor'
+  - 'Master'
+  - 'Doctor'
+careerOpportunities:
+  companies:
+    - "Shanghai Medical Centers, Bank of China, CCTV"
+    - "Xitoy davlat tashkilotlari"
+    - "Xalqaro korporatsiyalar va OAV"
+  salaryRanges:
+    - "Boshlang'ich: ¥130,000-190,000/yil"
+    - "3-5 yildan so'ng: ¥220,000-320,000/yil"
+    - "Senior darajada: ¥420,000+/yil"
+costs:
+  tuition:
+    - "Bakalavr: ¥26,000-32,000/yil"
+    - "Magistratura: ¥33,000-45,000/yil"
+    - "Doktorantura: ¥42,000-48,000/yil"
+  additional:
+    - "Yotoqxona: ¥12,000-18,000/yil"
+    - "Ovqatlanish: ¥15,000-20,000/yil"
+    - "Boshqa xarajatlar: ¥10,000-15,000/yil"
+scholarships:
+  - name: "Fudan University Presidential Scholarship"
+    description: "To'liq o'qish to'lovi va yashash xarajatlari. Yuqori akademik ko'rsatkichli talabalar uchun"
+  - name: "Shanghai Government Scholarship"
+    description: "Shanxay hukumati tomonidan beriladigan stipendiya. Xalqaro talabalar uchun"
+  - name: "Fudan Fellowship"
+    description: "Qisman o'qish to'lovi va oylik stipendiya. Magistratura va doktorantura talabalari uchun"
+description: |
+  Fudan University, established in 1905, is one of China's most prestigious and selective universities. Located in Shanghai, it is consistently ranked among the top universities in Asia. Fudan is particularly renowned for its programs in medicine, journalism, and business. The university maintains extensive international partnerships and offers numerous English-taught programs, making it a popular choice for international students.

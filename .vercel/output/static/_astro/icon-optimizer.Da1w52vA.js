@@ -1,0 +1,1 @@
+function e(){document.querySelectorAll("svg[data-lucide]").forEach(t=>{t.setAttribute("loading","lazy"),t.style.contain="strict",t.style.willChange="transform",t.style.transform="translateZ(0)"})}document.addEventListener("astro:page-load",()=>{e()});document.addEventListener("astro:after-swap",e);export{e as optimizeExistingIcons};

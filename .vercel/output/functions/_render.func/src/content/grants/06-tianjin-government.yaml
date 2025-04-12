@@ -1,0 +1,318 @@
+title:
+  uz: "Tianjin hukumati granti"
+  ru: "Грант правительства Тяньцзиня"
+  en: "Tianjin Government Scholarship"
+description:
+  uz: "Tianjin hukumati tomonidan xorijiy talabalar uchun ajratilgan stipendiya"
+  ru: "Стипендия от правительства Тяньцзиня для иностранных студентов"
+  en: "Scholarship provided by Tianjin government for international students"
+type: "Regional Scholarship"
+coverage:
+  uz: ["O'qish to'lovi", "Yotoqxona to'lovi", "Oylik stipendiya", "Tibbiy sug'urta"]
+  ru: ["Стоимость обучения", "Проживание в общежитии", "Ежемесячная стипендия", "Медицинская страховка"]
+  en: ["Tuition fee", "Accommodation", "Monthly stipend", "Medical insurance"]
+deadline: "2025-06-15"
+applicationStartDate: "2025-03-01"
+applicationEndDate: "2025-06-15"
+resultsAnnouncedDate: "2025-07-30"
+requirements:
+  uz:
+    - 18-30 yosh oralig'ida bo'lish (bakalavr uchun)
+    - 18-35 yosh oralig'ida bo'lish (magistratura uchun)
+    - 18-40 yosh oralig'ida bo'lish (doktorantura uchun)
+    - O'rta ma'lumot haqidagi hujjat (diploma)
+    - Sog'liq haqida ma'lumotnoma
+    - Ingliz yoki xitoy tilini bilish
+  ru:
+    - Возраст от 18 до 30 лет (для бакалавриата)
+    - Возраст от 18 до 35 лет (для магистратуры)
+    - Возраст от 18 до 40 лет (для докторантуры)
+    - Документ о среднем образовании (диплом)
+    - Справка о состоянии здоровья
+    - Знание английского или китайского языка
+  en:
+    - Age between 18-30 years (for Bachelor's)
+    - Age between 18-35 years (for Master's)
+    - Age between 18-40 years (for PhD)
+    - Diploma of previous education
+    - Health certificate
+    - English or Chinese language proficiency
+
+# Add detailed requirements descriptions
+requirementsDetails:
+  uz:
+    - title: "18-30 yosh oralig'ida bo'lish (bakalavr uchun)"
+      description: "Bakalavr dasturlari uchun ariza topshirish vaqtida 30 yoshdan kichik bo'lishingiz kerak. Magistratura uchun ariza topshirayotgan bo'lsangiz, 35 yoshdan kichik bo'lishingiz kerak."
+    - title: "O'rta ma'lumot haqidagi hujjat (diploma)"
+      description: "Magistratura uchun bachelor darajasi diplomingiz bo'lishi kerak. Doktorantura uchun magistr darajasi diplomingiz bo'lishi kerak."
+    - title: "Sog'liq haqida ma'lumotnoma"
+      description: "Xalqaro talablarga javob beradigan sog'liq haqida ma'lumotnoma, yuqumli kasalliklar yo'qligini ko'rsatadigan tibbiy tekshiruv natijasi (6 oydan oshmasligi kerak)."
+    - title: "Ingliz yoki xitoy tilini bilish"
+      description: "Ingliz tilida o'qish uchun TOEFL≥80 yoki IELTS≥6.0 ball; xitoy tilida o'qish uchun HSK 4 yoki undan yuqori daraja talab qilinadi."
+  ru:
+    - title: "Возраст от 18 до 30 лет (для бакалавриата)"
+      description: "Вы должны быть моложе 30 лет на момент подачи заявки для программ бакалавриата. Если вы подаете заявку на магистратуру, вы должны быть моложе 35 лет."
+    - title: "Документ о среднем образовании (диплом)"
+      description: "Для магистратуры требуется диплом бакалавра. Для докторантуры требуется диплом магистра."
+    - title: "Справка о состоянии здоровья"
+      description: "Медицинская справка, соответствующая международным требованиям, результат медицинского обследования, подтверждающий отсутствие инфекционных заболеваний (не старше 6 месяцев)."
+    - title: "Знание английского или китайского языка"
+      description: "Для обучения на английском языке требуется TOEFL≥80 или IELTS≥6.0 баллов; для обучения на китайском языке требуется HSK уровень 4 или выше."
+  en:
+    - title: "Age between 18-30 years (for Bachelor's)"
+      description: "You must be under 30 years old at the time of application for Bachelor's programs. If you're applying for a Master's program, you must be under 35 years old."
+    - title: "Diploma of previous education"
+      description: "For Master's programs, you need a Bachelor's degree. For PhD programs, you need a Master's degree."
+    - title: "Health certificate"
+      description: "A health certificate meeting international requirements, showing medical examination results confirming the absence of infectious diseases (not older than 6 months)."
+    - title: "English or Chinese language proficiency"
+      description: "For English-taught programs: TOEFL≥80 or IELTS≥6.0; for Chinese-taught programs: HSK level 4 or above is required."
+
+documents:
+  uz:
+    - Pasport nusxasi
+    - Diplom va ilovasi
+    - O'quv rejasi (800 so'zdan kam bo'lmasligi kerak)
+    - Til sertifikati
+    - Ikki professor tavsiya xati
+    - Tibbiy ko'rik natijasi
+  ru:
+    - Копия паспорта
+    - Диплом и приложение
+    - Учебный план (не менее 800 слов)
+    - Языковой сертификат
+    - Рекомендательные письма от двух профессоров
+    - Результаты медицинского осмотра
+  en:
+    - Passport copy
+    - Diploma and transcript
+    - Study plan (at least 800 words)
+    - Language certificate
+    - Two recommendation letters from professors
+    - Physical examination record
+benefits:
+  uz:
+    - Bakalavr uchun 20,000 yuan
+    - Magistratura uchun 30,000 yuan
+    - Doktorantura uchun 40,000 yuan
+    - Tibbiy sug'urta
+  ru:
+    - 20,000 юаней для бакалавров
+    - 30,000 юаней для магистров
+    - 40,000 юаней для докторантов
+    - Медицинская страховка
+  en:
+    - 20,000 yuan for Bachelor's students
+    - 30,000 yuan for Master's students
+    - 40,000 yuan for PhD students
+    - Medical insurance
+
+# Add detailed benefits descriptions
+benefitsDetails:
+  uz:
+    - title: "Bakalavr uchun 20,000 yuan"
+      description: "Bakalavr talabalariga yillik o'qish to'lovlari va yashash xarajatlari uchun 20,000 yuan miqdorida stipendiya to'lanadi"
+    - title: "Magistratura uchun 30,000 yuan"
+      description: "Magistratura talabalariga yillik o'qish to'lovlari va yashash xarajatlari uchun 30,000 yuan miqdorida stipendiya to'lanadi"
+    - title: "Doktorantura uchun 40,000 yuan"
+      description: "Doktorantura talabalariga yillik o'qish to'lovlari va yashash xarajatlari uchun 40,000 yuan miqdorida stipendiya to'lanadi"
+    - title: "Tibbiy sug'urta"
+      description: "Xitoyda bo'lgan vaqtda to'liq tibbiy xizmat va sug'urta bilan ta'minlanadi"
+  ru:
+    - title: "20,000 юаней для бакалавров"
+      description: "Стипендия в размере 20,000 юаней в год выплачивается студентам бакалавриата для покрытия платы за обучение и расходов на проживание"
+    - title: "30,000 юаней для магистров"
+      description: "Стипендия в размере 30,000 юаней в год выплачивается студентам магистратуры для покрытия платы за обучение и расходов на проживание"
+    - title: "40,000 юаней для докторантов"
+      description: "Стипендия в размере 40,000 юаней в год выплачивается докторантам для покрытия платы за обучение и расходов на проживание"
+    - title: "Медицинская страховка"
+      description: "Полное медицинское обслуживание и страхование во время пребывания в Китае"
+  en:
+    - title: "20,000 yuan for Bachelor's students"
+      description: "A scholarship of 20,000 yuan per year is provided to Bachelor's students to cover tuition fees and living expenses"
+    - title: "30,000 yuan for Master's students"
+      description: "A scholarship of 30,000 yuan per year is provided to Master's students to cover tuition fees and living expenses"
+    - title: "40,000 yuan for PhD students"
+      description: "A scholarship of 40,000 yuan per year is provided to PhD students to cover tuition fees and living expenses"
+    - title: "Medical insurance"
+      description: "Full medical service and insurance during your stay in China"
+
+image: /images/grants/tianjin.jpg
+color: green
+
+# New fields
+# Features with descriptions
+featuresDescriptions:
+  uz:
+    - title: "O'qish to'lovi"
+      description: "O'qish va yashash xarajatlari qisman yoki to'liq qoplanadi"
+    - title: "Yotoqxona"
+      description: "Yotoqxona to'lovi qoplanadi"
+    - title: "Stipendiya"
+      description: "Ta'lim darajasiga qarab oylik stipendiya beriladi"
+  ru:
+    - title: "Стоимость обучения"
+      description: "Полное или частичное покрытие расходов на обучение и проживание"
+    - title: "Общежитие"
+      description: "Покрытие расходов на общежитие"
+    - title: "Стипендия"
+      description: "Ежемесячная стипендия в зависимости от уровня образования"
+  en:
+    - title: "Tuition fee"
+      description: "Full or partial coverage of tuition and living expenses"
+    - title: "Accommodation"
+      description: "Coverage of dormitory expenses"
+    - title: "Stipend"
+      description: "Monthly stipend depending on education level"
+
+# Process steps
+process:
+  uz:
+    - id: 1
+      title: "Ariza topshirish"
+      description: "Tianjin universiteti veb-saytida onlayn ariza to'ldiring"
+      icon: "FileText"
+    - id: 2
+      title: "Hujjatlarni yuborish"
+      description: "Kerakli hujjatlarni tayyorlang va universitetga yuboring"
+      icon: "Upload"
+    - id: 3
+      title: "Intervyu"
+      description: "Online suhbatdan o'ting"
+      icon: "Video"
+    - id: 4
+      title: "Natijalarni kutish"
+      description: "Iyul oyida natijalar e'lon qilinadi"
+      icon: "Clock"
+  ru:
+    - id: 1
+      title: "Подача заявления"
+      description: "Заполните онлайн-заявку на сайте Тяньцзиньского университета"
+      icon: "FileText"
+    - id: 2
+      title: "Отправка документов"
+      description: "Подготовьте и отправьте необходимые документы в университет"
+      icon: "Upload"
+    - id: 3
+      title: "Интервью"
+      description: "Пройдите онлайн собеседование"
+      icon: "Video"
+    - id: 4
+      title: "Ожидание результатов"
+      description: "Результаты будут объявлены в июле"
+      icon: "Clock"
+  en:
+    - id: 1
+      title: "Submit Application"
+      description: "Fill out the online application on Tianjin university website"
+      icon: "FileText"
+    - id: 2
+      title: "Submit Documents"
+      description: "Prepare and submit required documents to the university"
+      icon: "Upload"
+    - id: 3
+      title: "Interview"
+      description: "Complete the online interview"
+      icon: "Video"
+    - id: 4
+      title: "Wait for Results"
+      description: "Results will be announced in July"
+      icon: "Clock"
+
+# Universities offering this grant
+universities:
+  - id: 1
+    name: "Tianjin University"
+    location: "Tianjin, China"
+    rating: 5
+  - id: 2
+    name: "Nankai University"
+    location: "Tianjin, China"
+    rating: 5
+  - id: 3
+    name: "Tianjin Medical University"
+    location: "Tianjin, China"
+    rating: 4
+  - id: 4
+    name: "Tianjin University of Technology"
+    location: "Tianjin, China"
+    rating: 4
+  - id: 5
+    name: "Tianjin Normal University"
+    location: "Tianjin, China"
+    rating: 4
+
+# Student testimonials
+testimonials:
+  uz:
+    - id: 1
+      name: "Farkhod Mamatov"
+      avatarUrl: "/images/testimonials/placeholder.jpeg"
+      graduationYear: "2023"
+      testimonial: "Tianjin granti menga Xitoyning eng rivojlangan shaharlaridan birida o'qish va karyeramni boshlash imkonini berdi"
+      initials: "FM"
+    - id: 2
+      name: "Gulnora Toshpulatova"
+      avatarUrl: "/images/testimonials/placeholder.jpeg"
+      graduationYear: "2022"
+      testimonial: "Tianjin Universitetida o'qish menga nafaqat chuqur bilim, balki katta amaliy tajriba ham berdi. Stipendiya esa moliyaviy muammolarni hal qildi."
+      initials: "GT"
+  ru:
+    - id: 1
+      name: "Дмитрий Смирнов"
+      avatarUrl: "/images/testimonials/placeholder.jpeg"
+      graduationYear: "2023"
+      testimonial: "Грант Тяньцзиня дал мне возможность учиться в одном из самых развитых городов Китая и начать свою карьеру"
+      initials: "ДС"
+    - id: 2
+      name: "Ольга Петрова"
+      avatarUrl: "/images/testimonials/placeholder.jpeg"
+      graduationYear: "2022"
+      testimonial: "Обучение в Тяньцзиньском университете дало мне не только глубокие знания, но и большой практический опыт. Стипендия решила финансовые проблемы."
+      initials: "ОП"
+  en:
+    - id: 1
+      name: "David Miller"
+      avatarUrl: "/images/testimonials/placeholder.jpeg"
+      graduationYear: "2023"
+      testimonial: "The Tianjin scholarship gave me the opportunity to study in one of China's most developed cities and start my career"
+      initials: "DM"
+    - id: 2
+      name: "Emma Thompson"
+      avatarUrl: "/images/testimonials/placeholder.jpeg"
+      graduationYear: "2022"
+      testimonial: "Studying at Tianjin University gave me not only deep knowledge but also great practical experience. The scholarship solved financial problems."
+      initials: "ET"
+
+# FAQs
+faqs:
+  uz:
+    - id: "faq-1"
+      question: "Tianjin hukumati granti kimlar uchun?"
+      answer: "Tianjin hukumati granti xalqaro talabalar uchun mo'ljallangan bo'lib, bakalavr, magistratura va doktorantura dasturlarida o'qimoqchi bo'lgan talabalar uchun ochiq"
+    - id: "faq-2"
+      question: "Ariza qachon topshiriladi?"
+      answer: "Ariza topshirish muddati odatda mart oyidan iyun oyi o'rtasigacha. Aniq sanalar universitetlar veb-saytlarida e'lon qilinadi."
+    - id: "faq-3"
+      question: "Qanday universitetlarda o'qish mumkin?"
+      answer: "Grant doirasida Tianjin shahrida joylashgan ko'plab universitetlarda o'qish mumkin, jumladan Tianjin universiteti, Nankai universiteti va boshqalar."
+  ru:
+    - id: "faq-1"
+      question: "Для кого предназначен грант правительства Тяньцзиня?"
+      answer: "Грант правительства Тяньцзиня предназначен для международных студентов и доступен для студентов, желающих обучаться по программам бакалавриата, магистратуры и докторантуры"
+    - id: "faq-2"
+      question: "Когда подается заявка?"
+      answer: "Срок подачи заявки обычно с марта до середины июня. Точные даты объявляются на сайтах университетов."
+    - id: "faq-3"
+      question: "В каких университетах можно учиться?"
+      answer: "В рамках гранта можно учиться во многих университетах, расположенных в Тяньцзине, включая Тяньцзиньский университет, Университет Нанькай и другие."
+  en:
+    - id: "faq-1"
+      question: "Who is the Tianjin Government Scholarship for?"
+      answer: "The Tianjin Government Scholarship is designed for international students and is available for students wishing to study in Bachelor's, Master's, and PhD programs"
+    - id: "faq-2"
+      question: "When is the application period?"
+      answer: "The application period is typically from March to mid-June. Exact dates are announced on university websites."
+    - id: "faq-3"
+      question: "Which universities can I study at?"
+      answer: "Under the grant, you can study at many universities located in Tianjin, including Tianjin University, Nankai University, and others." 

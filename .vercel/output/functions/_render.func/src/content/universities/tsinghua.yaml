@@ -1,0 +1,29 @@
+name:
+  uz: 'Tsinghua universiteti'
+  ru: 'Университет Цинхуа'
+  en: 'Tsinghua University'
+location: 'Beijing, China'
+rating: 4.9
+ranking: 4.9
+students:
+  uz: '50,000+'
+  ru: '50,000+ студентов'
+  en: '50,000+ students'
+faculties:
+  uz:
+    - 'Muhandislik'
+    - 'Kompyuter fanlari'
+    - 'Biznes'
+  ru:
+    - 'Инженерия'
+    - 'Компьютерные науки'
+    - 'Бизнес'
+  en:
+    - 'Engineering'
+    - 'Computer Science'
+    - 'Business'
+image: 'https://www.sangenbd.com/images/study-at-tsinghua-university-china-from-bangladesh.webp?height=400&width=600'
+logo: 'https://seeklogo.com/images/T/tsinghua-university-logo-F618496319-seeklogo.com.png?height=80&width=80'
+foundedYear: 1911
+established: 1911
+featured: true

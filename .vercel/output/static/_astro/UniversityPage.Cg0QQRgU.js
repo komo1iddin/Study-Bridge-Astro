@@ -1,0 +1,1 @@
+import{b as e}from"./university-features.BhdlOjGS.js";import"./svelte-vendor.CZ8pwuWY.js";import"./ClientRouter.astro_astro_type_script_index_0_lang.gKeyzdHP.js";import"./ui.CKHtrIOd.js";import"./icons.DC_GR0QF.js";import"./utils.CWD2anMO.js";export{e as default};

@@ -77,68 +77,10 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
       href={`${siteUrl}/uz${canonicalUrl}`} 
       hreflang="x-default"
     />
-
-    <!-- Optimized: Remove preload for AOS assets since they're loaded dynamically when needed -->
     
     <!-- Preconnect to important domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <!-- Inline critical CSS -->
-    <style is:inline>
-      /* Critical styles for immediately visible elements */
-      .critical-hidden { opacity: 0; }
-      .critical-visible { opacity: 1; transition: opacity .3s; }
-      
-      /* Navbar styles */
-      .header-fixed { position: fixed; top: 0; left: 0; right: 0; z-index: 50; }
-      
-      /* Button styles */
-      .btn-primary { 
-        background-color: #2463EB; 
-        color: white; 
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        font-weight: 500;
-      }
-      
-      /* Content fade-in */
-      .visible-immediately {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      
-      /* Reduce content layout shift */
-      img, svg { max-width: 100%; height: auto; }
-      
-      /* Reduce motion if user prefers */
-      @media (prefers-reduced-motion: reduce) {
-        *, ::before, ::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-          scroll-behavior: auto !important;
-        }
-      }
-    </style>
-    
-    <!-- Load non-critical CSS with JS -->
-    <script>
-      // Dynamically load non-critical CSS
-      function loadStyle(src) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = src;
-        document.head.appendChild(link);
-      }
-      
-      // After main content loads, add non-critical styles
-      window.addEventListener('load', () => {
-        setTimeout(() => {
-          loadStyle('/styles/lazyload.css');
-        }, 100);
-      });
-    </script>
 
     <ViewTransitions />
   </head>
@@ -152,62 +94,5 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
     </div>
 
     <OfferPopup lang={lang} autoShow={false} />
-
-    <script>
-      // Only load critical scripts immediately
-      import '../components/scripts/transitions';
-      
-      // Defer non-critical script loading
-      window.addEventListener('load', () => {
-        // Wait until main thread is idle for non-critical scripts
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(() => {
-            import('../components/scripts/icon-optimizer');
-            import('../components/scripts/aos-init');
-          });
-        } else {
-          // Fallback for browsers without requestIdleCallback
-          setTimeout(() => {
-            import('../components/scripts/icon-optimizer');
-            import('../components/scripts/aos-init');
-          }, 1000);
-        }
-      });
-      
-      // Lazy load images
-      if ('loading' in HTMLImageElement.prototype) {
-        // Use native lazy loading if supported
-        document.addEventListener('DOMContentLoaded', () => {
-          document.querySelectorAll('img[data-src]').forEach(img => {
-            img.setAttribute('loading', 'lazy');
-            img.src = img.dataset.src;
-          });
-        });
-      } else {
-        // Fallback using IntersectionObserver
-        document.addEventListener('DOMContentLoaded', () => {
-          const lazyImageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset.src) {
-                  img.src = img.dataset.src;
-                  lazyImageObserver.unobserve(img);
-                }
-              }
-            });
-          });
-
-          document.querySelectorAll('img[data-src]').forEach(img => 
-            lazyImageObserver.observe(img)
-          );
-        });
-      }
-
-      // Detect reduced motion preference
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('reduce-motion');
-      }
-    </script>
   </body>
 </html>

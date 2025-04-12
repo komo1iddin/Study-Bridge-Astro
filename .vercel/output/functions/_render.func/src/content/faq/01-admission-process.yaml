@@ -1,0 +1,27 @@
+id: "what-documents-for-admission"
+categoryId: "admission"
+order: 1
+question:
+  uz: "Xitoyda o'qish uchun qanday hujjatlar kerak?"
+  ru: "Какие документы нужны для учебы в Китае?"
+  en: "What documents are required to study in China?"
+answer:
+  uz: |
+    Xitoyda o'qish uchun quyidagi hujjatlar kerak:
+
+    1. Pasport (kamida 18 oy muddati qolgan bo'lishi kerak)
+    2. Diplom yoki attestat (xitoy yoki ingliz tiliga tarjima qilingan)
+    3. Transkript (baholar ro'yxati)
+    4. Tibbiy ko'rik natijasi (JW201 formasi)
+    5. Bank ma'lumotnomasi
+    6. 6 dona 3x4 rasm
+    7. Motivatsion xat
+    8. Til sertifikati (HSK yoki IELTS/TOEFL)
+
+    Barcha hujjatlar notarial tasdiqlangan va konsullik legalizatsiyasidan o'tgan bo'lishi kerak.
+lastUpdated: "2024-03-15"
+sources:
+  - title: "Xitoy Ta'lim Vazirligi"
+    url: "https://www.moe.gov.cn"
+  - title: "CSC Rasmiy sayti"
+    url: "https://www.csc.edu.cn"

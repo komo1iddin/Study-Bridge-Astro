@@ -249,17 +249,11 @@ const t = (key: string) => getTranslation(lang as Lang, key);
       animation: none !important;
     }
   }
-</style>
 
-<script>
-  // Initialize AOS
-  import AOS from 'aos';
-  
-  document.addEventListener('astro:page-load', () => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      offset: 50,
-    });
-  });
-</script>
+  [data-aos] {
+    // Reset all AOS-related styles for compatibility
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+</style>

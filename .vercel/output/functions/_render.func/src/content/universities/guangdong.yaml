@@ -1,0 +1,29 @@
+name:
+  uz: 'Guandong University of Foreign Studies'
+  ru: 'Гуандунский университет иностранных языков'
+  en: 'Guangdong University of Foreign Studies'
+location: 'Jinhua, China'
+rating: 4.5
+ranking: 4.5
+students:
+  uz: '35,000+'
+  ru: '35,000+ студентов'
+  en: '35,000+ students'
+faculties:
+  uz:
+    - 'Pedagogika'
+    - 'Gumanitar fanlar'
+    - 'Tabiiy fanlar'
+  ru:
+    - 'Педагогика'
+    - 'Гуманитарные науки'
+    - 'Естественные науки'
+  en:
+    - 'Pedagogy'
+    - 'Humanities'
+    - 'Natural Sciences'
+image: 'https://gdufs.cucas.cn/uploads/school/2019/0520/96aa043143a0af72a552182d97f2965e.jpg?height=400&width=600'
+logo: 'https://upload.wikimedia.org/wikipedia/en/e/e0/Guangdong_University_of_Foreign_Studies_logo.png?height=80&width=80'
+foundedYear: 1958
+established: 1958
+featured: false

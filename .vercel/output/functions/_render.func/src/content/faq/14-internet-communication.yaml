@@ -1,0 +1,39 @@
+id: "internet-and-communication"
+categoryId: "life"
+order: 5
+question:
+  uz: "Internet va aloqa masalalari qanday hal qilinadi?"
+  ru: "Как решаются вопросы интернета и связи?"
+  en: "How to handle internet and communication issues?"
+answer:
+  uz: |
+    Xitoyda internet va aloqa xizmatlari:
+
+    1. Mobil aloqa:
+       - China Mobile
+       - China Unicom
+       - China Telecom
+       - Oylik paketlar: 100-200 yuan
+       
+    2. Internet:
+       - Kampus Wi-Fi (bepul)
+       - Mobil internet
+       - Uy interneti
+       
+    3. VPN xizmatlari:
+       - Google, Facebook, Instagram uchun
+       - Ishonchli provayderlar
+       - Oylik: 50-100 yuan
+       
+    4. Messenjerlar:
+       - WeChat (asosiy)
+       - QQ
+       - DingTalk
+       
+    5. To'lov tizimlari:
+       - WeChat Pay
+       - Alipay
+       - UnionPay kartalar
+
+    Maslahat: Xitoyga kelishdan oldin VPN o'rnatib oling!
+lastUpdated: "2024-03-15"

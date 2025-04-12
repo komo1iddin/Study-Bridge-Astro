@@ -1,0 +1,26 @@
+id: "how-process-for-visa"
+categoryId: "documents"
+order: 1
+question:
+  uz: "Xitoy vizasini olish jarayoni qanday?"
+  ru: "Как получить китайскую визу?"
+  en: "How to get a Chinese visa?"
+answer:
+  uz: |
+    Xitoy talaba vizasini olish jarayoni quyidagi bosqichlardan iborat:
+
+    1. Universitetdan qabul xati olish
+    2. JW201/JW202 formalarini olish
+    3. Viza uchun kerakli hujjatlar:
+       - Pasport (kamida 18 oy muddati qolgan)
+       - Qabul xati va JW formalar
+       - Viza anketa formasini to'ldirish
+       - 2 dona 3x4 rasm
+       - Tibbiy ko'rik natijasi
+       - Bank ma'lumotnomasi
+
+    Viza olish muddati: 4-7 ish kuni
+    
+    Eslatma: X1 viza (6 oydan ortiq muddatga) va X2 viza (6 oygacha) mavjud.
+lastUpdated: "2024-03-15"
+image: "/images/visa-process.jpg"

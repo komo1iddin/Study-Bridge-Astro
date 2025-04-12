@@ -1,0 +1,42 @@
+id: "how-is-student-life-in-china"
+categoryId: "life"
+order: 1
+question:
+  uz: "Xitoyda talaba hayoti qanday?"
+  ru: "Какова студенческая жизнь в Китае?"
+  en: "What is student life like in China?"
+answer:
+  uz: |
+    Xitoyda talaba hayoti:
+
+    1. Yashash sharoitlari:
+       - Zamonaviy kampuslar
+       - 2-4 kishilik xonalar
+       - Internet, konditsioner
+       - Sport majmualari
+       
+    2. O'quv jarayoni:
+       - Darslar 8:00-17:00
+       - Kichik guruhlar (15-20 talaba)
+       - Amaliy mashg'ulotlar
+       - Zamonaviy laboratoriyalar
+       
+    3. Bo'sh vaqt:
+       - Sport seksiyalari
+       - Madaniy tadbirlar
+       - Sayohatlar
+       - Talabalar klublari
+       
+    4. Ishlash imkoniyatlari:
+       - Kampusda part-time ish
+       - Til o'rgatish
+       - Tarjimonlik
+       
+    5. Tibbiy xizmat:
+       - Kampus poliklinikasi
+       - Tibbiy sug'urta
+       - 24/7 yordam
+
+    Talabalar tajribasi va maslahatlarini bizning blogda o'qing.
+lastUpdated: "2024-03-15"
+image: "/images/student-life.jpg"

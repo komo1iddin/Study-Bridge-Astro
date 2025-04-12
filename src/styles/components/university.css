@@ -130,5 +130,7 @@
 
 /* AOS Overrides */
 [data-aos] {
-  pointer-events: auto !important;
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
