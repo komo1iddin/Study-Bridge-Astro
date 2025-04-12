@@ -33,6 +33,11 @@
     mounted = true;
   }
   
+  onMount(() => {
+    // Dispatch an event to notify that Svelte component is mounted
+    window.dispatchEvent(new CustomEvent('svelte-mounted'));
+  });
+  
   function handleFilterChange(event: CustomEvent<{key: keyof Filters, value: string}>) {
     const { key, value } = event.detail;
     filters = {
