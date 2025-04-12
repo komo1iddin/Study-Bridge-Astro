@@ -1,12 +1,12 @@
-import { c as createComponent, a as createAstro, m as maybeRenderHead, b as addAttribute, d as renderTemplate, e as renderComponent, n as renderScript } from "../../chunks/vendor_BAzprikM.mjs";
-import { t } from "../../chunks/vendor_BAzprikM.mjs";
+import { c as createComponent, a as createAstro, m as maybeRenderHead, b as addAttribute, d as renderTemplate, e as renderComponent } from "../../chunks/vendor_fPK89n42.mjs";
+import { q } from "../../chunks/vendor_fPK89n42.mjs";
 import "kleur/colors";
-import { l as languages, $ as $$SectionHeader } from "../../chunks/ui_DFpIJiEG.mjs";
-import { $ as $$Layout } from "../../chunks/Layout_DMdNbTih.mjs";
+import { l as languages, $ as $$SectionHeader } from "../../chunks/ui_BAsHSPwd.mjs";
+import { $ as $$Layout } from "../../chunks/Layout_BFuhr0c3.mjs";
 import "clsx";
 /* empty css                                    */
-import { j as $$GraduationCap, M as $$Briefcase, V as $$Linkedin, w as $$Twitter, p as $$Mail, E as $$Clock, y as $$School, i as $$Users, h as $$Award, Y as $$Heart, Z as $$Target, b as $$ArrowRight } from "../../chunks/icons_GFS7fkbb.mjs";
-import { $ as $$Breadcrumbs } from "../../chunks/Breadcrumbs_B0JlxQ9v.mjs";
+import { j as $$GraduationCap, M as $$Briefcase, V as $$Linkedin, w as $$Twitter, p as $$Mail, E as $$Clock, y as $$School, i as $$Users, h as $$Award, Y as $$Heart, Z as $$Target, b as $$ArrowRight } from "../../chunks/icons_gbmVFOaE.mjs";
+import { $ as $$Breadcrumbs } from "../../chunks/Breadcrumbs_CDkISIuC.mjs";
 const $$Astro$3 = createAstro();
 const $$Timeline = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro$3, $$props, $$slots);
@@ -167,7 +167,7 @@ Ready to Start Your Educational Journey?
 Contact us today to learn more about studying in China
 </p> <button onclick="window.uiStore.toggleContactModal(true)" class="inline-flex items-center px-8 py-4 bg-white text-primary-600 font-bold rounded-lg hover:bg-primary-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" data-astro-cid-xxsk6khd>
 Contact Us Now
-${renderComponent($$result2, "ArrowRight", $$ArrowRight, { "class": "ml-2 h-5 w-5", "data-astro-cid-xxsk6khd": true })} </button> </div> </div> </section> </div> ` })}  ${renderScript($$result, "/Users/komo1iddin/Desktop/AstroStudyLatest/project/src/pages/[lang]/about.astro?astro&type=script&index=0&lang.ts")}`;
+${renderComponent($$result2, "ArrowRight", $$ArrowRight, { "class": "ml-2 h-5 w-5", "data-astro-cid-xxsk6khd": true })} </button> </div> </div> </section> </div> ` })} `;
 }, "/Users/komo1iddin/Desktop/AstroStudyLatest/project/src/pages/[lang]/about.astro", void 0);
 const $$file = "/Users/komo1iddin/Desktop/AstroStudyLatest/project/src/pages/[lang]/about.astro";
 const $$url = "/[lang]/about";
@@ -175,5 +175,5 @@ const _page = /* @__PURE__ */ Object.freeze({ __proto__: null, default: $$About,
 const page = () => _page;
 export {
   page,
-  t as renderers
+  q as renderers
 };

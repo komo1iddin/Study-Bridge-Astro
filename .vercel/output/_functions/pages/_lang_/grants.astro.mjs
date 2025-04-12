@@ -1,12 +1,12 @@
-import { c as createComponent, a as createAstro, e as renderComponent, d as renderTemplate, m as maybeRenderHead, b as addAttribute } from "../../chunks/vendor_BAzprikM.mjs";
-import { t } from "../../chunks/vendor_BAzprikM.mjs";
+import { c as createComponent, a as createAstro, e as renderComponent, d as renderTemplate, m as maybeRenderHead, b as addAttribute } from "../../chunks/vendor_fPK89n42.mjs";
+import { q } from "../../chunks/vendor_fPK89n42.mjs";
 import "kleur/colors";
-import { $ as $$Layout } from "../../chunks/Layout_DMdNbTih.mjs";
-import { l as languages, i as getTranslation } from "../../chunks/ui_DFpIJiEG.mjs";
-import { c as getCollection } from "../../chunks/university-features_sJEkhT2g.mjs";
-import { $ as $$Breadcrumbs } from "../../chunks/Breadcrumbs_B0JlxQ9v.mjs";
+import { $ as $$Layout } from "../../chunks/Layout_BFuhr0c3.mjs";
+import { l as languages, i as getTranslation } from "../../chunks/ui_BAsHSPwd.mjs";
+import { c as getCollection } from "../../chunks/university-features_DGFRsfZW.mjs";
+import { $ as $$Breadcrumbs } from "../../chunks/Breadcrumbs_CDkISIuC.mjs";
 /* empty css                                     */
-import { d as $$ChevronRight, y as $$School, g as $$CheckCircle, b as $$ArrowRight, z as $$Calendar, B as $$Search, o as $$FileText, D as $$Upload, E as $$Clock, F as $$BookOpen, h as $$Award, G as $$User } from "../../chunks/icons_GFS7fkbb.mjs";
+import { d as $$ChevronRight, y as $$School, g as $$CheckCircle, b as $$ArrowRight, z as $$Calendar, B as $$Search, o as $$FileText, D as $$Upload, E as $$Clock, F as $$BookOpen, h as $$Award, G as $$User } from "../../chunks/icons_gbmVFOaE.mjs";
 const $$Astro = createAstro();
 const prerender = false;
 const $$Grants = createComponent(async ($$result, $$props, $$slots) => {
@@ -70,9 +70,9 @@ const $$Grants = createComponent(async ($$result, $$props, $$slots) => {
       icon: "user"
     }
   ];
-  const t2 = (key) => getTranslation(lang, key);
+  const t = (key) => getTranslation(lang, key);
   return renderTemplate`${renderComponent($$result, "Layout", $$Layout, { "title": "Гранты и стипендии | Study in China", "data-astro-cid-ydfzhtbi": true }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<div class="bg-gradient-to-b from-blue-50 to-white" data-astro-cid-ydfzhtbi> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" data-astro-cid-ydfzhtbi> ${renderComponent($$result2, "Breadcrumbs", $$Breadcrumbs, { "items": [
-    { label: t2("nav.grants"), href: `/${lang}/grants` }
+    { label: t("nav.grants"), href: `/${lang}/grants` }
   ], "data-astro-cid-ydfzhtbi": true })} </div> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" data-astro-cid-ydfzhtbi> <!-- Hero Section --> <div class="text-center mb-16" data-aos="fade-up" data-aos-duration="1000" data-astro-cid-ydfzhtbi> <h1 class="text-5xl font-extrabold text-gray-900 mb-4 tracking-tight" data-astro-cid-ydfzhtbi>Гранты и стипендии</h1> <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-astro-cid-ydfzhtbi>Откройте для себя возможности финансирования вашего образования в лучших университетах Китая</p> <div class="mt-8" data-astro-cid-ydfzhtbi> <a href="#grants" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1" data-astro-cid-ydfzhtbi>
 Узнать больше
 ${renderComponent($$result2, "ChevronRight", $$ChevronRight, { "class": "ml-2 h-5 w-5", "data-astro-cid-ydfzhtbi": true })} </a> </div> </div> <!-- Available Grants --> <div id="grants" class="mb-20" data-astro-cid-ydfzhtbi> <div class="text-center mb-10" data-aos="fade-up" data-aos-duration="800" data-astro-cid-ydfzhtbi> <h2 class="text-3xl font-bold text-gray-900 mb-4" data-astro-cid-ydfzhtbi>Доступные стипендии</h2> <p class="text-lg text-gray-600 max-w-2xl mx-auto" data-astro-cid-ydfzhtbi>Выберите подходящую программу финансирования для вашего обучения в Китае</p> </div> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-astro-cid-ydfzhtbi> ${grantsData.map((grant, index) => renderTemplate`<div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col h-full transition-all duration-500 hover:shadow-xl hover:-translate-y-2" data-aos="fade-up"${addAttribute(index * 100, "data-aos-delay")} data-astro-cid-ydfzhtbi> <div class="bg-primary-500 h-2 w-full" data-astro-cid-ydfzhtbi></div> <div class="p-6 flex flex-col h-full" data-astro-cid-ydfzhtbi> <div class="flex items-start justify-between mb-4" data-astro-cid-ydfzhtbi> <div data-astro-cid-ydfzhtbi> <h2 class="text-xl font-bold text-gray-900 transition-colors duration-300" data-astro-cid-ydfzhtbi>${grant.title}</h2> <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 mt-2 transition-colors duration-300 hover:bg-primary-200" data-astro-cid-ydfzhtbi> ${grant.type} </span> </div> ${renderComponent($$result2, "School", $$School, { "class": "h-6 w-6 text-primary-600 flex-shrink-0 transition-transform duration-300 hover:scale-110", "data-astro-cid-ydfzhtbi": true })} </div> <div class="flex-grow space-y-4" data-astro-cid-ydfzhtbi> <div data-astro-cid-ydfzhtbi> <h3 class="text-sm font-medium text-gray-700 mb-2" data-astro-cid-ydfzhtbi>Покрытие:</h3> <ul class="space-y-1" data-astro-cid-ydfzhtbi> ${grant.coverage.map((item) => renderTemplate`<li class="flex items-center text-sm text-gray-600 transition-transform duration-200 hover:translate-x-1" data-astro-cid-ydfzhtbi> ${renderComponent($$result2, "CheckCircle", $$CheckCircle, { "class": "h-4 w-4 text-green-500 mr-2 flex-shrink-0", "data-astro-cid-ydfzhtbi": true })} ${item} </li>`)} </ul> </div> <div data-astro-cid-ydfzhtbi> <h3 class="text-sm font-medium text-gray-700 mb-2" data-astro-cid-ydfzhtbi>Требования:</h3> <ul class="space-y-1" data-astro-cid-ydfzhtbi> ${grant.requirements.map((req) => renderTemplate`<li class="flex items-start text-sm text-gray-600 transition-transform duration-200 hover:translate-x-1" data-astro-cid-ydfzhtbi> ${renderComponent($$result2, "ArrowRight", $$ArrowRight, { "class": "h-4 w-4 text-primary-600 mr-2 mt-0.5 flex-shrink-0", "data-astro-cid-ydfzhtbi": true })} ${req} </li>`)} </ul> </div> </div> <div class="mt-6 pt-4 border-t border-gray-100" data-astro-cid-ydfzhtbi> <div class="flex items-center mb-4 text-sm text-gray-500" data-astro-cid-ydfzhtbi> ${renderComponent($$result2, "Calendar", $$Calendar, { "class": "h-4 w-4 mr-2 text-primary-500", "data-astro-cid-ydfzhtbi": true })} <span class="font-medium" data-astro-cid-ydfzhtbi>Дедлайн:</span> <span class="ml-1" data-astro-cid-ydfzhtbi>${grant.deadline}</span> </div> <a${addAttribute(`/${lang}/grants/${grant.slug}`, "href")} class="inline-flex items-center justify-center w-full px-4 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 transition-all duration-300 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-sm hover:shadow-md" data-astro-cid-ydfzhtbi>
@@ -132,5 +132,5 @@ const _page = /* @__PURE__ */ Object.freeze({ __proto__: null, default: $$Grants
 const page = () => _page;
 export {
   page,
-  t as renderers
+  q as renderers
 };

@@ -1,46 +1,49 @@
-import { p as defineMiddleware, q as sequence } from "./chunks/vendor_BAzprikM.mjs";
-import { l as languages, e as defaultLang } from "./chunks/ui_DFpIJiEG.mjs";
+import { e as defaultLang, l as languages } from "./chunks/ui_BAsHSPwd.mjs";
 import "es-module-lexer";
+import { p as sequence } from "./chunks/vendor_fPK89n42.mjs";
 import "kleur/colors";
 import "clsx";
 import "cookie";
-const onRequest$1 = defineMiddleware(async ({ request, locals, redirect }, next) => {
+const DEV_MODE = process.env.NODE_ENV !== "production";
+const pathLanguageCache = /* @__PURE__ */ new Map();
+const isStaticAsset = (pathname) => {
+  return pathname.match(/\.(css|js|jpg|jpeg|png|webp|gif|svg|ico|woff|woff2|avif)$/) !== null || pathname.startsWith("/favicon") || pathname.startsWith("/_astro/") || pathname.startsWith("/optimized-images/");
+};
+const isAdminRoute = (pathname) => {
+  return pathname.startsWith("/admin/");
+};
+const onRequest$1 = async (context, next) => {
+  const { request, locals, redirect } = context;
   const url = new URL(request.url);
   const pathname = url.pathname;
-  if (pathname.match(/\.(css|js|jpg|jpeg|png|webp|gif|svg|ico|woff|woff2)$/) || pathname.startsWith("/favicon") || pathname.startsWith("/_astro/")) {
+  if (isStaticAsset(pathname)) {
     return next();
   }
-  if (pathname.startsWith("/admin/")) {
+  if (isAdminRoute(pathname)) {
     return next();
   }
   const pathSegments = pathname.split("/").filter(Boolean);
   const pathLang = pathSegments[0];
   const isValidLangInPath = languages.includes(pathLang);
-  if (!isValidLangInPath && pathname !== "/") {
-    let detectedLang = defaultLang;
-    const acceptLang = request.headers.get("accept-language");
-    if (acceptLang) {
-      const browserLangs = acceptLang.split(",").map((lang) => lang.split(";")[0].trim().substring(0, 2).toLowerCase());
-      for (const browserLang of browserLangs) {
-        if (languages.includes(browserLang)) {
-          detectedLang = browserLang;
-          break;
-        }
-      }
-    }
-    const newPath = `/${detectedLang}${pathname === "/" ? "" : pathname}`;
-    return redirect(newPath, 307);
-  }
-  if (pathname === "/") {
-    return redirect(`/${defaultLang}/`, 307);
-  }
   if (isValidLangInPath) {
     locals.lang = pathLang;
-  } else {
-    locals.lang = defaultLang;
+    return next();
   }
-  return next();
-});
+  if (pathLanguageCache.has(pathname)) {
+    return redirect(pathLanguageCache.get(pathname) || `/${defaultLang}/`, 307);
+  }
+  if (pathname === "/") {
+    if (DEV_MODE) {
+      pathLanguageCache.set(pathname, `/${defaultLang}/`);
+    }
+    return redirect(`/${defaultLang}/`, 307);
+  }
+  const redirectPath = `/${defaultLang}${pathname}`;
+  if (DEV_MODE) {
+    pathLanguageCache.set(pathname, redirectPath);
+  }
+  return redirect(redirectPath, 307);
+};
 const onRequest = sequence(
   onRequest$1
 );

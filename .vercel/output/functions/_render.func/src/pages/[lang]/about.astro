@@ -239,27 +239,5 @@ const t = (key: string) => getTranslation(lang as Lang, key);
     transform: translateY(-0.25rem);
   }
 
-  /* Reduce motion */
-  @media (prefers-reduced-motion: reduce) {
-    .transition-all,
-    .hover\:-translate-y-1:hover,
-    [data-aos] {
-      transition: none !important;
-      transform: none !important;
-      animation: none !important;
-    }
-  }
-</style>
 
-<script>
-  // Initialize AOS
-  import AOS from 'aos';
-  
-  document.addEventListener('astro:page-load', () => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      offset: 50,
-    });
-  });
-</script>
+</style>

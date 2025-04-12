@@ -239,21 +239,5 @@ const t = (key: string) => getTranslation(lang as Lang, key);
     transform: translateY(-0.25rem);
   }
 
-  /* Reduce motion */
-  @media (prefers-reduced-motion: reduce) {
-    .transition-all,
-    .hover\:-translate-y-1:hover,
-    [data-aos] {
-      transition: none !important;
-      transform: none !important;
-      animation: none !important;
-    }
-  }
 
-  [data-aos] {
-    // Reset all AOS-related styles for compatibility
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 </style>

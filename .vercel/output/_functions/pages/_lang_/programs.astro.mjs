@@ -1,15 +1,15 @@
-import { c as createComponent, a as createAstro, e as renderComponent, d as renderTemplate, m as maybeRenderHead, b as addAttribute } from "../../chunks/vendor_BAzprikM.mjs";
-import { t } from "../../chunks/vendor_BAzprikM.mjs";
+import { c as createComponent, a as createAstro, e as renderComponent, d as renderTemplate, m as maybeRenderHead, b as addAttribute } from "../../chunks/vendor_fPK89n42.mjs";
+import { q } from "../../chunks/vendor_fPK89n42.mjs";
 import "kleur/colors";
-import { $ as $$Layout } from "../../chunks/Layout_DMdNbTih.mjs";
-import { l as languages, i as getTranslation, $ as $$SectionHeader } from "../../chunks/ui_DFpIJiEG.mjs";
-import { c as getCollection } from "../../chunks/university-features_sJEkhT2g.mjs";
-import { $ as $$Breadcrumbs } from "../../chunks/Breadcrumbs_B0JlxQ9v.mjs";
-import { $ as $$ContactModal } from "../../chunks/ContactModal_DJdGLMdF.mjs";
-import { $ as $$Contact } from "../../chunks/Contact_CezTUkJc.mjs";
-import { $ as $$FAQ } from "../../chunks/FAQ_3WqR22Qx.mjs";
+import { $ as $$Layout } from "../../chunks/Layout_BFuhr0c3.mjs";
+import { l as languages, i as getTranslation, $ as $$SectionHeader } from "../../chunks/ui_BAsHSPwd.mjs";
+import { c as getCollection } from "../../chunks/university-features_DGFRsfZW.mjs";
+import { $ as $$Breadcrumbs } from "../../chunks/Breadcrumbs_CDkISIuC.mjs";
+import { $ as $$ContactModal } from "../../chunks/ContactModal_COoptbVG.mjs";
+import { $ as $$Contact } from "../../chunks/Contact_DqyF8bW5.mjs";
+import { $ as $$FAQ } from "../../chunks/FAQ_rLLlU600.mjs";
 /* empty css                                    */
-import { F as $$BookOpen, j as $$GraduationCap, b as $$ArrowRight, E as $$Clock, g as $$CheckCircle } from "../../chunks/icons_GFS7fkbb.mjs";
+import { F as $$BookOpen, j as $$GraduationCap, b as $$ArrowRight, E as $$Clock, g as $$CheckCircle } from "../../chunks/icons_gbmVFOaE.mjs";
 const $$Astro = createAstro();
 const prerender = false;
 const $$Index = createComponent(async ($$result, $$props, $$slots) => {
@@ -19,7 +19,7 @@ const $$Index = createComponent(async ($$result, $$props, $$slots) => {
   if (!lang || !languages.includes(lang)) {
     return Astro2.redirect("/uz/");
   }
-  const t2 = (key) => getTranslation(lang, key);
+  const t = (key) => getTranslation(lang, key);
   const programsEntries = await getCollection("programs");
   const programsByType = {
     language: programsEntries.filter((p) => p.data.type === "language"),
@@ -27,8 +27,8 @@ const $$Index = createComponent(async ($$result, $$props, $$slots) => {
     master: programsEntries.filter((p) => p.data.type === "master")
   };
   const breadcrumbItems = [
-    { label: t2("common.home"), href: `/${lang}` },
-    { label: t2("common.programs"), href: `/${lang}/programs` }
+    { label: t("common.home"), href: `/${lang}` },
+    { label: t("common.programs"), href: `/${lang}/programs` }
   ];
   const programTypes = [
     {
@@ -87,5 +87,5 @@ const _page = /* @__PURE__ */ Object.freeze({ __proto__: null, default: $$Index,
 const page = () => _page;
 export {
   page,
-  t as renderers
+  q as renderers
 };

@@ -1,0 +1,9 @@
+---
+import { defaultLang } from '@/i18n/langUtils';
+
+// Export this as a server-side handled route
+export const prerender = false;
+
+// Use 301 permanent redirect
+return Astro.redirect(`/${defaultLang}/`, 301);
+---

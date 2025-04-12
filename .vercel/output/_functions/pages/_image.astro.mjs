@@ -1,5 +1,5 @@
-import { w, t } from "../chunks/vendor_BAzprikM.mjs";
+import { v, q } from "../chunks/vendor_fPK89n42.mjs";
 export {
-  w as page,
-  t as renderers
+  v as page,
+  q as renderers
 };

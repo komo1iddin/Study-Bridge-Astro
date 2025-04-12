@@ -48,10 +48,6 @@
 			"dest": "_render"
 		},
 		{
-			"src": "^/([^/]+?)/programs/([^/]+?)/([^/]+?)/?$",
-			"dest": "_render"
-		},
-		{
 			"src": "^/([^/]+?)/programs/?$",
 			"dest": "_render"
 		},
@@ -64,7 +60,11 @@
 			"dest": "_render"
 		},
 		{
-			"src": "^/([^/]+?)/?$",
+			"src": "^/$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/$",
 			"dest": "_render"
 		}
 	]
