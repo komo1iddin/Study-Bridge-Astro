@@ -21,9 +21,10 @@
   let loading = true;
   let error = null;
   let isMobile = false;
-  let visibleUniversities = universities || [];
+  let visibleUniversities = [];
   let selectedIndex = 0;
   let swipeAnimationActive = true;
+  let carouselContainer: HTMLElement;
   
   // DOM refs
   let emblaRef;
@@ -33,61 +34,83 @@
   // Setup carousel on mount
   onMount(() => {
     // Check if mobile
-    const checkIfMobile = () => isMobile = window.innerWidth <= 768;
+    const checkIfMobile = () => {
+      isMobile = window.innerWidth <= 768;
+      
+      // Reset and reinitialize carousel on screen size change
+      if (emblaApi) {
+        emblaApi.destroy();
+        initializeCarousel();
+      }
+    };
+    
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
     
-    // Load universities with delay for loading effect
-    loading = true;
-    const timer = setTimeout(() => {
-      try {
-        visibleUniversities = universities || [];
-        loading = false;
-      } catch (err) {
-        error = t.error || 'Маълумотларни юклашда хатолик юз берди';
-        loading = false;
-      }
-    }, 300);
+    // Load universities immediately without delay
+    try {
+      visibleUniversities = universities || [];
+      loading = false;
+    } catch (err) {
+      error = t.error || 'Маълумотларни юклашда хатолик юз берди';
+      loading = false;
+    }
     
-    // Start swipe animation - make sure this is running at the same interval as the React version
-    const animInterval = setInterval(() => {
-      swipeAnimationActive = !swipeAnimationActive;
-    }, 2000);  // 2-second interval for the animation
+    // Start swipe animation - disable on mobile to save resources
+    let animInterval;
+    if (!isMobile) {
+      animInterval = setInterval(() => {
+        swipeAnimationActive = !swipeAnimationActive;
+      }, 2000);
+    }
     
-    // Initialize carousel after DOM is ready
-    setTimeout(() => {
-      ({ emblaApi, autoplay } = createEmblaCarousel(emblaRef, {
-        loop: true,
-        align: "start",
-        slidesToScroll: 1,
-        skipSnaps: false,
-        inViewThreshold: 0.7,
-        startIndex: 0,
-        dragFree: false,
-        containScroll: "trimSnaps",
-        watchDrag: true,
-        speed: 20,
-        delay: 4000, // Autoplay delay
-      }));
+    // Apply performance optimizations for touch devices
+    if (carouselContainer) {
+      carouselContainer.style.willChange = 'transform';
+      carouselContainer.style.transform = 'translateZ(0)';
+      carouselContainer.style.backfaceVisibility = 'hidden';
       
-      if (emblaApi) {
-        emblaApi.on("select", () => {
-          selectedIndex = emblaApi.selectedScrollSnap();
-        });
-        emblaApi.scrollTo(0);
-      }
-    }, 0);
+      // Improve touch handling
+      carouselContainer.style.touchAction = 'pan-y';
+    }
+    
+    // Initialize carousel
+    initializeCarousel();
     
     // Cleanup function
     return () => {
       window.removeEventListener('resize', checkIfMobile);
-      clearTimeout(timer);
-      clearInterval(animInterval);
+      if (animInterval) clearInterval(animInterval);
       
       if (emblaApi) emblaApi.destroy();
       if (autoplay && autoplay.stop) autoplay.stop();
     };
   });
+  
+  // Function to initialize carousel with proper settings
+  function initializeCarousel() {
+    // Initialize carousel immediately
+    ({ emblaApi, autoplay } = createEmblaCarousel(emblaRef, {
+      loop: true,
+      align: "start",
+      slidesToScroll: 1,
+      skipSnaps: false,
+      inViewThreshold: isMobile ? 0.1 : 0.7,
+      startIndex: 0,
+      dragFree: isMobile,
+      containScroll: "trimSnaps",
+      watchDrag: true,
+      speed: isMobile ? 15 : 20, // Slower on mobile for smoother performance
+      delay: 4000, // Autoplay delay
+    }));
+    
+    if (emblaApi) {
+      emblaApi.on("select", () => {
+        selectedIndex = emblaApi.selectedScrollSnap();
+      });
+      emblaApi.scrollTo(0);
+    }
+  }
   
   // Carousel navigation functions
   function scrollNext() {
@@ -99,15 +122,18 @@
   }
 </script>
 
-<div class="w-full bg-[#F5F9FB] py-12 relative">
+<div class="w-full bg-[#F5F9FB] py-12 relative" bind:this={carouselContainer}>
   <BackgroundDecoration />
   <div class="w-full max-w-[1920px] mx-auto px-4 relative z-10">
-    <SectionHeader 
-      title={t.leadingUniversities}
-      subtitle={t.discoverText}
-    />
+    <div data-animate="slideDown" data-duration="0.6">
+      <SectionHeader 
+        title={t.leadingUniversities}
+        subtitle={t.discoverText}
+      />
+    </div>
 
-    <div class="flex justify-end mb-4">
+    {#if !isMobile}
+    <div class="flex justify-end mb-4" data-animate="fadeIn" data-delay="0.3">
       <div class={`flex items-center gap-2 px-4 py-2 bg-white backdrop-blur-sm rounded-full shadow-sm transition-transform duration-700 ${
         swipeAnimationActive ? "translate-x-2" : "-translate-x-2"
       }`}>
@@ -117,22 +143,28 @@
         </span>
       </div>
     </div>
+    {/if}
 
-    <div class="relative mb-8 pb-6">
-      <div class="overflow-hidden cursor-grab active:cursor-grabbing" bind:this={emblaRef}>
-        <div class="flex">
+    <div class="relative mb-8 pb-6" data-animate="fadeIn" data-delay="0.1">
+      <div 
+        class="overflow-hidden cursor-grab active:cursor-grabbing carousel-container" 
+        bind:this={emblaRef}
+      >
+        <div class="flex" data-stagger-group data-stagger-amount="0.1">
           {#if loading}
             {#each Array(4) as _, index}
               <div 
-                class="min-w-[280px] md:min-w-[320px] lg:min-w-[300px] xl:min-w-[320px] px-2 pb-4"
+                class="min-w-[280px] md:min-w-[320px] lg:min-w-[300px] xl:min-w-[320px] px-2 pb-4 carousel-slide"
+                data-stagger-item
               >
                 <UniversityCardSkeleton />
               </div>
             {/each}
           {:else if visibleUniversities.length > 0}
-            {#each visibleUniversities as university (university.id)}
+            {#each visibleUniversities as university, i (university.id)}
               <div 
-                class="min-w-[280px] md:min-w-[320px] lg:min-w-[300px] xl:min-w-[320px] px-2 pb-4"
+                class="min-w-[280px] md:min-w-[320px] lg:min-w-[300px] xl:min-w-[320px] px-2 pb-4 carousel-slide"
+                data-stagger-item
               >
                 <UniversityCardItem 
                   university={university} 
@@ -150,7 +182,7 @@
       </div>
 
       {#if !isMobile && visibleUniversities.length > 0}
-        <div class="absolute -bottom-2 left-4 flex items-center gap-2 z-10">
+        <div class="absolute -bottom-2 left-4 flex items-center gap-2 z-10" data-animate="fadeIn" data-delay="0.7">
           <button 
             on:click={scrollPrev} 
             class="bg-white/90 hover:bg-white rounded-full p-2.5 shadow-lg transition-all duration-200 hover:scale-110"
@@ -167,7 +199,7 @@
       {/if}
     </div>
 
-    <div class="text-center mt-12">
+    <div class="text-center mt-12" data-animate="fadeIn" data-delay="0.5">
       <ButtonView
         href={`/${lang}/universities`} 
         text={t.viewAll} 
@@ -189,3 +221,19 @@
     {error}
   </div>
 {/if}
+
+<style>
+  /* Optimize carousel for mobile */
+  :global(.carousel-container) {
+    -webkit-overflow-scrolling: touch;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  
+  :global(.carousel-slide) {
+    contain: content;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+</style>

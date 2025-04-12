@@ -77,8 +77,9 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
       href={`${siteUrl}/uz${canonicalUrl}`} 
       hreflang="x-default"
     />
-
-    <!-- Optimized: Remove preload for AOS assets since they're loaded dynamically when needed -->
+    
+    <!-- Preload Motion script for faster loading -->
+    <link rel="preload" href="/scripts/motion.js" as="script" />
     
     <!-- Preconnect to important domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -125,18 +126,16 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
     <!-- Load non-critical CSS with JS -->
     <script>
       // Dynamically load non-critical CSS
-      function loadStyle(src) {
+      function loadStyle(src: string): void {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = src;
         document.head.appendChild(link);
       }
       
-      // After main content loads, add non-critical styles
-      window.addEventListener('load', () => {
-        setTimeout(() => {
-          loadStyle('/styles/lazyload.css');
-        }, 100);
+      // Load styles early in the page lifecycle
+      document.addEventListener('DOMContentLoaded', () => {
+        loadStyle('/styles/lazyload.css');
       });
     </script>
 
@@ -154,33 +153,38 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
     <OfferPopup lang={lang} autoShow={false} />
 
     <script>
-      // Only load critical scripts immediately
+      // Load critical scripts immediately
       import '../components/scripts/transitions';
       
-      // Defer non-critical script loading
-      window.addEventListener('load', () => {
-        // Wait until main thread is idle for non-critical scripts
-        if ('requestIdleCallback' in window) {
-          window.requestIdleCallback(() => {
-            import('../components/scripts/icon-optimizer');
-            import('../components/scripts/aos-init');
-          });
-        } else {
-          // Fallback for browsers without requestIdleCallback
-          setTimeout(() => {
-            import('../components/scripts/icon-optimizer');
-            import('../components/scripts/aos-init');
-          }, 1000);
-        }
+      // Load Motion immediately - essential for animations
+      document.addEventListener('DOMContentLoaded', () => {
+        // Use dynamic import for Motion
+        import('motion').catch(() => {
+          // Fallback to CDN if local import fails
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = 'https://cdn.jsdelivr.net/npm/motion@11.0.0/+esm';
+          document.body.appendChild(script);
+        }).then(() => {
+          // Init animations once Motion is loaded
+          import('../components/scripts/motion-init');
+        });
+        
+        // Load icon optimizer with slight delay
+        setTimeout(() => {
+          import('../components/scripts/icon-optimizer');
+        }, 200);
       });
       
-      // Lazy load images
+      // Lazy load images with proper TypeScript typing
       if ('loading' in HTMLImageElement.prototype) {
         // Use native lazy loading if supported
         document.addEventListener('DOMContentLoaded', () => {
-          document.querySelectorAll('img[data-src]').forEach(img => {
-            img.setAttribute('loading', 'lazy');
-            img.src = img.dataset.src;
+          document.querySelectorAll<HTMLImageElement>('img[data-src]').forEach(img => {
+            img.loading = 'lazy';
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+            }
           });
         });
       } else {
@@ -189,7 +193,7 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
           const lazyImageObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
               if (entry.isIntersecting) {
-                const img = entry.target;
+                const img = entry.target as HTMLImageElement;
                 if (img.dataset.src) {
                   img.src = img.dataset.src;
                   lazyImageObserver.unobserve(img);
@@ -198,7 +202,7 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
             });
           });
 
-          document.querySelectorAll('img[data-src]').forEach(img => 
+          document.querySelectorAll<HTMLImageElement>('img[data-src]').forEach(img => 
             lazyImageObserver.observe(img)
           );
         });

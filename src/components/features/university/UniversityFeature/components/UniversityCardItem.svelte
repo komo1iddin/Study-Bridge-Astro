@@ -10,6 +10,26 @@
   export let lang: Lang;
   export let className = '';
   
+  // Detect if mobile
+  let isMobile = false;
+  
+  // When component mounts, check if mobile
+  import { onMount } from 'svelte';
+  onMount(() => {
+    isMobile = window.innerWidth <= 768;
+    
+    // Add resize listener to update on orientation change
+    window.addEventListener('resize', () => {
+      isMobile = window.innerWidth <= 768;
+    });
+    
+    return () => {
+      window.removeEventListener('resize', () => {
+        isMobile = window.innerWidth <= 768;
+      });
+    };
+  });
+  
   // Navigation handler
   function handleMoreInfo() {
     // Change the URL structure to match the university detail page
@@ -30,28 +50,36 @@
     <img 
       src={university.image} 
       alt={university.name}
-      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      loading="lazy"
+      decoding="async"
+      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 will-change-transform"
     />
   </div>
 
-  <div class="p-4 sm:p-5 flex flex-col relative min-h-[280px]">
+  <div class="p-4 sm:p-5 flex flex-col relative min-h-[280px] will-change-transform">
     <!-- Logo -->
     <div class="absolute -top-8 left-4 sm:left-5 bg-white/90 p-1.5 rounded-full shadow-lg">
       <img 
         src={university.logo} 
         alt={`${university.name} logo`}
+        loading="lazy"
+        width="56"
+        height="56"
         class="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-contain"
       />
     </div>
     
-    <!-- Watermark -->
-    <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none overflow-hidden">
-      <img 
-        src={university.logo} 
-        alt=""
-        class="w-32 h-32 sm:w-40 sm:h-40 object-contain translate-x-1/3 translate-y-1/3"
-      />
-    </div>
+    <!-- Watermark - only show on desktop -->
+    {#if !isMobile}
+      <div class="absolute bottom-0 right-0 opacity-10 pointer-events-none overflow-hidden">
+        <img 
+          src={university.logo} 
+          alt=""
+          loading="lazy"
+          class="w-32 h-32 sm:w-40 sm:h-40 object-contain translate-x-1/3 translate-y-1/3"
+        />
+      </div>
+    {/if}
 
     <!-- Title section -->
     <div class="pl-14 sm:pl-16 pt-3 h-[50px] sm:h-[60px]">
@@ -73,14 +101,14 @@
     </div>
 
     <!-- Faculties section -->
-    <div class="h-[80px] sm:h-[90px] overflow-y-auto mb-3">
+    <div class="h-[80px] sm:h-[90px] overflow-y-auto mb-3 overscroll-contain">
       <div class="text-xs sm:text-sm font-semibold mb-2 flex items-center gap-2 text-gray-700">
         <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center flex-shrink-0">
           <GraduationCap class="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />
         </div>
         <span>{t.faculties}</span>
       </div>
-      <div class="flex flex-wrap gap-1.5">
+      <div class="flex flex-wrap gap-1.5 content-start">
         {#each university.faculties as faculty}
           <div class="bg-gray-50 hover:bg-gray-100 text-gray-700 transition-colors rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-xs font-medium border border-gray-200">
             {faculty}
@@ -98,4 +126,19 @@
       <ChevronRight class="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-0.5" />
     </button>
   </div>
-</Card> 
+</Card>
+
+<style>
+  /* Apply hardware acceleration */
+  :global(.will-change-transform) {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  /* Optimize scrolling on touch devices */
+  :global(.overscroll-contain) {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+</style> 
