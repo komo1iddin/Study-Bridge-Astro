@@ -1,12 +1,8 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/langUtils';
- 
-
 import UniversityPage from '@/components/features/university/UniversityPage/UniversityPage.astro';
-import fs from 'node:fs';
-import path from 'node:path';
-import yaml from 'js-yaml';
+import { getUniversityEntries } from '@/data/helpers/universities';
 
 // Определим тип University здесь напрямую, чтобы избежать проблем с импортом
 type University = {
@@ -30,42 +26,31 @@ const { lang } = Astro.params;
 if (!lang || !languages.includes(lang as Lang)) {
   return Astro.redirect('/uz/'); // Redirect to default language if invalid
 }
+
 export function getStaticPaths() {
   return ['uz', 'ru', 'en'].map((lang) => ({ params: { lang } }));
 }
 
 let universitiesData: University[] = [];
-let error = null;
+let error: Error | null = null;
 
 try {
-  // Читаем YAML-файлы напрямую
-  console.log('Trying to load YAML files directly');
+  // Use the helper function to get university data
+  console.log('Loading university data');
+  const entries = await getUniversityEntries();
   
-  // Путь к директории с YAML-файлами университетов
-  const universitiesDir = path.join(process.cwd(), 'src/content/universities');
-  
-  // Проверяем существование директории
-  if (fs.existsSync(universitiesDir)) {
-    // Получаем список файлов в директории
-    const files = fs.readdirSync(universitiesDir).filter(file => 
-      file.endsWith('.yaml') || file.endsWith('.yml')
-    );
+  if (entries && entries.length > 0) {
+    console.log(`Found ${entries.length} universities`);
     
-    console.log(`Found ${files.length} YAML files in ${universitiesDir}`);
-    
-    // Читаем и парсим каждый YAML-файл
-    universitiesData = files.map(file => {
-      const filePath = path.join(universitiesDir, file);
-      const fileContent = fs.readFileSync(filePath, 'utf8');
-      const data = yaml.load(fileContent) as any;
-      
-      // Получаем id из имени файла (без расширения)
-      const id = path.basename(file, path.extname(file));
+    // Convert entries to the required format
+    universitiesData = entries.map((entry: any) => {
+      const id = typeof entry.id === 'string' ? entry.id.replace(/\.(md|yaml)$/, '') : entry.id;
+      const data = entry.data || entry;
       
       return {
         id,
         ...data,
-        // Преобразуем данные в соответствии с языком, если необходимо
+        // Apply language-specific transformations
         name: typeof data.name === 'object' ? data.name[lang] || data.name.en || '' : data.name,
         description: typeof data.description === 'object' ? 
           data.description[lang] || data.description.en || '' : 
@@ -73,18 +58,18 @@ try {
       };
     });
     
-    console.log(`Loaded ${universitiesData.length} universities from YAML files`);
+    console.log(`Processed ${universitiesData.length} universities`);
   } else {
-    console.log(`Directory ${universitiesDir} does not exist`);
+    console.log('No university data found');
   }
 } catch (e) {
-  error = e;
+  error = e as Error;
   console.error('Failed to fetch universities:', e);
-  universitiesData = []; // Пустой массив в случае ошибки
+  universitiesData = []; // Empty array in case of error
 }
 
 // Server-side render this page
-export const prerender = false;
+export const prerender = true;
 // Use the language parameter to get translations
 import { getTranslation } from '@/i18n/translationUtils';
 const t = (key: string) => getTranslation(lang as Lang, key);

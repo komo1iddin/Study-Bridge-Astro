@@ -3,6 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 import { languages, type Lang } from '@/i18n/langUtils';
 import UniversityDetailPage from '@/components/features/university/UniversityDetailPage/UniversityDetailPage.astro';
 import ContactModal from '@/components/features/contact/ContactModal.astro';
+import { getUniversityEntries } from '@/data/helpers/universities';
 
 // Server-side render this page
 export const prerender = true;
@@ -50,30 +51,6 @@ async function readYamlFiles() {
       data: yaml.load(content)
     };
   }));
-}
-
-async function getUniversityEntries() {
-  try {
-    return await readYamlFiles();
-  } catch (error) {
-    console.error('Error reading YAML files:', error);
-    
-    try {
-      // Import getCollection dynamically to avoid issues
-      const { getCollection } = await import('astro:content');
-      
-      // Use 'as any' to avoid type issues with dynamic import
-      const entries = await (getCollection as any)('universities');
-      if (!entries.length) {
-        const entriesMd = await (getCollection as any)('universities-md');
-        return entriesMd;
-      }
-      return entries;
-    } catch (collectionError) {
-      console.error('Error fetching from collections:', collectionError);
-      return [];
-    }
-  }
 }
 
 function processLocation(location: string | { city: string; country: string }) {
