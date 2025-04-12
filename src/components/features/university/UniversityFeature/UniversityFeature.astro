@@ -16,30 +16,16 @@ const universityFeatureT = universityFeatureTranslations[lang];
 let universities: UniversityFeatureItem[] = [];
 
 try {
-  console.log("Fetching universities in UniversityFeature.astro");
+  // Remove unnecessary console logs in production
+  const DEV_MODE = process.env.NODE_ENV !== 'production';
+  if (DEV_MODE) console.log("Fetching universities in UniversityFeature.astro");
+  
   universities = await getFeaturedUniversities(lang, 8);
-  console.log(`Found ${universities.length} universities in UniversityFeature.astro`);
   
-  // Fallback to static data if no universities found
-  if (universities.length === 0) {
-    console.log("No universities found, using fallback data");
-    const staticData = await import('@/types/university');
-    if (staticData && typeof staticData === 'object' && 'universities' in staticData && Array.isArray(staticData.universities)) {
-      universities = [...staticData.universities] as UniversityFeatureItem[];
-    }
-  }
+  if (DEV_MODE) console.log(`Found ${universities.length} universities`);
 } catch (err) {
+  // Just log the error and use empty array
   console.error("Error fetching universities:", err);
-  
-  // Fallback to static data on error
-  try {
-    const staticData = await import('@/types/university');
-    if (staticData && typeof staticData === 'object' && 'universities' in staticData && Array.isArray(staticData.universities)) {
-      universities = [...staticData.universities] as UniversityFeatureItem[];
-    }
-  } catch (e) {
-    console.error("Failed to load fallback data:", e);
-  }
 }
 ---
 
@@ -47,5 +33,5 @@ try {
   lang={lang} 
   universities={universities} 
   t={universityFeatureT}
-  client:visible 
+  client:idle 
 />

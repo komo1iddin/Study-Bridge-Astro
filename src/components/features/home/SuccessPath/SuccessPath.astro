@@ -13,4 +13,4 @@ const { lang = 'uz' } = Astro.props;
 const translations = getSuccessPathTranslations(lang);
 ---
 
-<SuccessPathComponent lang={lang} translations={translations} client:visible />
+<SuccessPathComponent lang={lang} translations={translations} client:idle />

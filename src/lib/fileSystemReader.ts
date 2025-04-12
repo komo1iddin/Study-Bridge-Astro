@@ -117,6 +117,23 @@ export async function getFilesInDirectory(dirPath: string, extension: string) {
   }
 }
 
+// Helper to check if directory exists with caching
+async function directoryExists(dirPath: string): Promise<boolean> {
+  const cacheKey = `dir-exists-${dirPath}`;
+  if (fileExistsCache.has(cacheKey)) {
+    return fileExistsCache.get(cacheKey) || false;
+  }
+  
+  try {
+    await fs.promises.access(dirPath);
+    fileExistsCache.set(cacheKey, true);
+    return true;
+  } catch (e) {
+    fileExistsCache.set(cacheKey, false);
+    return false;
+  }
+}
+
 // Get all universities
 export async function getAllUniversities(lang: Lang) {
   // Remove log statement in production for better performance
@@ -269,32 +286,23 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
     const yamlDirPath = path.join(contentDir, 'posts');
     const mdDirPath = path.join(contentDir, 'posts-md');
     
-    // Check if directories exist
-    let yamlDirExists = false;
-    let mdDirExists = false;
+    // Check if directories exist (using our cached helper)
+    const [yamlDirExists, mdDirExists] = await Promise.all([
+      directoryExists(yamlDirPath),
+      directoryExists(mdDirPath)
+    ]);
     
-    try {
-      await fs.promises.access(yamlDirPath);
-      yamlDirExists = true;
-      console.log('posts directory exists');
-    } catch (e) {
-      console.log('posts directory does not exist');
-    }
-    
-    try {
-      await fs.promises.access(mdDirPath);
-      mdDirExists = true;
-      console.log('posts-md directory exists');
-    } catch (e) {
-      console.log('posts-md directory does not exist');
+    if (DEV_MODE) {
+      console.log(`Posts directories: YAML ${yamlDirExists ? 'exists' : 'missing'}, MD ${mdDirExists ? 'exists' : 'missing'}`);
     }
     
     // Try to read YAML files first
     if (yamlDirExists) {
       const yamlFiles = await getFilesInDirectory(yamlDirPath, '.yaml');
       
-      console.log('Reading posts from YAML files:', yamlFiles);
-      console.log('First post data sample:', yamlFiles.length > 0 ? await readYamlFile(path.join(yamlDirPath, yamlFiles[0])) : 'No posts found');
+      if (DEV_MODE && yamlFiles.length > 0) {
+        console.log(`Found ${yamlFiles.length} YAML post files`);
+      }
       
       if (yamlFiles.length > 0) {
         const posts = await Promise.all(
@@ -341,16 +349,16 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
     // If no YAML files or no valid YAML posts, try MD files
     if (mdDirExists) {
       const mdFiles = await getFilesInDirectory(mdDirPath, '.md');
-      console.log(`Looking for .md files in: ${mdDirPath}`);
-      console.log(`Found ${mdFiles.length} .md files in ${mdDirPath}`);
+      
+      if (DEV_MODE) {
+        console.log(`Found ${mdFiles.length} MD post files`);
+      }
       
       if (mdFiles.length > 0) {
         const posts = await Promise.all(
           mdFiles.map(async file => {
             const filePath = path.join(mdDirPath, file);
-            console.log(`Attempting to read MD file: ${filePath}`);
-            const data = await readMdFile(filePath) as PostData | null; // Explicitly type data
-            if (data) console.log(`Successfully read MD file: ${filePath}`);
+            const data = await readMdFile(filePath) as PostData | null;
             return {
               slug: file.replace('.md', ''),
               data,
@@ -367,14 +375,16 @@ export async function getAllPosts(lang: Lang): Promise<Post[]> {
             return dateB - dateA;
           });
         
-        console.log(`Found ${validPosts.length} valid MD posts`);
+        if (DEV_MODE) {
+          console.log(`Found ${validPosts.length} valid MD posts`);
+        }
         return validPosts;
       }
     }
     
     // If no files found, return empty array
     return [];
-  });
+  }, CACHE_TTL);
 }
 
 // Get all testimonials
@@ -384,23 +394,11 @@ export async function getAllTestimonials(lang: Lang): Promise<Testimonial[]> {
     const mdDirPath = path.join(contentDir, 'testimonials-md');
     const yamlDirPath = path.join(contentDir, 'testimonials');
     
-    // Check if directories exist
-    let mdDirExists = false;
-    let yamlDirExists = false;
-    
-    try {
-      await fs.promises.access(mdDirPath);
-      mdDirExists = true;
-    } catch (e) {
-      console.log('testimonials-md directory does not exist');
-    }
-    
-    try {
-      await fs.promises.access(yamlDirPath);
-      yamlDirExists = true;
-    } catch (e) {
-      console.log('testimonials directory does not exist');
-    }
+    // Check if directories exist (using cached helper)
+    const [mdDirExists, yamlDirExists] = await Promise.all([
+      directoryExists(mdDirPath),
+      directoryExists(yamlDirPath)
+    ]);
     
     // Try to read MD files first
     if (mdDirExists) {
@@ -410,7 +408,7 @@ export async function getAllTestimonials(lang: Lang): Promise<Testimonial[]> {
         const testimonials = await Promise.all(
           mdFiles.map(async file => {
             const filePath = path.join(mdDirPath, file);
-            const data = await readMdFile(filePath) as TestimonialData | null; // Explicitly type data
+            const data = await readMdFile(filePath) as TestimonialData | null;
             return {
               slug: file.replace('.md', ''),
               data,
@@ -431,9 +429,9 @@ export async function getAllTestimonials(lang: Lang): Promise<Testimonial[]> {
         const testimonials = await Promise.all(
           yamlFiles.map(async file => {
             const filePath = path.join(yamlDirPath, file);
-            const data = await readYamlFile(filePath) as TestimonialData | null; // Explicitly type data
+            const data = await readYamlFile(filePath) as TestimonialData | null;
             return {
-              slug: file.replace('.md', ''), // Corrected extension removal
+              slug: file.replace('.yaml', ''), // Fix extension removal
               data,
             };
           })
@@ -446,7 +444,7 @@ export async function getAllTestimonials(lang: Lang): Promise<Testimonial[]> {
     
     // If no files found, return empty array
     return [];
-  });
+  }, CACHE_TTL);
 }
 
 // Get all FAQ items
@@ -454,15 +452,15 @@ export async function getAllFAQ(lang: Lang): Promise<FAQ[]> {
   return getCachedData(`faq-all-${lang}`, async () => {
     const yamlDirPath = path.join(contentDir, 'faq');
     
-    try {
-      await fs.promises.access(yamlDirPath);
+    // Use directoryExists helper instead of try/catch
+    if (await directoryExists(yamlDirPath)) {
       const yamlFiles = await getFilesInDirectory(yamlDirPath, '.yaml');
       
       if (yamlFiles.length > 0) {
         const faqItems = await Promise.all(
           yamlFiles.map(async file => {
             const filePath = path.join(yamlDirPath, file);
-            const data = await readYamlFile(filePath) as FAQData | null; // Explicitly type data
+            const data = await readYamlFile(filePath) as FAQData | null;
             return {
               slug: file.replace('.yaml', ''),
               data,
@@ -473,12 +471,10 @@ export async function getAllFAQ(lang: Lang): Promise<FAQ[]> {
         // Use type guard to filter nulls and satisfy TypeScript
         return faqItems.filter((item): item is FAQ => item.data !== null);
       }
-    } catch (e) {
-      console.log('FAQ directory does not exist or is empty');
     }
     
     return [];
-  });
+  }, CACHE_TTL);
 }
 
 // Get all features
@@ -486,15 +482,15 @@ export async function getAllFeatures(lang: Lang): Promise<Feature[]> {
   return getCachedData(`features-all-${lang}`, async () => {
     const yamlDirPath = path.join(contentDir, 'features');
     
-    try {
-      await fs.promises.access(yamlDirPath);
+    // Use directoryExists helper instead of try/catch
+    if (await directoryExists(yamlDirPath)) {
       const yamlFiles = await getFilesInDirectory(yamlDirPath, '.yaml');
       
       if (yamlFiles.length > 0) {
         const features = await Promise.all(
           yamlFiles.map(async file => {
             const filePath = path.join(yamlDirPath, file);
-            const data = await readYamlFile(filePath) as FeatureData | null; // Explicitly type data
+            const data = await readYamlFile(filePath) as FeatureData | null;
             return {
               slug: file.replace('.yaml', ''),
               data,
@@ -505,12 +501,10 @@ export async function getAllFeatures(lang: Lang): Promise<Feature[]> {
         // Use type guard to filter nulls and satisfy TypeScript
         return features.filter((feature): feature is Feature => feature.data !== null);
       }
-    } catch (e) {
-      console.log('Features directory does not exist or is empty');
     }
     
     return [];
-  });
+  }, CACHE_TTL);
 }
 
 // Get all cities from universities

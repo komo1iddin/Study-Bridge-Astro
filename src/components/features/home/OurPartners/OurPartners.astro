@@ -13,4 +13,4 @@ const { lang = 'uz' } = Astro.props;
 const translations = getPartnersTranslations(lang);
 ---
 
-<OurPartnersComponent lang={lang} translations={translations} client:visible />
+<OurPartnersComponent lang={lang} translations={translations} client:idle />
