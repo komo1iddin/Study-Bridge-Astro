@@ -17,6 +17,11 @@ const DEV_MODE = process.env.NODE_ENV !== 'production';
 const fileExistsCache = new Map<string, boolean>();
 const directoryCache = new Map<string, string[]>();
 
+// Increase cache TTL for production to reduce file system operations
+const CACHE_TTL = DEV_MODE 
+  ? 1000 * 60 * 10    // 10 minutes in dev
+  : 1000 * 60 * 60;   // 60 minutes in production
+
 // Read a YAML file and parse its contents
 export async function readYamlFile(filePath: string) {
   try {
@@ -114,7 +119,11 @@ export async function getFilesInDirectory(dirPath: string, extension: string) {
 
 // Get all universities
 export async function getAllUniversities(lang: Lang) {
-  console.log(`Getting all universities for language: ${lang}`);
+  // Remove log statement in production for better performance
+  if (DEV_MODE) {
+    console.log(`Getting all universities for language: ${lang}`);
+  }
+  
   return getCachedData(`universities-all-${lang}`, async () => {
     const universitiesDir = path.join(contentDir, 'universities');
     const yamlFiles = await getFilesInDirectory(universitiesDir, '.yaml');
@@ -136,12 +145,16 @@ export async function getAllUniversities(lang: Lang) {
     }
     
     return universities;
-  });
+  }, CACHE_TTL); // Use longer cache TTL
 }
 
 // Get a single university by ID
 export async function getUniversityById(id: string, lang: Lang) {
-  console.log(`Getting university with ID: ${id} for language: ${lang}`);
+  // Remove log statement in production for better performance
+  if (DEV_MODE) {
+    console.log(`Getting university with ID: ${id} for language: ${lang}`);
+  }
+  
   return getCachedData(`university-${id}-${lang}`, async () => {
     const filePath = path.join(contentDir, 'universities', `${id}.yaml`);
     const universityData = await readYamlFile(filePath) as UniversityYaml;
@@ -152,7 +165,7 @@ export async function getUniversityById(id: string, lang: Lang) {
     }
     
     return null;
-  });
+  }, CACHE_TTL); // Use longer cache TTL
 }
 
 // Get a single university by slug
@@ -572,35 +585,44 @@ export async function getFeaturedUniversities(lang: Lang, limit = 8): Promise<Un
 
 // Get a single post by slug
 export async function getPostBySlug(slug: string, lang: Lang): Promise<Post | null> {
-  console.log(`Getting post with slug: ${slug} for language: ${lang}`);
+  // Remove excessive logging in production
+  if (DEV_MODE) {
+    console.log(`Getting post with slug: ${slug} for language: ${lang}`);
+  }
   
   try {
     const yamlDirPath = path.join(contentDir, 'posts');
     const filePath = path.join(yamlDirPath, `${slug}.yaml`);
     
     // Check if file exists
-    try {
-      await fs.promises.access(filePath);
-      console.log(`Post file exists at: ${filePath}`);
-    } catch (e) {
-      console.error(`Post file does not exist: ${filePath}`);
+    if (!await fileExists(filePath)) {
+      if (DEV_MODE) {
+        console.error(`Post file does not exist: ${filePath}`);
+      }
       return null;
     }
     
     // Read and parse YAML file
     const postData = await readYamlFile(filePath) as PostData | null; // Explicitly type data
     if (!postData) {
-      console.error(`Failed to parse post YAML: ${filePath}`);
+      if (DEV_MODE) {
+        console.error(`Failed to parse post YAML: ${filePath}`);
+      }
       return null;
     }
     
-    console.log(`Successfully loaded post data for: ${slug}`);
+    if (DEV_MODE) {
+      console.log(`Successfully loaded post data for: ${slug}`);
+    }
+    
     return {
       slug,
       data: postData
     };
   } catch (e) {
-    console.error(`Error getting post by slug ${slug}:`, e);
+    if (DEV_MODE) {
+      console.error(`Error getting post by slug ${slug}:`, e);
+    }
     return null;
   }
 }

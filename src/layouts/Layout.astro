@@ -7,6 +7,7 @@ import type { Lang } from '@/i18n/langUtils';
 import { getLangFromUrl, languages } from '@/i18n/langUtils';
 import { createTranslationFunction } from '@/i18n/translationUtils';
 import OfferPopup from '@/components/shared/popup/OfferPopup.astro';
+import '@/styles/global.css';
 
 const lang = getLangFromUrl(Astro.url);
 const t = createTranslationFunction(lang);
@@ -43,13 +44,31 @@ const pageMeta = { ...defaultMeta[lang], ...meta };
 const siteUrl = 'https://yoursite.com'; // O'z domeningizni kiriting
 const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
 
+// Critical paths that should be preloaded for common navigation patterns
+const currentPath = Astro.url.pathname;
+const criticalPaths = [
+  `/${lang}`,
+  `/${lang}/contacts`, 
+  `/${lang}/universities`
+];
+
+// Critical CSS that should be preloaded
+const criticalStyles = [
+  '/_astro/global.css',
+];
+
+// Critical icons for faster initial rendering
+const criticalIcons = [
+  'menu', 'x', 'chevron-down', 'chevron-right', 'phone', 'mail', 'map-pin', 'calendar', 'clock', 'users', 'book-open'
+];
+
 ---
 
 <!DOCTYPE html>
 <html lang={lang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     
@@ -82,6 +101,18 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- Preload critical CSS -->
+    {criticalStyles.map(style => (
+      <link rel="preload" href={style} as="style" />
+    ))}
+    
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- DNS prefetch and preconnect for common domains -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+
     <ViewTransitions />
   </head>
   <body class="min-h-screen flex flex-col">
@@ -94,5 +125,122 @@ const fullCanonicalUrl = `${siteUrl}/${lang}${canonicalUrl}`;
     </div>
 
     <OfferPopup lang={lang} autoShow={false} />
+
+    <!-- Store language preference for faster future navigations -->
+    <script define:vars={{ lang }}>
+      // Store user language preference in localStorage
+      if (typeof localStorage !== 'undefined') {
+        // Save current language for future visits
+        localStorage.setItem('preferred-language', lang);
+
+        // Handle language selector clicks to update stored preference
+        document.addEventListener('DOMContentLoaded', () => {
+          const langSelectors = document.querySelectorAll('[data-lang-select]');
+          
+          langSelectors.forEach(selector => {
+            selector.addEventListener('click', (e) => {
+              const target = e.currentTarget;
+              if (target && target instanceof HTMLElement) {
+                const targetLang = target.getAttribute('data-lang-select');
+                if (targetLang) {
+                  localStorage.setItem('preferred-language', targetLang);
+                }
+              }
+            });
+          });
+        });
+      }
+    </script>
+
+    <!-- Preload next pages logic -->
+    <script define:vars={{ criticalPaths, criticalIcons, currentPath, lang }}>
+      // Track if preloading has been initiated
+      let hasPreloadedPages = false;
+      let hasPreloadedIcons = false;
+      
+      // Preload critical pages when idle
+      function preloadCriticalPages() {
+        if (hasPreloadedPages) return;
+        hasPreloadedPages = true;
+        
+        console.log(" Предварительная загрузка критических страниц...");
+        criticalPaths.forEach(path => {
+          // Skip current page
+          if (path === currentPath) return;
+          
+          // Use fetch with low priority and caching
+          fetch(path, { 
+            priority: 'low',
+            cache: 'force-cache'
+          }).catch(() => {});
+        });
+      }
+      
+      // Preload critical icons
+      function preloadCriticalIcons() {
+        if (hasPreloadedIcons) return;
+        hasPreloadedIcons = true;
+        
+        console.log(" Предварительная загрузка иконок...");
+        criticalIcons.forEach(icon => {
+          const iconUrl = `/_astro/lucide_${icon}.svg`;
+          
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.href = iconUrl;
+          link.as = 'image';
+          document.head.appendChild(link);
+        });
+      }
+      
+      // Use requestIdleCallback or setTimeout fallback
+      const requestIdleCallback = 
+        window.requestIdleCallback || 
+        ((cb) => setTimeout(cb, 1000));
+      
+      // Schedule preloading during idle time
+      requestIdleCallback(() => {
+        preloadCriticalPages();
+      });
+      
+      // Preload icons after slight delay
+      setTimeout(() => {
+        requestIdleCallback(() => {
+          preloadCriticalIcons();
+        });
+      }, 2000);
+      
+      // Optimize icon rendering
+      document.addEventListener('DOMContentLoaded', () => {
+        // Add loading="lazy" to non-visible SVG icons
+        document.querySelectorAll('svg[data-lucide]').forEach(icon => {
+          icon.setAttribute('loading', 'lazy');
+          icon.style.contain = 'strict';
+          icon.style.willChange = 'transform';
+          icon.style.transform = 'translateZ(0)';
+        });
+      });
+    </script>
+    
+    <style is:global>
+      /* Custom property for reduced motion users */
+      @media (prefers-reduced-motion: reduce) {
+        :root {
+          --transition-speed: 0.001s;
+          --animation-speed: 0.001s;
+        }
+      }
+      
+      /* Optimize rendering with content-visibility */
+      .section, .section-divider-new {
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 5000px;
+      }
+      
+      /* Optimize off-screen images */
+      img:not([loading]) {
+        loading: lazy;
+      }
+    </style>
   </body>
 </html>

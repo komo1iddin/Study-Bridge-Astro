@@ -246,3 +246,137 @@ These issues collectively create the significant performance bottleneck you're e
 2. **Track Core Web Vitals in production**
 
 Remember to make one change at a time, test thoroughly, and have a rollback plan for each modification.
+
+
+
+
+I'll examine why the site is still loading slowly in development mode. Let's start by checking the astro.config.mjs file again to understand how the development server is configured:
+
+Read file: astro.config.mjs
+Let's check the middleware.ts file which could be adding overhead on page loads:
+
+Read file: src/middleware.ts
+Let's check for any remaining client:load directives that might be causing hydration delays:
+
+Ran tool
+Let's check if there are other hydration directives in use:
+
+Ran tool
+Now let's check any heavy bundle sizes in your site by examining the imports in the most complex components or pages, like your homepage:
+
+Read file: src/pages/[lang]/index.astro
+Let's examine the heavy ProgramFeature component to see what might be causing performance issues:
+
+Read file: src/components/features/programs/ProgramFeature.astro
+Let's also check the UniversityFeature component:
+
+Read file: src/components/features/university/UniversityFeature/UniversityFeature.astro
+Let's examine the `getFeaturedUniversities` function that is trying to load content:
+
+Read file: src/lib/fileSystemReader.ts
+Let's look at the getFeaturedUniversities function specifically:
+
+Read file: src/lib/fileSystemReader.ts
+Now, let's check the middleware.ts again to understand how it's handling the language routing which might be causing redirects:
+
+Read file: src/middleware.ts
+Let's also check the homepage's component structure more thoroughly by looking at the HeroComponent:
+
+Read file: src/components/features/home/Hero/HeroComponent.svelte
+Let's find the correct path:
+
+Read file: src/components/features/home/Hero/Index.svelte
+Let's examine the MobileNav component:
+
+Read file: src/components/shared/navigation/Header/MobileNav.svelte
+Let's also check the cache implementation in the fileSystemReader.ts:
+
+Read file: src/lib/cache.ts
+Let's measure the performance of the development server:
+
+```bash
+time curl -s http://localhost:4321/ > /dev/null
+```
+After analyzing your Astro project, I've identified several factors contributing to the 3500-4000ms page load times in development mode:
+
+## Key Issues Causing Development Mode Slowness
+
+1. **I18n Implementation & Middleware**:
+   - Your middleware.ts redirects all root requests to language-specific paths (307 redirects)
+   - Each page load triggers language detection, Accept-Language header parsing, and redirects
+   - The redirection adds significant latency in development mode
+
+2. **Filesystem Content Access**:
+   - The `fileSystemReader.ts` file shows extensive file operations (reading YAML files)
+   - Multiple `console.log` statements suggest heavy debugging during development
+   - Error handling includes expensive fallback operations and directory checks
+
+3. **Component Hydration Cascades**:
+   - Many components use `client:visible` which still requires JavaScript evaluation
+   - Your homepage loads at least 10+ components with potential hydration
+   - Heavy components like Hero and MobileNav have complex initialization logic
+
+4. **Lazy Loading Implementation**:
+   - Components like MobileNav implement their own lazy loading of icons and data
+   - This creates many dynamic imports during page initialization
+   - Code like `async function loadFullFunctionality()` suggests complex initialization flows
+
+5. **Development Server Limitations**:
+   - The Vite development server doesn't optimize as aggressively as build mode
+   - Your config has `devSourcemap: false` but dev mode still does more processing
+   - HMR (Hot Module Replacement) adds overhead in development
+
+## Recommended Solutions
+
+1. **Optimize Middleware**:
+   ```typescript
+   // In middleware.ts
+   // Add a localStorage cache for language preference
+   if (typeof window !== 'undefined') {
+     const storedLang = localStorage.getItem('preferred-language');
+     if (storedLang && languages.includes(storedLang as any)) {
+       detectedLang = storedLang as typeof defaultLang;
+     }
+   }
+   
+   // Store selection after detection
+   localStorage.setItem('preferred-language', detectedLang);
+   ```
+
+2. **Improve Development Mode Performance**:
+   - Create a dev-specific Astro config with fewer optimizations:
+   ```javascript
+   // Create astro.dev.config.mjs
+   export default defineConfig({
+     // Copy from main config but remove heavy optimizations
+     vite: {
+       // Disable expensive operations in dev
+       optimizeDeps: {
+         disabled: true
+       },
+       build: {
+         // Simplify for dev
+         minify: false
+       }
+     }
+   });
+   ```
+
+3. **Reduce Component Complexity**:
+   - The MobileNav.svelte component has complex initialization with over 400 lines
+   - Consider splitting large components to minimize initial load time
+
+4. **Address Console Logging**:
+   - Remove extensive console.logs in development, especially in fileSystemReader.ts
+   - These add considerable overhead in the browser debug environment
+
+5. **Cache Filesystem Operations**:
+   - Your LRU cache (cache.ts) is good, but consider caching for longer in development
+
+6. **Test with a Static Mode**:
+   - Try `export const prerender = true` in your routes instead of `false`
+   - This will test if SSR processing is causing the slowdown
+
+The key difference between development and production is that development needs to support instant updates (HMR) while production can optimize everything upfront. Your page-loading specific issue (as opposed to initial server startup) suggests the middleware and component hydration are the primary culprits.
+
+Would you like me to implement any of these specific solutions?
