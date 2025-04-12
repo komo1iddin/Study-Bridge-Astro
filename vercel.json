@@ -1,0 +1,10 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/uz/" },
+    { "source": "/uz/:path*", "destination": "/uz/:path*" },
+    { "source": "/ru/:path*", "destination": "/ru/:path*" },
+    { "source": "/en/:path*", "destination": "/en/:path*" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": true
+} 
