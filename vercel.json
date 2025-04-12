@@ -1,6 +1,8 @@
 {
+  "redirects": [
+    { "source": "/", "destination": "/uz/", "permanent": true }
+  ],
   "rewrites": [
-    { "source": "/", "destination": "/uz/" },
     { "source": "/uz/:path*", "destination": "/uz/:path*" },
     { "source": "/ru/:path*", "destination": "/ru/:path*" },
     { "source": "/en/:path*", "destination": "/en/:path*" }
