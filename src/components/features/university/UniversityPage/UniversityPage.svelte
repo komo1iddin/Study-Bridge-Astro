@@ -22,18 +22,16 @@
   
   // Get translations
   $: t = getUniversityPageTranslations(lang);
-  $: translationsReady = Boolean(t && t.filters && t.list && t.card);
+  // Let's simplify the readiness check, assuming 't' will exist if translations load
+  $: translationsReady = Boolean(t);
   
   let filters: Filters = DEFAULT_FILTERS;
   let mounted = false;
   let mobileFiltersOpen = false;
   
-  // Set mounted flag synchronously if we're in browser environment
-  if (typeof window !== 'undefined') {
-    mounted = true;
-  }
-  
+  // Use onMount to ensure we're in the browser before setting mounted
   onMount(() => {
+    mounted = true;
     // Dispatch an event to notify that Svelte component is mounted
     window.dispatchEvent(new CustomEvent('svelte-mounted'));
   });
@@ -59,28 +57,53 @@
   }
 </script>
 
+<!-- Simplify the loading condition: show skeleton only if not mounted -->
 {#if !mounted}
   <!-- Loading State -->
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative">
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative animate-pulse">
     <div class="container mx-auto py-8 px-4 md:px-6 relative z-10">
-      <div class="flex items-center justify-center h-64">
-        <div class="animate-pulse flex flex-col items-center gap-4">
-          <div class="h-12 w-12 rounded-full bg-blue-200"></div>
-          <div class="h-4 w-48 bg-blue-200 rounded"></div>
-          <div class="h-3 w-32 bg-blue-100 rounded"></div>
-        </div>
-      </div>
+       <!-- Skeleton for UniversityPage -->
+       <div class="mb-6 h-4 w-1/3 bg-gray-200 rounded"></div> 
+       <div class="flex flex-col lg:flex-row gap-8">
+         <!-- Sidebar Skeleton -->
+         <div class="hidden lg:block md:w-64 lg:w-72 xl:w-80 space-y-6">
+           <div class="bg-white p-4 rounded-lg shadow space-y-4">
+             <div class="h-5 w-1/2 bg-gray-300 rounded"></div>
+             <div class="h-8 bg-gray-200 rounded"></div>
+             <div class="h-8 bg-gray-200 rounded"></div>
+             <div class="h-8 bg-gray-200 rounded"></div>
+           </div>
+            <div class="bg-white p-4 rounded-lg shadow space-y-4">
+             <div class="h-5 w-1/2 bg-gray-300 rounded"></div>
+             <div class="h-8 bg-gray-200 rounded"></div>
+             <div class="h-8 bg-gray-200 rounded"></div>
+           </div>
+           <div class="h-10 w-full bg-gray-200 rounded-lg"></div>
+         </div>
+         <!-- Main Content Skeleton -->
+         <div class="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {#each Array(6) as _}
+              <div class="bg-white p-4 rounded-lg shadow space-y-3">
+                <div class="h-32 bg-gray-200 rounded-lg"></div>
+                <div class="h-5 w-3/4 bg-gray-300 rounded"></div>
+                <div class="h-4 w-1/2 bg-gray-200 rounded"></div>
+                <div class="flex justify-between items-center pt-2">
+                   <div class="h-4 w-1/4 bg-gray-200 rounded"></div>
+                   <div class="h-8 w-1/4 bg-gray-200 rounded-lg"></div>
+                </div>
+              </div>
+            {/each}
+          </div>
+       </div>
     </div>
   </div>
 {:else if !translationsReady}
-  <!-- Loading Translations -->
+  <!-- Loading Translations (Optional) -->
   <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative">
     <div class="container mx-auto py-8 px-4 md:px-6 relative z-10">
       <div class="flex items-center justify-center h-64">
-        <div class="animate-pulse flex flex-col items-center gap-4">
-          <div class="h-12 w-12 rounded-full bg-blue-200"></div>
-          <div class="h-4 w-48 bg-blue-200 rounded"></div>
-          <div class="h-3 w-32 bg-blue-100 rounded"></div>
+        <div class="flex flex-col items-center gap-4">
+          <div class="h-12 w-12 rounded-full bg-blue-200 animate-spin"></div>
           <p class="text-sm text-blue-700">Loading translations...</p>
         </div>
       </div>

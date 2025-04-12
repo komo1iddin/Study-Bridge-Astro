@@ -32,7 +32,6 @@
   // State
   let mounted = false;
   let activeTab = "overview";
-  let isLoading = true;
 
   // Debug the university object
   console.log("University object in main component:", university);
@@ -52,15 +51,8 @@
     console.log("UniversityDetailPage component mounted");
     checkUrlForTab();
     
-    // Force loading to end immediately
-    setTimeout(() => {
-      console.log("Setting mounted and isLoading");
-      mounted = true;
-      isLoading = false;
-      
-      // Dispatch the university-detail-mounted event
-      window.dispatchEvent(new CustomEvent('university-detail-mounted'));
-    }, 100);
+    mounted = true;
+    window.dispatchEvent(new CustomEvent('university-detail-mounted'));
   });
 
   // Tab change handler
@@ -81,14 +73,64 @@
   }
 </script>
 
-{#if !mounted || isLoading}
-  <div class="min-h-screen w-full bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative">
-    <div class="container mx-auto py-8 px-4 md:px-6 relative z-10">
-      <div class="flex items-center justify-center h-64">
-        <div class="animate-pulse flex flex-col items-center gap-4">
-          <div class="h-12 w-12 rounded-full bg-blue-200"></div>
-          <div class="h-4 w-48 bg-blue-200 rounded"></div>
-          <div class="h-3 w-32 bg-blue-100 rounded"></div>
+{#if !mounted}
+  <div class="min-h-screen w-full bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative overflow-hidden">
+    <div class="w-full max-w-7xl mx-auto py-4 sm:py-6 md:py-8 px-4 sm:px-6 md:px-8 relative z-10 animate-pulse">
+      <div class="flex items-center gap-2 h-4 mb-6">
+        <div class="h-3.5 w-3.5 bg-gray-200 rounded"></div>
+        <div class="h-2 w-1 bg-gray-200 rounded"></div>
+        <div class="h-3 w-20 bg-gray-200 rounded"></div>
+        <div class="h-2 w-1 bg-gray-200 rounded"></div>
+        <div class="h-3 w-24 bg-gray-300 rounded"></div>
+      </div>
+
+      <div class="grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 md:grid-cols-3">
+        <div class="md:col-span-2 space-y-4 sm:space-y-6 md:space-y-8">
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex flex-col sm:flex-row gap-4 mb-4">
+              <div class="h-20 w-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
+              <div class="flex-1 space-y-3">
+                <div class="h-6 w-3/4 bg-gray-300 rounded"></div>
+                <div class="h-4 w-1/2 bg-gray-200 rounded"></div>
+                <div class="h-4 w-1/3 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+            <div class="h-10 bg-gray-100 rounded-md flex items-center px-2 space-x-4">
+              <div class="h-6 w-16 bg-gray-200 rounded"></div>
+              <div class="h-6 w-16 bg-gray-200 rounded"></div>
+              <div class="h-6 w-16 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6 space-y-4">
+            <div class="h-5 w-1/3 bg-gray-300 rounded"></div>
+            <div class="h-4 w-full bg-gray-200 rounded"></div>
+            <div class="h-4 w-full bg-gray-200 rounded"></div>
+            <div class="h-4 w-3/4 bg-gray-200 rounded"></div>
+          </div>
+           <div class="bg-white rounded-lg shadow p-6 space-y-4">
+            <div class="h-5 w-1/3 bg-gray-300 rounded"></div>
+            <div class="h-4 w-full bg-gray-200 rounded"></div>
+            <div class="h-4 w-3/4 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+
+        <div class="space-y-4 sm:space-y-6">
+          <div class="bg-white rounded-lg shadow p-6 space-y-3">
+             <div class="h-5 w-1/2 bg-gray-300 rounded"></div>
+             <div class="h-8 w-full bg-gray-200 rounded-lg"></div>
+             <div class="h-4 w-full bg-gray-200 rounded"></div>
+          </div>
+          <div class="bg-white rounded-lg shadow p-6 space-y-3">
+             <div class="h-5 w-1/2 bg-gray-300 rounded"></div>
+             <div class="h-4 w-3/4 bg-gray-200 rounded"></div>
+             <div class="h-4 w-1/2 bg-gray-200 rounded"></div>
+          </div>
+           <div class="bg-white rounded-lg shadow p-6 space-y-3">
+             <div class="h-5 w-1/2 bg-gray-300 rounded"></div>
+             <div class="h-4 w-full bg-gray-200 rounded"></div>
+             <div class="h-4 w-3/4 bg-gray-200 rounded"></div>
+          </div>
+          <div class="h-10 w-full bg-gray-200 rounded-lg"></div>
         </div>
       </div>
     </div>
