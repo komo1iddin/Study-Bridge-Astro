@@ -4,8 +4,9 @@ import { getSectionTranslations } from '@/i18n/features/ui/section';
 
 interface Props {
   lang?: Lang;
-  title: string;
+  title?: string;
   subtitle?: string;
+  description?: string;
   centered?: boolean;
   animation?: string;
   animationDuration?: string;
@@ -17,6 +18,7 @@ const {
   lang = 'uz', 
   title, 
   subtitle,
+  description,
   centered = true,
   animation = "fade-up",
   animationDuration = "800",
@@ -26,6 +28,9 @@ const {
 
 // Get potential default section translations if needed
 const sectionT = getSectionTranslations(lang);
+
+// Use description as fallback for subtitle if provided
+const displaySubtitle = subtitle || description;
 ---
 
 <div 
@@ -34,14 +39,16 @@ const sectionT = getSectionTranslations(lang);
   data-aos-duration={animationDuration}
   data-aos-delay={animationDelay}
 >
-  <h2 class="text-3xl font-bold tracking-tight md:text-3xl lg:text-4xl mb-5 animate-title">
-    <slot name="title">
-      <Fragment set:html={title} />
-    </slot>
-  </h2>
-  {subtitle && (
+  {title && (
+    <h2 class="text-3xl font-bold tracking-tight md:text-3xl lg:text-4xl mb-5 animate-title">
+      <slot name="title">
+        <Fragment set:html={title} />
+      </slot>
+    </h2>
+  )}
+  {displaySubtitle && (
     <p class="text-muted-foreground md:text-lg max-w-[600px] mx-auto animate-text">
-      <slot name="subtitle">{subtitle}</slot>
+      <slot name="subtitle">{displaySubtitle}</slot>
     </p>
   )}
   <div class="h-1 w-20 bg-blue-600 mx-auto mt-4 animate-line"></div>
