@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Card, CardContent } from "@/components/ui/svelte";
   import { Badge } from "@/components/ui/svelte";
-  import { Award } from "lucide-svelte";
+  import { Award, ChevronDown } from "lucide-svelte";
   import { onMount, createEventDispatcher } from "svelte";
   import type { TransformedGrantData } from '@/lib/transformers/grantTransformer';
 
@@ -18,6 +18,14 @@
     console.log("Before change, activeTab was:", activeTab);
     dispatch('change', value);
   }
+
+  // Define tabs array for use in both mobile select and desktop tabs
+  $: tabs = [
+    { value: 'overview', label: grant.tabs.overview.title },
+    { value: 'benefits', label: grant.tabs.benefits.title },
+    { value: 'requirements', label: grant.tabs.requirements.title },
+    { value: 'process', label: grant.tabs.process.title }
+  ];
 
   onMount(() => {
     console.log("HeaderCard mounted with activeTab:", activeTab);
@@ -80,32 +88,42 @@
     </div>
   </div>
   <CardContent class="p-0">
-    <div class="w-full">
-      <div class="grid grid-cols-4 bg-slate-100 rounded-none h-auto p-0">
-        <button 
-          class="py-3 rounded-none {activeTab === 'overview' ? 'bg-white text-slate-600 font-medium' : 'text-slate-600 hover:bg-slate-50'}"
-          on:click={() => handleTabClick('overview')}
-        >
-          {grant.tabs.overview.title}
-        </button>
-        <button 
-          class="py-3 rounded-none {activeTab === 'benefits' ? 'bg-white text-slate-600 font-medium' : 'text-slate-600 hover:bg-slate-50'}"
-          on:click={() => handleTabClick('benefits')}
-        >
-          {grant.tabs.benefits.title}
-        </button>
-        <button 
-          class="py-3 rounded-none {activeTab === 'requirements' ? 'bg-white text-slate-600 font-medium' : 'text-slate-600 hover:bg-slate-50'}"
-          on:click={() => handleTabClick('requirements')}
-        >
-          {grant.tabs.requirements.title}
-        </button>
-        <button 
-          class="py-3 rounded-none {activeTab === 'process' ? 'bg-white text-slate-600 font-medium' : 'text-slate-600 hover:bg-slate-50'}"
-          on:click={() => handleTabClick('process')}
-        >
-          {grant.tabs.process.title}
-        </button>
+    <!-- Mobile Dropdown with Custom Styling -->
+    <div class="md:hidden">
+      <div class="p-2 bg-slate-100">
+        <div class="relative">
+          <!-- Custom Styled Select with Icon -->
+          <select 
+            class="w-full appearance-none bg-white border border-slate-200 rounded-md shadow-sm focus:outline-none text-slate-800 font-medium p-2.5 pr-10"
+            value={activeTab}
+            on:change={(e) => handleTabClick((e.target as HTMLSelectElement).value)}
+            aria-label="Select a section"
+          >
+            {#each tabs as tab}
+              <option value={tab.value}>{tab.label}</option>
+            {/each}
+          </select>
+          <!-- Positioned Icon -->
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-500">
+            <ChevronDown class="h-4 w-4" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop Tabs -->
+    <div class="hidden md:block">
+      <div class="w-full">
+        <div class="grid grid-cols-4 bg-slate-100 rounded-none h-auto p-0">
+          {#each tabs as tab}
+            <button 
+              class="py-3 rounded-none {activeTab === tab.value ? 'bg-white text-slate-600 font-medium' : 'text-slate-600 hover:bg-slate-50'}"
+              on:click={() => handleTabClick(tab.value)}
+            >
+              {tab.label}
+            </button>
+          {/each}
+        </div>
       </div>
     </div>
   </CardContent>
