@@ -25,20 +25,10 @@
   $: translationsReady = Boolean(t && t.filters && t.list && t.card);
   
   let filters: Filters = DEFAULT_FILTERS;
-  let mounted = false;
   let mobileFiltersOpen = false;
   
-  // Set mounted flag synchronously if we're in browser environment
-  if (typeof window !== 'undefined') {
-    mounted = true;
-  }
-  
   onMount(() => {
-    // Set mounted flag
-    mounted = true;
-    
-    // Dispatch an event to notify that Svelte component is mounted
-    window.dispatchEvent(new CustomEvent('university-page-mounted'));
+    console.log("UniversityPage component mounted");
   });
   
   function handleFilterChange(event: CustomEvent<{key: keyof Filters, value: string}>) {
@@ -62,58 +52,55 @@
   }
 </script>
 
-<!-- Don't render anything here as the skeleton is in the Astro component -->
-{#if mounted && translationsReady}
-  <!-- Main Layout -->
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative overflow-hidden">
-    <BackgroundDecoration />
-    <div class="relative z-10">
-      <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <!-- Breadcrumb -->
-        <div class="flex items-center gap-2 text-sm text-slate-500 mb-6">
-          <Home class="h-3.5 w-3.5" />
-          <span>/</span>
-          <span class="text-slate-900 font-medium">{t.breadcrumb.universities}</span>
-        </div>
-        
-        <!-- Mobile filters -->
-        <div class="lg:hidden mb-6">
-          <MobileFilters
+<!-- Main Layout -->
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative overflow-hidden">
+  <BackgroundDecoration />
+  <div class="relative z-10">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 text-sm text-slate-500 mb-6">
+        <Home class="h-3.5 w-3.5" />
+        <span>/</span>
+        <span class="text-slate-900 font-medium">{t.breadcrumb.universities}</span>
+      </div>
+      
+      <!-- Mobile filters -->
+      <div class="lg:hidden mb-6">
+        <MobileFilters
+          filters={filters}
+          cities={cities}
+          isOpen={mobileFiltersOpen}
+          {t}
+          {lang}
+          on:change={handleFilterChange}
+          on:reset={resetFilters}
+          on:openStateChange={handleMobileFiltersOpenChange}
+        />
+      </div>
+      
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar -->
+        <aside class="hidden lg:block sticky top-8 h-fit md:w-64 lg:w-72 xl:w-80">
+          <Sidebar
             filters={filters}
             cities={cities}
-            isOpen={mobileFiltersOpen}
             {t}
             {lang}
             on:change={handleFilterChange}
             on:reset={resetFilters}
-            on:openStateChange={handleMobileFiltersOpenChange}
           />
-        </div>
+        </aside>
         
-        <div class="flex flex-col lg:flex-row gap-8">
-          <!-- Sidebar -->
-          <aside class="hidden lg:block sticky top-8 h-fit md:w-64 lg:w-72 xl:w-80">
-            <Sidebar
-              filters={filters}
-              cities={cities}
-              {t}
-              {lang}
-              on:change={handleFilterChange}
-              on:reset={resetFilters}
-            />
-          </aside>
-          
-          <!-- Main content -->
-          <main class="flex-1 max-w-full lg:max-w-[calc(100%-20rem)] xl:max-w-[calc(100%-22rem)]">
-            <UniversityList
-              universities={universities}
-              filters={filters}
-              {t}
-              {lang}
-            />
-          </main>
-        </div>
+        <!-- Main content -->
+        <main class="flex-1 max-w-full lg:max-w-[calc(100%-20rem)] xl:max-w-[calc(100%-22rem)]">
+          <UniversityList
+            universities={universities}
+            filters={filters}
+            {t}
+            {lang}
+          />
+        </main>
       </div>
     </div>
   </div>
-{/if} 
+</div> 
