@@ -44,8 +44,8 @@ function getPathForLang(lang: Lang) {
 }
 ---
 
-{!isMobile && (
-  <div class="relative language-selector-container">
+<div class={`language-selector-container ${isMobile ? 'mobile-selector' : ''}`}>
+  {!isMobile ? (
     <button
       type="button"
       class="flex items-center gap-1.5 text-gray-600 hover:text-blue-600 py-1.5 px-2.5 rounded-lg hover:bg-gray-50 transition-colors duration-200 language-selector-button"
@@ -57,48 +57,58 @@ function getPathForLang(lang: Lang) {
       <span class="text-sm font-medium">{currentLanguage.name}</span>
       <ChevronDown class="w-4 h-4 ml-0.5 chevron-icon" />
     </button>
-
-    <div
-      class="absolute right-0 z-50 mt-1 w-40 origin-top-right rounded-lg shadow-md hidden bg-white border border-gray-100 language-selector-menu"
-      role="menu"
-      aria-orientation="vertical"
-      tabindex="-1"
-    >
-      <div class="py-1.5" role="none">
-        {languageOptions.map((language) => (
-          <a
-            href={getPathForLang(language.code)}
-            class:list={[
-              "flex items-center px-3 py-2 text-sm transition-colors duration-200 justify-between",
-              currentLang === language.code
-                ? "text-blue-600 bg-blue-50"
-                : "text-gray-600 hover:bg-gray-50 hover:text-blue-600"
-            ]}
-            role="menuitem"
-            tabindex="-1"
-            data-astro-reload
-            hreflang={language.code}
-            lang={language.code}
-            rel="alternate"
-            title={`${language.fullName} - ${language.shortcut}`}
-          >
-            <span>{language.name}</span>
-            {currentLang === language.code && (
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 ml-auto">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-            )}
-            <span class="text-xs text-gray-400 ml-auto hidden md:inline">{language.shortcut}</span>
-          </a>
-        ))}
+  ) : (
+    <div class="mb-2 px-2">
+      <div class="font-medium text-gray-700 mb-2 flex items-center">
+        <Languages class="w-5 h-5 mr-2" />
+        {t.selectLanguage}
       </div>
     </div>
+  )}
+
+  <div
+    class={`${isMobile ? 'w-full' : 'absolute right-0 z-50 mt-1 w-40 origin-top-right hidden'} bg-white rounded-lg ${isMobile ? '' : 'shadow-md border border-gray-100'} language-selector-menu`}
+    role="menu"
+    aria-orientation="vertical"
+    tabindex="-1"
+  >
+    <div class="py-1.5" role="none">
+      {languageOptions.map((language) => (
+        <a
+          href={getPathForLang(language.code)}
+          class:list={[
+            "flex items-center px-3 py-2 text-sm transition-colors duration-200 justify-between",
+            isMobile ? "rounded-lg" : "",
+            currentLang === language.code
+              ? "text-blue-600 bg-blue-50"
+              : "text-gray-600 hover:bg-gray-50 hover:text-blue-600"
+          ]}
+          role="menuitem"
+          tabindex="-1"
+          data-astro-reload
+          hreflang={language.code}
+          lang={language.code}
+          rel="alternate"
+          title={`${language.fullName} - ${language.shortcut}`}
+        >
+          <span>{isMobile ? language.fullName : language.name}</span>
+          {currentLang === language.code && (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 ml-auto">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          )}
+          {!isMobile && (
+            <span class="text-xs text-gray-400 ml-auto hidden md:inline">{language.shortcut}</span>
+          )}
+        </a>
+      ))}
+    </div>
   </div>
-)}
+</div>
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    const containers = document.querySelectorAll('.language-selector-container');
+    const containers = document.querySelectorAll('.language-selector-container:not(.mobile-selector)');
     
     containers.forEach(container => {
       const button = container.querySelector('.language-selector-button');

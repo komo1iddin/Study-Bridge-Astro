@@ -47,12 +47,17 @@ const t = getHeaderTranslations(currentLang);
 
       {/* Mobile Navigation */}
       <div class="flex lg:hidden items-center gap-2">
-        <button 
-          onclick="window.showLanguageSelector?.()"
-          class="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
-        >
-          <Globe class="h-5 w-5" />
-        </button>
+        <div class="mobile-language-btn">
+          <button 
+            class="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+            id="mobile-language-toggle"
+          >
+            <Globe class="h-5 w-5" />
+          </button>
+          <div class="mobile-language-menu hidden absolute top-16 right-0 z-50 w-full p-2 bg-white border-b border-gray-200">
+            <LanguageSelector isMobile={true} />
+          </div>
+        </div>
         
         <a href="tel:+998901234567" class="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors duration-200">
           <Phone class="h-5 w-5" />
@@ -65,6 +70,11 @@ const t = getHeaderTranslations(currentLang);
 </header>
 
 <script>
+  // Add type definition for window.showOfferPopup
+  interface Window {
+    showOfferPopup: () => void;
+  }
+
   // Add event listener for body class changes to update header transparency
   const header = document.querySelector('header');
   const headerInner = header?.querySelector('div');
@@ -95,4 +105,26 @@ const t = getHeaderTranslations(currentLang);
 
   // Initial check in case the menu is already open
   updateHeaderStyle();
+</script>
+
+<script>
+  // Handle mobile language selector toggle
+  document.addEventListener('astro:page-load', () => {
+    const mobileLanguageToggle = document.getElementById('mobile-language-toggle');
+    const mobileLanguageMenu = document.querySelector('.mobile-language-menu');
+    
+    if (mobileLanguageToggle && mobileLanguageMenu) {
+      mobileLanguageToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mobileLanguageMenu.classList.toggle('hidden');
+      });
+      
+      document.addEventListener('click', (e) => {
+        if (!mobileLanguageToggle.contains(e.target as Node) && 
+            !mobileLanguageMenu.contains(e.target as Node)) {
+          mobileLanguageMenu.classList.add('hidden');
+        }
+      });
+    }
+  });
 </script>
