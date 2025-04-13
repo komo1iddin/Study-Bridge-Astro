@@ -1,9 +1,11 @@
 ---
-import UniversityPageComponent from './UniversityPage.svelte';
+import UniversityPageComponent from "./UniversityPage.svelte";
 import { getLangFromUrl } from '@/i18n/langUtils';
+import { getAllUniversities, getAllCities } from '@/lib/fileSystemReader';
 
-const { universities, cities } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
+const universities = await getAllUniversities(lang);
+const cities = await getAllCities(lang) || [];
 ---
 
 <!-- Loading Skeleton (will show until client component hydrates) -->
@@ -90,9 +92,9 @@ const lang = getLangFromUrl(Astro.url);
 
 <UniversityPageComponent 
   universities={universities} 
-  cities={cities}
-  lang={lang} 
-  client:visible 
+  cities={cities} 
+  lang={lang}
+  client:only="svelte"
 />
 
 <script>
