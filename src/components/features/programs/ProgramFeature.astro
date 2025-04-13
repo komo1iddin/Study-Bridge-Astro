@@ -3,7 +3,7 @@ import type { Lang } from '@/i18n/langUtils';
 import { getProgramsTranslations } from '@/i18n/features/programs';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import ButtonView from '@/components/ui/astro/ButtonView.astro';
-import { Clock, CheckCircle } from 'lucide-astro';
+import { Clock, CheckCircle, ChevronDown } from 'lucide-astro';
 
 interface Props {
   lang?: Lang;
@@ -81,9 +81,7 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
             </option>
           ))}
         </select>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none">
-          <path d="m6 9 6 6 6-6"/>
-        </svg>
+        <ChevronDown class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" />
       </div>
     </div>
   </div>
@@ -209,6 +207,12 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
 
 <!-- Client-side JavaScript -->
 <script is:inline>
+  // Import Lucide icons SVG paths for client-side rendering
+  const iconPaths = {
+    clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    checkCircle: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>'
+  };
+
   // Wait for DOM to be fully loaded
   document.addEventListener('DOMContentLoaded', () => {
     initTabs();
@@ -306,7 +310,7 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
 
                 <div class="flex items-center mb-6 text-slate-600">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600">
-                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    ${iconPaths.clock}
                   </svg>
                   <span>Davomiyligi: ${program.duration}</span>
                 </div>
@@ -316,7 +320,7 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
                   ${program.benefits.map(benefit => `
                     <li class="flex items-start gap-3">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0">
-                        <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                        ${iconPaths.checkCircle}
                       </svg>
                       <span class="text-slate-600">${benefit}</span>
                     </li>
