@@ -3,7 +3,7 @@ import type { Lang } from '@/i18n/langUtils';
 import { getProgramsTranslations } from '@/i18n/features/programs';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import ButtonView from '@/components/ui/astro/ButtonView.astro';
-import { Calendar, Clock, Users, GraduationCap, CheckCircle } from 'lucide-astro';
+import { Clock, CheckCircle } from 'lucide-astro';
 
 interface Props {
   lang?: Lang;
@@ -58,64 +58,235 @@ const activeCategory = Astro.url.searchParams.get('program') || 'bachelor';
 const activeProgram = programs.find(p => p.id === activeCategory) || programs[0];
 ---
 
-<section class="container max-w-7xl bg-background mx-auto py-12 md:py-16 lg:py-20">
-  <div class="container px-4 md:px-6">
-    <!-- Header -->
-    <SectionHeader
-      title={t.main.title}
-      subtitle={t.main.subtitle}
-    />
+<section class="container mx-auto py-12 md:py-16 lg:py-20 px-4 md:px-6">
+  <!-- Header -->
+  <SectionHeader
+    title={t.main.title}
+    subtitle={t.main.subtitle}
+  />
 
-    <!-- Category Selector - Mobile -->
-    <div class="md:hidden mb-8">
-      <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg">
-        <div class="text-base font-medium">{t.labels.programs}</div>
-        <div class="relative w-full">
-          <select 
-            id="program-select-mobile"
-            class="w-full appearance-none bg-background border rounded-md px-4 py-2 pr-8"
-            value={activeCategory}
-          >
-            {programs.map((program) => (
-              <option value={program.id}>
-                {program.title}
-              </option>
-            ))}
-          </select>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none">
-            <path d="m6 9 6 6 6-6"/>
-          </svg>
+  <!-- Category Selector - Mobile -->
+  <div class="md:hidden mb-8">
+    <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg">
+      <div class="text-base font-medium">{t.labels.programs}</div>
+      <div class="relative w-full">
+        <select 
+          id="program-select-mobile"
+          class="w-full appearance-none bg-background border rounded-md px-4 py-2 pr-8"
+          value={activeCategory}
+        >
+          {programs.map((program) => (
+            <option value={program.id}>
+              {program.title}
+            </option>
+          ))}
+        </select>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none">
+          <path d="m6 9 6 6 6-6"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Pills - Desktop -->
+  <div class="hidden md:flex justify-center mb-8">
+    <div class="inline-flex p-1 bg-gray-50 border rounded-lg shadow-sm">
+      {programs.map((program) => (
+        <button
+          type="button"
+          data-program={program.id}
+          class:list={[
+            "flex items-center gap-2 px-6 py-3 rounded-md transition-all",
+            activeCategory === program.id 
+              ? "bg-white shadow-sm border text-primary font-medium" 
+              : "hover:bg-gray-100 text-gray-600"
+          ]}
+        >
+          <span>{program.title}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- Program Content -->
+  <div class="max-w-6xl mx-auto">
+    <div id="program-content">
+      <div class="border-2 rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-muted/10 border-b pb-3 p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-medium text-xl">{activeProgram.title}</h3>
+            <div class="text-sm text-muted-foreground">Ta'lim dasturi</div>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <p class="text-slate-600 mb-6">
+                {activeProgram.description}
+              </p>
+
+              <div class="flex items-end gap-3 mb-6">
+                <div class="text-3xl font-bold text-blue-600">{activeProgram.price.discounted}</div>
+                <div class="text-lg text-slate-500 line-through">{activeProgram.price.original}</div>
+                <div class="text-sm text-blue-600 font-medium">/yil</div>
+              </div>
+
+              <div class="flex items-center mb-6 text-slate-600">
+                <Clock class="h-5 w-5 mr-2 text-blue-600" />
+                <span>Davomiyligi: {activeProgram.duration}</span>
+              </div>
+
+              <h4 class="font-semibold text-slate-800 mb-3">Dastur imkoniyatlari:</h4>
+              <ul class="space-y-4 mb-6">
+                {activeProgram.benefits.map((benefit) => (
+                  <li class="flex items-start gap-3">
+                    <CheckCircle class="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span class="text-slate-600">{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 transition-colors">
+                  Ariza topshirish
+                </button>
+                <button class="border border-blue-200 text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-2 transition-colors">
+                  Dastur haqida batafsil
+                </button>
+              </div>
+            </div>
+
+            <div class="relative rounded-xl overflow-hidden h-[300px] md:h-auto">
+              <img
+                src="https://insight.study.csu.edu.au/wp-content/uploads/2018/03/5-Reasons-to-go-to-uni-besides-boosting-your-career-prospects.jpg?height=500&width=500"
+                alt={activeProgram.title}
+                class="absolute inset-0 w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <div class="flex items-center space-x-2">
+                  <span class="bg-blue-600 text-white py-1 px-3 rounded-full text-sm">
+                    {activeCategory === "bachelor" ? "Top dastur" : activeCategory === "master" ? "Eng mashhur" : "Tezkor"}
+                  </span>
+                  <span class="bg-green-600 text-white py-1 px-3 rounded-full text-sm">
+                    {activeProgram.discount} chegirma
+                  </span>
+                </div>
+                <p class="text-white text-sm mt-2">Ro'yxatdan o'tish oxirgi muddati: {activeProgram.deadline}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
+          Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Category Pills - Desktop -->
-    <div class="hidden md:flex justify-center mb-8">
-      <div class="inline-flex p-1 bg-gray-50 border rounded-lg shadow-sm">
-        {programs.map((program) => (
-          <button
-            type="button"
-            data-program={program.id}
-            class:list={[
-              "flex items-center gap-2 px-6 py-3 rounded-md transition-all",
-              activeCategory === program.id 
-                ? "bg-white shadow-sm border text-primary font-medium" 
-                : "hover:bg-gray-100 text-gray-600"
-            ]}
-          >
-            <span>{program.title}</span>
-          </button>
-        ))}
-      </div>
-    </div>
+  <!-- Buttons -->
+  <div class="text-center mt-12">
+    <ButtonView
+      href={`/${lang}/programs`} 
+      text={t.labels.viewAll} 
+      variant="mobile" 
+      showOnDesktop={false} 
+    />
+    
+    <ButtonView
+      href={`/${lang}/programs`} 
+      text={t.labels.viewAll} 
+      variant="desktop" 
+      showOnMobile={false} 
+    />
+  </div>
+</section>
 
-    <!-- Program Content -->
-    <div class="md:max-w-6xl mx-auto">
-      <div id="program-content">
+<!-- Embed program data for client-side use -->
+<script id="program-data" type="application/json" set:html={JSON.stringify(programs)}></script>
+
+<!-- Client-side JavaScript -->
+<script is:inline>
+  // Wait for DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    initTabs();
+  });
+
+  // Initialize tabs functionality
+  function initTabs() {
+    // Get program data
+    let programsData;
+    try {
+      const programDataScript = document.getElementById('program-data');
+      if (programDataScript && programDataScript.textContent) {
+        programsData = JSON.parse(programDataScript.textContent);
+      } else {
+        console.error('Program data element not found or empty');
+        return;
+      }
+    } catch (e) {
+      console.error('Error parsing program data:', e);
+      return;
+    }
+
+    // Main function to switch programs
+    function switchProgram(programId) {
+      // Validate program ID
+      const activeProgram = programsData.find(p => p.id === programId);
+      if (!activeProgram) {
+        programId = 'bachelor'; // Default fallback
+      }
+      
+      // Get current container dimensions to prevent layout shift
+      const contentElement = document.getElementById('program-content');
+      let containerHeight = 0;
+      
+      if (contentElement && contentElement.firstElementChild) {
+        containerHeight = contentElement.firstElementChild.offsetHeight;
+        contentElement.style.width = contentElement.firstElementChild.offsetWidth + 'px';
+        contentElement.style.height = containerHeight + 'px';
+        contentElement.style.overflow = 'hidden';
+      }
+      
+      // Update URL without reloading
+      const url = new URL(window.location.href);
+      url.searchParams.set('program', programId);
+      window.history.pushState({ programId }, '', url);
+      
+      // Update tab styling - using getAttribute instead of dataset for TypeScript compatibility
+      document.querySelectorAll('[data-program]').forEach(el => {
+        const isActive = el.getAttribute('data-program') === programId;
+        
+        if (isActive) {
+          el.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+          el.classList.remove('hover:bg-gray-100', 'text-gray-600');
+        } else {
+          el.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+          el.classList.add('hover:bg-gray-100', 'text-gray-600');
+        }
+      });
+      
+      // Update mobile select - using standard JavaScript property access
+      const mobileSelect = document.getElementById('program-select-mobile');
+      if (mobileSelect) {
+        mobileSelect.value = programId;
+      }
+      
+      // Generate new HTML
+      const program = programsData.find(p => p.id === programId);
+      
+      // Create category badge text
+      let categoryBadge = "Top dastur";
+      if (programId === "master") categoryBadge = "Eng mashhur";
+      if (programId === "language") categoryBadge = "Tezkor";
+      
+      const contentHTML = `
         <div class="border-2 rounded-xl shadow-sm overflow-hidden">
           <div class="bg-muted/10 border-b pb-3 p-6">
             <div class="flex items-center justify-between">
-              <h3 class="font-medium text-xl">{activeProgram.title}</h3>
+              <h3 class="font-medium text-xl">${program.title}</h3>
               <div class="text-sm text-muted-foreground">Ta'lim dasturi</div>
             </div>
           </div>
@@ -124,28 +295,32 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <p class="text-slate-600 mb-6">
-                  {activeProgram.description}
+                  ${program.description}
                 </p>
 
                 <div class="flex items-end gap-3 mb-6">
-                  <div class="text-3xl font-bold text-blue-600">{activeProgram.price.discounted}</div>
-                  <div class="text-lg text-slate-500 line-through">{activeProgram.price.original}</div>
+                  <div class="text-3xl font-bold text-blue-600">${program.price.discounted}</div>
+                  <div class="text-lg text-slate-500 line-through">${program.price.original}</div>
                   <div class="text-sm text-blue-600 font-medium">/yil</div>
                 </div>
 
                 <div class="flex items-center mb-6 text-slate-600">
-                  <Clock class="h-5 w-5 mr-2 text-blue-600" />
-                  <span>Davomiyligi: {activeProgram.duration}</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span>Davomiyligi: ${program.duration}</span>
                 </div>
 
                 <h4 class="font-semibold text-slate-800 mb-3">Dastur imkoniyatlari:</h4>
                 <ul class="space-y-4 mb-6">
-                  {activeProgram.benefits.map((benefit) => (
+                  ${program.benefits.map(benefit => `
                     <li class="flex items-start gap-3">
-                      <CheckCircle class="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span class="text-slate-600">{benefit}</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0">
+                        <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                      </svg>
+                      <span class="text-slate-600">${benefit}</span>
                     </li>
-                  ))}
+                  `).join('')}
                 </ul>
 
                 <div class="flex flex-col sm:flex-row gap-3">
@@ -161,20 +336,20 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
               <div class="relative rounded-xl overflow-hidden h-[300px] md:h-auto">
                 <img
                   src="https://insight.study.csu.edu.au/wp-content/uploads/2018/03/5-Reasons-to-go-to-uni-besides-boosting-your-career-prospects.jpg?height=500&width=500"
-                  alt={activeProgram.title}
+                  alt="${program.title}"
                   class="absolute inset-0 w-full h-full object-cover"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <div class="flex items-center space-x-2">
                     <span class="bg-blue-600 text-white py-1 px-3 rounded-full text-sm">
-                      {activeCategory === "bachelor" ? "Top dastur" : activeCategory === "master" ? "Eng mashhur" : "Tezkor"}
+                      ${categoryBadge}
                     </span>
                     <span class="bg-green-600 text-white py-1 px-3 rounded-full text-sm">
-                      {activeProgram.discount} chegirma
+                      ${program.discount} chegirma
                     </span>
                   </div>
-                  <p class="text-white text-sm mt-2">Ro'yxatdan o'tish oxirgi muddati: {activeProgram.deadline}</p>
+                  <p class="text-white text-sm mt-2">Ro'yxatdan o'tish oxirgi muddati: ${program.deadline}</p>
                 </div>
               </div>
             </div>
@@ -184,72 +359,57 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
             Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
           </div>
         </div>
-      </div>
-    </div>
+      `;
+      
+      if (contentElement) {
+        contentElement.innerHTML = contentHTML;
+        
+        // Reset dimensions after a short delay to allow new content to render
+        setTimeout(() => {
+          if (contentElement) {
+            contentElement.style.width = '';
+            contentElement.style.height = '';
+            contentElement.style.overflow = '';
+          }
+        }, 50);
+      }
+    }
 
-    <div class="container">
-      <!-- Mobile button (hidden on desktop) -->
-      <div class="text-center mt-12">
-        <ButtonView
-          href={`/${lang}/programs`} 
-          text={t.labels.viewAll} 
-          variant="mobile" 
-          showOnDesktop={false} 
-        />
-      </div>
-    
-      <!-- Desktop button (hidden on mobile) -->
-      <div class="text-center mt-12">
-        <ButtonView
-          href={`/${lang}/programs`} 
-          text={t.labels.viewAll} 
-          variant="desktop" 
-          showOnMobile={false} 
-        />
-      </div>
-    </div>
-  </div>
-</section>
+    // Set up event listeners for desktop tabs
+    document.querySelectorAll('[data-program]').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const programId = button.getAttribute('data-program');
+        if (programId) {
+          switchProgram(programId);
+        }
+      });
+    });
 
-<script>
-  function updateContent(program) {
-    // Update the URL
-    const url = new URL(window.location.href);
-    url.searchParams.set('program', program);
-    history.pushState({}, '', url);
+    // Set up event listener for mobile select
+    const mobileSelect = document.getElementById('program-select-mobile');
+    if (mobileSelect) {
+      mobileSelect.addEventListener('change', (e) => {
+        const programId = e.currentTarget.value;
+        switchProgram(programId);
+      });
+    }
 
-    // Update the active tab
-    document.querySelectorAll('[data-program]').forEach(el => {
-      const isActive = el.dataset.program === program;
-      if (isActive) {
-        el.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-        el.classList.remove('hover:bg-gray-100', 'text-gray-600');
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.programId) {
+        switchProgram(e.state.programId);
       } else {
-        el.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-        el.classList.add('hover:bg-gray-100', 'text-gray-600');
+        // Fallback to URL parameter or default
+        const url = new URL(window.location.href);
+        const programId = url.searchParams.get('program') || 'bachelor';
+        switchProgram(programId);
       }
     });
 
-    // Trigger page reload to update content with new translations
-    window.location.reload();
+    // Initial load - get program from URL or use default
+    const url = new URL(window.location.href);
+    const initialProgram = url.searchParams.get('program') || 'bachelor';
+    switchProgram(initialProgram);
   }
-
-  // Event listeners
-  document.addEventListener('DOMContentLoaded', () => {
-    // Desktop program buttons
-    document.querySelectorAll('[data-program]').forEach(button => {
-      button.addEventListener('click', () => {
-        const program = button.dataset.program;
-        updateContent(program);
-      });
-    });
-
-    // Mobile program select
-    const mobileSelect = document.getElementById('program-select-mobile');
-    if (mobileSelect) {
-      mobileSelect.addEventListener('change', () => {
-        updateContent(mobileSelect.value);
-      });
-    }
-  });
 </script>

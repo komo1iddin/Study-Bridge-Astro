@@ -54,201 +54,61 @@ const activeCategory = Astro.url.searchParams.get('category') || 'education';
 const activeItem = categories.find((c) => c.id === activeCategory) || categories[0];
 ---
 
-<section class="container max-w-7xl bg-background mx-auto py-12 md:py-16 lg:py-20">
-  <div class="container px-4 md:px-6">
-    <!-- Header -->
-    <SectionHeader
-      title={t.title}
-      subtitle={t.subtitle}
-    />
+<section class="container mx-auto py-12 md:py-16 lg:py-20 px-4 md:px-6">
+  <!-- Header -->
+  <SectionHeader
+    title={t.title}
+    subtitle={t.subtitle}
+  />
 
-    <!-- Category Selector - Mobile -->
-    <div class="md:hidden mb-8">
-      <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg">
-        <div class="text-base font-medium">{t.selectCategory}</div>
-        <div class="relative w-full">
-          <select 
-            id="category-select-mobile"
-            class="w-full appearance-none bg-background border rounded-md px-4 py-2 pr-8"
-            value={activeCategory}
-          >
-            {categories.map((category) => (
-              <option value={category.id}>{category.title}</option>
-            ))}
-          </select>
-          <ChevronDown class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" />
-        </div>
+  <!-- Category Selector - Mobile -->
+  <div class="md:hidden mb-8">
+    <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg">
+      <div class="text-base font-medium">{t.selectCategory}</div>
+      <div class="relative w-full">
+        <select 
+          id="category-select-mobile"
+          class="w-full appearance-none bg-background border rounded-md px-4 py-2 pr-8"
+          value={activeCategory}
+        >
+          {categories.map((category) => (
+            <option value={category.id}>{category.title}</option>
+          ))}
+        </select>
+        <ChevronDown class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" />
       </div>
     </div>
-
-<!-- Category Pills - Desktop -->
-<div class="hidden md:flex justify-center mb-8">
-  <div class="inline-flex p-1 bg-gray-50 border rounded-lg shadow-sm">
-    {categories.map((category) => (
-      <button
-        type="button"
-        data-category={category.id}
-        class={cn(
-          "flex items-center gap-2 px-6 py-3 rounded-md transition-all",
-          activeCategory === category.id 
-            ? "bg-white shadow-sm border text-primary font-medium" 
-            : "hover:bg-gray-100 text-gray-600"
-        )}
-      >
-        <category.icon class="h-4 w-4" />
-        <span>{category.title}</span>
-      </button>
-    ))}
   </div>
-</div>
 
-    <!-- Comparison Content -->
-    <div class="md:max-w-6xl mx-auto">
-      <div id="comparison-content">
-        <div class="border-2 rounded-xl shadow-sm overflow-hidden">
-          <div class="bg-muted/10 border-b pb-3 p-6">
-            <div class="flex items-center justify-between">
-              <h3 class="font-medium text-xl">{activeItem.title}</h3>
-              <div class="text-sm text-muted-foreground">{t.compareAnalysis}</div>
-            </div>
-          </div>
-
-          <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x">
-            <!-- China Column -->
-            <div class="p-6">
-              <div class="flex items-center gap-2 mb-4">
-                <div class="h-6 w-6 rounded-full bg-[#DE2910] flex items-center justify-center text-white text-xs font-bold">
-                  CN
-                </div>
-                <h4 class="font-medium text-lg">{t.countries.china}</h4>
-              </div>
-              <hr class="mb-4" />
-              <ul class="space-y-4">
-                {activeItem.china.map((item) => (
-                  <li class="flex items-start gap-3">
-                    <CheckCircle2 class="h-5 w-5 text-[#DE2910] mt-0.5 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <!-- Uzbekistan Column -->
-            <div class="p-6">
-              <div class="flex items-center gap-2 mb-4">
-                <div class="h-6 w-6 rounded-full bg-[#1A5BE1] flex items-center justify-center text-white text-xs font-bold">
-                  UZ
-                </div>
-                <h4 class="font-medium text-lg">{t.countries.uzbekistan}</h4>
-              </div>
-              <hr class="mb-4" />
-              <ul class="space-y-4">
-                {activeItem.uzb.map((item) => (
-                  <li class="flex items-start gap-3">
-                    <CheckCircle2 class="h-5 w-5 text-[#1A5BE1] mt-0.5 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
-            {t.dataFrom}
-          </div>
-        </div>
-      </div>
+  <!-- Category Pills - Desktop -->
+  <div class="hidden md:flex justify-center mb-8">
+    <div class="inline-flex p-1 bg-gray-50 border rounded-lg shadow-sm">
+      {categories.map((category) => (
+        <button
+          type="button"
+          data-category={category.id}
+          class={cn(
+            "flex items-center gap-2 px-6 py-3 rounded-md transition-all",
+            activeCategory === category.id 
+              ? "bg-white shadow-sm border text-primary font-medium" 
+              : "hover:bg-gray-100 text-gray-600"
+          )}
+        >
+          <category.icon class="h-4 w-4" />
+          <span>{category.title}</span>
+        </button>
+      ))}
     </div>
-
-    <div class="container">
-      <!-- Мобильная кнопка (скрыта на десктопе) -->
-      <div class="text-center mt-12">
-        <ButtonView
-          href={`/${lang}/blog`} 
-          text={t.readArticle} 
-          variant="mobile" 
-          showOnDesktop={false} 
-        />
-      </div>
-    
-      <!-- Десктопная кнопка (скрыта на мобильных) -->
-      <div class="text-center mt-12">
-        <ButtonView
-          href={`/${lang}/blog`} 
-          text={t.readArticle} 
-          variant="desktop" 
-          showOnMobile={false} 
-        />
-      </div>
-    </div>
-
-   <div class="px-4 sm:px-6 lg:px-8">
-     <CTA />
-   </div>
-
   </div>
-</section>
 
-<script>
-  import type { ComparisonTranslations } from '@/i18n/features/home/comparison/types';
-  
-  // This function will be called when a category is selected
-  function updateContent(category: string) {
-    // Get the translations from the window object (populated during SSR)
-    const t = (window as any).__comparisonTranslations as ComparisonTranslations;
-    if (!t) return;
-    
-    // Categories data structure
-    const categories = {
-      education: {
-        title: t.categories.education.title,
-        china: t.categories.education.china,
-        uzb: t.categories.education.uzb
-      },
-      programs: {
-        title: t.categories.programs.title,
-        china: t.categories.programs.china,
-        uzb: t.categories.programs.uzb
-      },
-      infrastructure: {
-        title: t.categories.infrastructure.title,
-        china: t.categories.infrastructure.china,
-        uzb: t.categories.infrastructure.uzb
-      },
-      teachers: {
-        title: t.categories.teachers.title,
-        china: t.categories.teachers.china,
-        uzb: t.categories.teachers.uzb
-      }
-    };
-
-    const activeItem = categories[category as keyof typeof categories];
-    if (!activeItem) return;
-
-    // Update URL
-    const url = new URL(window.location.href);
-    url.searchParams.set('category', category);
-    history.pushState({}, '', url);
-
-    // Update active tab
-    document.querySelectorAll('[data-category]').forEach(el => {
-      const isActive = (el as HTMLElement).dataset.category === category;
-      if (isActive) {
-        el.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-        el.classList.remove('hover:bg-gray-100', 'text-gray-600');
-      } else {
-        el.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-        el.classList.add('hover:bg-gray-100', 'text-gray-600');
-      }
-    });
-
-    // Update content
-    const newContent = `
+  <!-- Comparison Content -->
+  <div class="max-w-6xl mx-auto">
+    <div id="comparison-content">
       <div class="border-2 rounded-xl shadow-sm overflow-hidden">
         <div class="bg-muted/10 border-b pb-3 p-6">
           <div class="flex items-center justify-between">
-            <h3 class="font-medium text-xl">${activeItem.title}</h3>
-            <div class="text-sm text-muted-foreground">${t.compareAnalysis}</div>
+            <h3 class="font-medium text-xl">{activeItem.title}</h3>
+            <div class="text-sm text-muted-foreground">{t.compareAnalysis}</div>
           </div>
         </div>
 
@@ -259,18 +119,16 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
               <div class="h-6 w-6 rounded-full bg-[#DE2910] flex items-center justify-center text-white text-xs font-bold">
                 CN
               </div>
-              <h4 class="font-medium text-lg">${t.countries.china}</h4>
+              <h4 class="font-medium text-lg">{t.countries.china}</h4>
             </div>
             <hr class="mb-4" />
             <ul class="space-y-4">
-              ${activeItem.china.map(item => `
+              {activeItem.china.map((item) => (
                 <li class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DE2910" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mt-0.5 flex-shrink-0">
-                    <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
-                  </svg>
-                  <span>${item}</span>
+                  <CheckCircle2 class="h-5 w-5 text-[#DE2910] mt-0.5 flex-shrink-0" />
+                  <span>{item}</span>
                 </li>
-              `).join('')}
+              ))}
             </ul>
           </div>
 
@@ -280,67 +138,273 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
               <div class="h-6 w-6 rounded-full bg-[#1A5BE1] flex items-center justify-center text-white text-xs font-bold">
                 UZ
               </div>
-              <h4 class="font-medium text-lg">${t.countries.uzbekistan}</h4>
+              <h4 class="font-medium text-lg">{t.countries.uzbekistan}</h4>
             </div>
             <hr class="mb-4" />
             <ul class="space-y-4">
-              ${activeItem.uzb.map(item => `
+              {activeItem.uzb.map((item) => (
                 <li class="flex items-start gap-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A5BE1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mt-0.5 flex-shrink-0">
-                    <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
-                  </svg>
-                  <span>${item}</span>
+                  <CheckCircle2 class="h-5 w-5 text-[#1A5BE1] mt-0.5 flex-shrink-0" />
+                  <span>{item}</span>
                 </li>
-              `).join('')}
+              ))}
             </ul>
           </div>
         </div>
 
         <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
-          ${t.dataFrom}
+          {t.dataFrom}
         </div>
       </div>
-    `;
+    </div>
+  </div>
 
-    const contentElement = document.getElementById('comparison-content');
-    if (contentElement) {
-      contentElement.innerHTML = newContent;
-    }
-  }
+  <!-- Buttons -->
+  <div class="text-center mt-12">
+    <ButtonView
+      href={`/${lang}/blog`} 
+      text={t.readArticle} 
+      variant="mobile" 
+      showOnDesktop={false} 
+    />
+    
+    <ButtonView
+      href={`/${lang}/blog`} 
+      text={t.readArticle} 
+      variant="desktop" 
+      showOnMobile={false} 
+    />
+  </div>
 
-  // Store translations in the window object for client-side use
+  <!-- CTA -->
+  <div class="max-w-6xl mx-auto mt-16">
+    <CTA />
+  </div>
+</section>
+
+<!-- Embed translations for client-side use -->
+<script id="comparison-translations" type="application/json" set:html={JSON.stringify(t)}></script>
+
+<!-- Client-side JavaScript -->
+<script is:inline>
+  // Wait for DOM to be fully loaded
   document.addEventListener('DOMContentLoaded', () => {
-    const translationsScript = document.getElementById('comparison-translations');
-    if (translationsScript) {
-      try {
-        (window as any).__comparisonTranslations = JSON.parse(translationsScript.textContent || '{}');
-      } catch (e) {
-        console.error('Error parsing comparison translations:', e);
+    initTabs();
+  });
+
+  // Initialize tabs functionality
+  function initTabs() {
+    // Get translations
+    let translations;
+    try {
+      const translationsScript = document.getElementById('comparison-translations');
+      if (translationsScript && translationsScript.textContent) {
+        translations = JSON.parse(translationsScript.textContent);
+      } else {
+        console.error('Comparison translations element not found or empty');
+        return;
+      }
+    } catch (e) {
+      console.error('Error parsing comparison translations:', e);
+      return;
+    }
+
+    // Create category map
+    const categoryMap = {
+      education: {
+        title: translations.categories.education.title,
+        china: translations.categories.education.china,
+        uzb: translations.categories.education.uzb
+      },
+      programs: {
+        title: translations.categories.programs.title,
+        china: translations.categories.programs.china,
+        uzb: translations.categories.programs.uzb
+      },
+      infrastructure: {
+        title: translations.categories.infrastructure.title,
+        china: translations.categories.infrastructure.china,
+        uzb: translations.categories.infrastructure.uzb
+      },
+      teachers: {
+        title: translations.categories.teachers.title,
+        china: translations.categories.teachers.china,
+        uzb: translations.categories.teachers.uzb
+      }
+    };
+
+    // Main function to switch categories
+    function switchCategory(categoryId) {
+      // Validate category
+      if (!categoryMap[categoryId]) {
+        categoryId = 'education'; // Default fallback
+      }
+      
+      const activeCategory = categoryMap[categoryId];
+      
+      // Get current container dimensions to prevent layout shift
+      const contentElement = document.getElementById('comparison-content');
+      let containerStyle = {};
+      
+      if (contentElement && contentElement.firstElementChild) {
+        const container = contentElement.firstElementChild;
+        const rect = container.getBoundingClientRect();
+        
+        // Save all relevant dimensions and position
+        containerStyle = {
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+          position: window.getComputedStyle(container).position,
+          margin: window.getComputedStyle(container).margin
+        };
+        
+        // Apply fixed dimensions
+        contentElement.style.width = containerStyle.width;
+        contentElement.style.height = containerStyle.height;
+        contentElement.style.overflow = 'hidden';
+      }
+      
+      // Update URL without reloading
+      const url = new URL(window.location.href);
+      url.searchParams.set('category', categoryId);
+      window.history.pushState({ categoryId }, '', url);
+      
+      // Update tab styling first (before content change)
+      document.querySelectorAll('[data-category]').forEach(el => {
+        const button = el;
+        const isActive = button.dataset.category === categoryId;
+        
+        if (isActive) {
+          button.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+          button.classList.remove('hover:bg-gray-100', 'text-gray-600');
+        } else {
+          button.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+          button.classList.add('hover:bg-gray-100', 'text-gray-600');
+        }
+      });
+      
+      // Update mobile select
+      const mobileSelect = document.getElementById('category-select-mobile');
+      if (mobileSelect) {
+        mobileSelect.value = categoryId;
+      }
+      
+      // Prepare content
+      const contentHTML = `
+        <div class="border-2 rounded-xl shadow-sm overflow-hidden">
+          <div class="bg-muted/10 border-b pb-3 p-6">
+            <div class="flex items-center justify-between">
+              <h3 class="font-medium text-xl">${activeCategory.title}</h3>
+              <div class="text-sm text-muted-foreground">${translations.compareAnalysis}</div>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x">
+            <!-- China Column -->
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="h-6 w-6 rounded-full bg-[#DE2910] flex items-center justify-center text-white text-xs font-bold">
+                  CN
+                </div>
+                <h4 class="font-medium text-lg">${translations.countries.china}</h4>
+              </div>
+              <hr class="mb-4" />
+              <ul class="space-y-4">
+                ${activeCategory.china.map(item => `
+                  <li class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#DE2910" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mt-0.5 flex-shrink-0">
+                      <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                    </svg>
+                    <span>${item}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+
+            <!-- Uzbekistan Column -->
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="h-6 w-6 rounded-full bg-[#1A5BE1] flex items-center justify-center text-white text-xs font-bold">
+                  UZ
+                </div>
+                <h4 class="font-medium text-lg">${translations.countries.uzbekistan}</h4>
+              </div>
+              <hr class="mb-4" />
+              <ul class="space-y-4">
+                ${activeCategory.uzb.map(item => `
+                  <li class="flex items-start gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A5BE1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mt-0.5 flex-shrink-0">
+                      <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                    </svg>
+                    <span>${item}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
+            ${translations.dataFrom}
+          </div>
+        </div>
+      `;
+      
+      // Update content with a slight delay to ensure the container dimensions are applied
+      if (contentElement) {
+        // Use requestAnimationFrame for smoother updates
+        requestAnimationFrame(() => {
+          contentElement.innerHTML = contentHTML;
+          
+          // Reset dimensions in the next frame after content is rendered
+          requestAnimationFrame(() => {
+            // Allow a small delay for the browser to calculate the new layout
+            setTimeout(() => {
+              if (contentElement) {
+                contentElement.style.width = '';
+                contentElement.style.height = '';
+                contentElement.style.overflow = '';
+              }
+            }, 50);
+          });
+        });
       }
     }
-    
-    // Desktop tabs
+
+    // Set up event listeners for desktop tabs
     document.querySelectorAll('[data-category]').forEach(button => {
       button.addEventListener('click', (e) => {
-        const category = (button as HTMLElement).dataset.category;
-        if (category) {
-          updateContent(category);
+        e.preventDefault();
+        const categoryId = button.dataset.category;
+        if (categoryId) {
+          switchCategory(categoryId);
         }
       });
     });
 
-    // Mobile select
+    // Set up event listener for mobile select
     const categorySelect = document.getElementById('category-select-mobile');
     if (categorySelect) {
       categorySelect.addEventListener('change', (e) => {
-        const category = (e.target as HTMLSelectElement).value;
-        updateContent(category);
+        const categoryId = e.target.value;
+        switchCategory(categoryId);
       });
     }
-  });
-</script>
 
-<!-- Embed translations for client-side use -->
-<script id="comparison-translations" type="application/json">
-  {JSON.stringify(t)}
+    // Handle browser back/forward navigation
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.categoryId) {
+        switchCategory(e.state.categoryId);
+      } else {
+        // Fallback to URL parameter or default
+        const url = new URL(window.location.href);
+        const categoryId = url.searchParams.get('category') || 'education';
+        switchCategory(categoryId);
+      }
+    });
+
+    // Initial load - get category from URL or use default
+    const url = new URL(window.location.href);
+    const initialCategory = url.searchParams.get('category') || 'education';
+    switchCategory(initialCategory);
+  }
 </script>
