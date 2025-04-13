@@ -37,6 +37,7 @@
     { value: "overview", label: t.tabs.overview },
     { value: "programs", label: t.tabs.programs },
     { value: "admission", label: t.tabs.admission },
+    { value: "facilities", label: t.tabs.facilities },
     { value: "images", label: t.tabs.images },
     { value: "dorms", label: t.tabs.dorms },
     { value: "faq", label: t.tabs.faq }

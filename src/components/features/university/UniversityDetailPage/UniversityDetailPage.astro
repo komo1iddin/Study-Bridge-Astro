@@ -6,8 +6,55 @@ const { university } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 ---
 
-<UniversityDetailPageComponent 
-  university={university} 
-  lang={lang} 
-  client:load 
-/> 
+<div class="min-h-screen university-detail-wrapper">
+  <UniversityDetailPageComponent 
+    university={university} 
+    lang={lang} 
+    client:only="svelte"
+  />
+
+  <!-- Loading fallback that gets hidden when the component hydrates -->
+  <div id="loading-fallback" class="loading-fallback absolute inset-0 z-50 bg-white">
+    <div class="min-h-screen w-full flex items-center justify-center">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+        <div class="space-y-4">
+          <div class="h-4 bg-blue-200 rounded w-3/4 mx-auto"></div>
+          <div class="h-10 bg-blue-200 rounded w-1/2 mx-auto"></div>
+          <div class="space-y-2">
+            <div class="h-3 bg-slate-200 rounded"></div>
+            <div class="h-3 bg-slate-200 rounded w-5/6"></div>
+            <div class="h-3 bg-slate-200 rounded w-4/6"></div>
+          </div>
+          <div class="text-blue-600 font-medium">Loading university details...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .university-detail-wrapper {
+    position: relative;
+  }
+</style>
+
+<script>
+  // Hide loading UI when component is hydrated
+  document.addEventListener('astro:page-load', () => {
+    // Small delay to ensure component is fully hydrated
+    setTimeout(() => {
+      const loadingElement = document.getElementById('loading-fallback');
+      if (loadingElement) {
+        loadingElement.style.display = 'none';
+      }
+    }, 300);
+  });
+
+  // Fallback in case the above doesn't trigger
+  setTimeout(() => {
+    const loadingElement = document.getElementById('loading-fallback');
+    if (loadingElement) {
+      loadingElement.style.display = 'none';
+    }
+  }, 2000);
+</script> 
