@@ -3,7 +3,7 @@ import type { Lang } from '@/i18n/langUtils';
 import { getProgramsTranslations } from '@/i18n/features/programs';
 import SectionHeader from '@/components/ui/SectionHeader.astro';
 import ButtonView from '@/components/ui/astro/ButtonView.astro';
-import { Clock, CheckCircle, ChevronDown } from 'lucide-astro';
+import { Clock, CheckCircle, ChevronDown, GraduationCap, BookOpen, Building, Award, MapPin, Users, Calendar, Briefcase } from 'lucide-astro';
 
 interface Props {
   lang?: Lang;
@@ -12,6 +12,7 @@ interface Props {
 const { lang = 'uz' } = Astro.props;
 const t = getProgramsTranslations(lang);
 
+// Enhanced program data with more China-specific information
 const programs = [
   {
     id: 'bachelor',
@@ -24,7 +25,30 @@ const programs = [
     duration: t.categories.bachelor.duration,
     benefits: t.categories.bachelor.benefits,
     deadline: "2025-yil 1-may",
-    discount: "20%"
+    discount: "20%",
+    // New China-specific fields
+    chinese_title: "本科课程",
+    universities: [
+      {
+        name: "Fudan University",
+        city: "Shanghai",
+        image: "/images/universities/fudan-university/campus.jpg",
+        rank: "#16 in Asia"
+      },
+      {
+        name: "Tsinghua University",
+        city: "Beijing",
+        image: "/images/universities/tsinghua/campus.jpg",
+        rank: "#3 in Asia"
+      }
+    ],
+    majors: ["Computer Science", "Business Administration", "Engineering", "Medicine", "Economics"],
+    job_opportunities: ["International Companies", "Research Institutions", "Government Agencies"],
+    visa_requirements: ["Student Visa (X1/X2)", "Health Certificate", "Acceptance Letter"],
+    language_requirements: "HSK 4 or English Proficiency",
+    accommodation: "Modern campus dormitories or off-campus apartments",
+    featured: true,
+    icon: GraduationCap
   },
   {
     id: 'master',
@@ -37,7 +61,30 @@ const programs = [
     duration: t.categories.master.duration,
     benefits: t.categories.master.benefits,
     deadline: "2025-yil 1-may",
-    discount: "20%"
+    discount: "20%",
+    // New China-specific fields
+    chinese_title: "硕士课程",
+    universities: [
+      {
+        name: "Shanghai Jiao Tong University",
+        city: "Shanghai",
+        image: "/images/universities/shanghai-jiaotong/campus.jpg",
+        rank: "#7 in Asia"
+      },
+      {
+        name: "Zhejiang University",
+        city: "Hangzhou",
+        image: "/images/universities/zhejiang-university/campus.jpg",
+        rank: "#5 in Asia"
+      }
+    ],
+    majors: ["Advanced Engineering", "International Business", "AI & Data Science", "Public Policy"],
+    job_opportunities: ["Leadership Positions", "Academic Careers", "Specialized Research"],
+    visa_requirements: ["Student Visa (X1)", "Degree Certificate", "Research Proposal"],
+    language_requirements: "HSK 5 or IELTS 6.5+",
+    accommodation: "Graduate student housing with private facilities",
+    featured: true,
+    icon: Award
   },
   {
     id: 'language',
@@ -50,7 +97,30 @@ const programs = [
     duration: t.categories.language.duration,
     benefits: t.categories.language.benefits,
     deadline: "2025-yil 1-may",
-    discount: "20%"
+    discount: "20%",
+    // New China-specific fields
+    chinese_title: "汉语课程",
+    universities: [
+      {
+        name: "Beijing Language and Culture University",
+        city: "Beijing",
+        image: "/images/universities/placeholder.jpeg",
+        rank: "#1 for Language Studies"
+      },
+      {
+        name: "Shanghai International Studies University",
+        city: "Shanghai",
+        image: "/images/universities/placeholder.jpeg",
+        rank: "Top 5 for Languages"
+      }
+    ],
+    majors: ["Mandarin Chinese", "Business Chinese", "Academic Chinese", "HSK Preparation"],
+    job_opportunities: ["Interpreter/Translator", "Language Teacher", "Cultural Liaison"],
+    visa_requirements: ["Short-term Student Visa (X2)", "Program Acceptance", "Health Check"],
+    language_requirements: "No prior knowledge required for beginners",
+    accommodation: "Homestay options available for language immersion",
+    featured: false,
+    icon: BookOpen
   }
 ];
 
@@ -59,15 +129,22 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
 ---
 
 <section class="container mx-auto py-12 md:py-16 lg:py-20 px-4 md:px-6">
-  <!-- Header -->
+  <!-- Header with China focus -->
   <SectionHeader
     title={t.main.title}
     subtitle={t.main.subtitle}
   />
+  
+  <div class="mb-8 text-center max-w-3xl mx-auto">
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <img src="/images/universities/placeholder.jpeg" alt="China Flag" class="w-6 h-4 object-cover rounded-sm" />
+      <span class="text-sm font-medium text-blue-600">★ {lang === 'uz' ? 'Xitoyda o\'qish imkoniyati' : 'Study in China Opportunity'} ★</span>
+    </div>
+  </div>
 
   <!-- Category Selector - Mobile -->
   <div class="md:hidden mb-8">
-    <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg">
+    <div class="max-w-[640px] mx-auto flex flex-col items-center justify-between gap-4 p-4 bg-muted/10 border rounded-lg shadow-sm">
       <div class="text-base font-medium">{t.labels.programs}</div>
       <div class="relative w-full">
         <select 
@@ -87,7 +164,7 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
   </div>
 
   <!-- Category Pills - Desktop -->
-  <div class="hidden md:flex justify-center mb-8">
+  <div class="hidden md:flex justify-center mb-10">
     <div class="inline-flex p-1 bg-gray-50 border rounded-lg shadow-sm">
       {programs.map((program) => (
         <button
@@ -100,91 +177,268 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
               : "hover:bg-gray-100 text-gray-600"
           ]}
         >
+          <program.icon class="h-4 w-4" />
           <span>{program.title}</span>
         </button>
       ))}
     </div>
   </div>
 
-  <!-- Program Content -->
+  <!-- Program Content - Redesigned with China focus -->
   <div class="max-w-6xl mx-auto">
     <div id="program-content">
-      <div class="border-2 rounded-xl shadow-sm overflow-hidden">
-        <div class="bg-muted/10 border-b pb-3 p-6">
-          <div class="flex items-center justify-between">
-            <h3 class="font-medium text-xl">{activeProgram.title}</h3>
-            <div class="text-sm text-muted-foreground">Ta'lim dasturi</div>
-          </div>
-        </div>
-
-        <div class="p-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="border rounded-xl shadow-sm overflow-hidden bg-white">
+        <!-- Header with Chinese title -->
+        <div class="bg-blue-50 border-b pb-3 p-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between">
             <div>
-              <p class="text-slate-600 mb-6">
-                {activeProgram.description}
-              </p>
+              <h3 class="font-medium text-xl text-blue-900">{activeProgram.title}</h3>
+              <p class="text-blue-700 text-sm mt-1">{activeProgram.chinese_title}</p>
+            </div>
+            <div class="mt-2 md:mt-0 flex items-center">
+              <div class="bg-blue-600 text-white py-1 px-3 rounded-full text-sm mr-2">
+                {activeProgram.featured ? '★ Premium' : 'Standard'}
+              </div>
+              <div class="text-sm text-muted-foreground">Ta'lim dasturi</div>
+            </div>
+          </div>
+        </div>
 
-              <div class="flex items-end gap-3 mb-6">
-                <div class="text-3xl font-bold text-blue-600">{activeProgram.price.discounted}</div>
-                <div class="text-lg text-slate-500 line-through">{activeProgram.price.original}</div>
-                <div class="text-sm text-blue-600 font-medium">/yil</div>
+        <!-- Main content -->
+        <div class="p-6">
+          <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <!-- Left column - Program details -->
+            <div class="lg:col-span-3">
+              <div class="mb-6">
+                <h4 class="text-lg font-semibold mb-2 text-blue-900 flex items-center">
+                  <BookOpen class="h-5 w-5 mr-2 text-blue-600" />
+                  {lang === 'uz' ? 'Dastur haqida' : 'About the Program'}
+                </h4>
+                <p class="text-slate-600">
+                  {activeProgram.description}
+                </p>
+              </div>
+              
+              <!-- Pricing -->
+              <div class="mb-6 bg-blue-50 p-4 rounded-lg">
+                <h4 class="text-lg font-semibold mb-3 text-blue-900 flex items-center">
+                  <Award class="h-5 w-5 mr-2 text-blue-600" />
+                  {t.labels.price}
+                </h4>
+                <div class="flex items-end gap-3">
+                  <div class="text-3xl font-bold text-blue-600">{activeProgram.price.discounted}</div>
+                  <div class="text-lg text-slate-500 line-through">{activeProgram.price.original}</div>
+                  <div class="text-sm text-blue-600 font-medium">/yil</div>
+                </div>
+                <div class="mt-2 flex items-center text-sm text-slate-600">
+                  <span class="bg-green-100 text-green-800 py-0.5 px-2 rounded-full text-xs font-medium mr-2">
+                    {activeProgram.discount} {t.common.discount}
+                  </span>
+                  <Calendar class="h-4 w-4 mr-1 text-slate-400" />
+                  <span>{lang === 'uz' ? 'Chegirma muddati:' : 'Discount until:'} {activeProgram.deadline}</span>
+                </div>
               </div>
 
-              <div class="flex items-center mb-6 text-slate-600">
-                <Clock class="h-5 w-5 mr-2 text-blue-600" />
-                <span>Davomiyligi: {activeProgram.duration}</span>
+              <!-- Program details -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                    <Clock class="h-5 w-5 mr-2 text-blue-600" />
+                    {t.labels.duration}
+                  </h4>
+                  <p class="text-slate-600">{activeProgram.duration}</p>
+                </div>
+                
+                <div>
+                  <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                    <MapPin class="h-5 w-5 mr-2 text-blue-600" />
+                    {lang === 'uz' ? 'Joylashuv' : 'Location'}
+                  </h4>
+                  <p class="text-slate-600">{activeProgram.universities.map(u => u.city).join(', ')}, {lang === 'uz' ? 'Xitoy' : 'China'}</p>
+                </div>
+                
+                <div>
+                  <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                    <Users class="h-5 w-5 mr-2 text-blue-600" />
+                    {lang === 'uz' ? 'Til talablari' : 'Language Requirements'}
+                  </h4>
+                  <p class="text-slate-600">{activeProgram.language_requirements}</p>
+                </div>
+                
+                <div>
+                  <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                    <Building class="h-5 w-5 mr-2 text-blue-600" />
+                    {lang === 'uz' ? 'Turar joy' : 'Accommodation'}
+                  </h4>
+                  <p class="text-slate-600">{activeProgram.accommodation}</p>
+                </div>
               </div>
 
-              <h4 class="font-semibold text-slate-800 mb-3">Dastur imkoniyatlari:</h4>
-              <ul class="space-y-4 mb-6">
-                {activeProgram.benefits.map((benefit) => (
-                  <li class="flex items-start gap-3">
-                    <CheckCircle class="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span class="text-slate-600">{benefit}</span>
-                  </li>
-                ))}
-              </ul>
+              <div class="mb-6">
+                <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                  <GraduationCap class="h-5 w-5 mr-2 text-blue-600" />
+                  {lang === 'uz' ? 'Mutaxassisliklar' : 'Available Majors'}
+                </h4>
+                <div class="flex flex-wrap gap-2">
+                  {activeProgram.majors.map(major => (
+                    <span class="bg-blue-50 text-blue-800 py-1 px-3 rounded-full text-sm">
+                      {major}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
-              <div class="flex flex-col sm:flex-row gap-3">
-                <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 transition-colors">
-                  Ariza topshirish
+              <div class="mb-6">
+                <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                  <Briefcase class="h-5 w-5 mr-2 text-blue-600" />
+                  {lang === 'uz' ? 'Karyera imkoniyatlari' : 'Career Opportunities'}
+                </h4>
+                <div class="flex flex-wrap gap-2">
+                  {activeProgram.job_opportunities.map(job => (
+                    <span class="bg-green-50 text-green-800 py-1 px-3 rounded-full text-sm">
+                      {job}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Benefits -->
+              <div class="mb-6">
+                <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                  <CheckCircle class="h-5 w-5 mr-2 text-blue-600" />
+                  {t.labels.benefits}
+                </h4>
+                <ul class="space-y-3">
+                  {activeProgram.benefits.map((benefit) => (
+                    <li class="flex items-start gap-3">
+                      <CheckCircle class="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span class="text-slate-600">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <!-- Action buttons -->
+              <div class="flex flex-col sm:flex-row gap-3 mt-8">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6 py-3 transition-colors font-medium shadow-sm">
+                  {t.labels.applyNow}
                 </button>
-                <button class="border border-blue-200 text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-2 transition-colors">
-                  Dastur haqida batafsil
+                <button class="border border-blue-200 text-blue-600 hover:bg-blue-50 rounded-lg px-6 py-3 transition-colors font-medium">
+                  {t.labels.learnMore}
                 </button>
               </div>
             </div>
 
-            <div class="relative rounded-xl overflow-hidden h-[300px] md:h-auto">
-              <img
-                src="https://insight.study.csu.edu.au/wp-content/uploads/2018/03/5-Reasons-to-go-to-uni-besides-boosting-your-career-prospects.jpg?height=500&width=500"
-                alt={activeProgram.title}
-                class="absolute inset-0 w-full h-full object-cover"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
-              <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <div class="flex items-center space-x-2">
-                  <span class="bg-blue-600 text-white py-1 px-3 rounded-full text-sm">
-                    {activeCategory === "bachelor" ? "Top dastur" : activeCategory === "master" ? "Eng mashhur" : "Tezkor"}
-                  </span>
-                  <span class="bg-green-600 text-white py-1 px-3 rounded-full text-sm">
-                    {activeProgram.discount} chegirma
-                  </span>
+            <!-- Right column - China-specific information -->
+            <div class="lg:col-span-2">
+              <!-- Universities -->
+              <div class="mb-6">
+                <h4 class="text-lg font-semibold mb-4 text-blue-900 flex items-center">
+                  <Building class="h-5 w-5 mr-2 text-blue-600" />
+                  {lang === 'uz' ? 'Hamkor universitetlar' : 'Partner Universities'}
+                </h4>
+                <div class="space-y-4">
+                  {activeProgram.universities.map((university) => (
+                    <div class="border rounded-lg overflow-hidden shadow-sm">
+                      <div class="h-32 overflow-hidden">
+                        <img 
+                          src={university.image} 
+                          alt={university.name}
+                          class="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div class="p-4">
+                        <h5 class="font-medium text-slate-900">{university.name}</h5>
+                        <div class="flex items-center justify-between mt-1">
+                          <span class="text-sm text-slate-600 flex items-center">
+                            <MapPin class="h-3 w-3 mr-1" />
+                            {university.city}
+                          </span>
+                          <span class="text-xs bg-blue-100 text-blue-800 py-0.5 px-2 rounded-full">
+                            {university.rank}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <p class="text-white text-sm mt-2">Ro'yxatdan o'tish oxirgi muddati: {activeProgram.deadline}</p>
+              </div>
+
+              <!-- Visa Information -->
+              <div class="mb-6 border rounded-lg p-4 bg-amber-50">
+                <h4 class="text-base font-semibold mb-3 text-amber-900 flex items-center">
+                  <Award class="h-5 w-5 mr-2 text-amber-600" />
+                  {lang === 'uz' ? 'Viza talablari' : 'Visa Requirements'}
+                </h4>
+                <ul class="space-y-2">
+                  {activeProgram.visa_requirements.map((req) => (
+                    <li class="flex items-start gap-2 text-sm text-slate-700">
+                      <span class="text-amber-500 font-bold">•</span>
+                      <span>{req}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div class="mt-3 text-xs text-slate-500">
+                  {lang === 'uz' ? 'Biz viza olishda yordam beramiz' : 'We assist with visa applications'}
+                </div>
+              </div>
+
+              <!-- Application Timeline -->
+              <div class="border rounded-lg p-4 bg-blue-50">
+                <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                  <Calendar class="h-5 w-5 mr-2 text-blue-600" />
+                  {lang === 'uz' ? 'Ariza topshirish jarayoni' : 'Application Process'}
+                </h4>
+                <div class="space-y-3">
+                  <div class="flex items-start gap-3">
+                    <div class="bg-blue-600 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-0.5">1</div>
+                    <div>
+                      <h5 class="font-medium text-sm text-blue-900">{lang === 'uz' ? 'Ro\'yxatdan o\'tish' : 'Registration'}</h5>
+                      <p class="text-xs text-slate-600">Online ariza to'ldiring</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <div class="bg-blue-600 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-0.5">2</div>
+                    <div>
+                      <h5 class="font-medium text-sm text-blue-900">{lang === 'uz' ? 'Hujjatlar tayyorlash' : 'Document Preparation'}</h5>
+                      <p class="text-xs text-slate-600">Kerakli hujjatlarni taqdim eting</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <div class="bg-blue-600 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
+                    <div>
+                      <h5 class="font-medium text-sm text-blue-900">{lang === 'uz' ? 'Intervyu' : 'Interview'}</h5>
+                      <p class="text-xs text-slate-600">Qabul komissiyasi bilan suhbat</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <div class="bg-blue-600 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-0.5">4</div>
+                    <div>
+                      <h5 class="font-medium text-sm text-blue-900">{lang === 'uz' ? 'Qabul xati' : 'Acceptance Letter'}</h5>
+                      <p class="text-xs text-slate-600">Universitetdan qabul xati</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start gap-3">
+                    <div class="bg-blue-600 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-0.5">5</div>
+                    <div>
+                      <h5 class="font-medium text-sm text-blue-900">{lang === 'uz' ? 'Viza olish' : 'Visa Application'}</h5>
+                      <p class="text-xs text-slate-600">Viza olish jarayoni</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
-          Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
+        <div class="bg-blue-50 border-t p-4 text-sm text-muted-foreground">
+          {lang === 'uz' ? 'Ma\'lumotlar 2023-yil holatiga ko\'ra taqdim etilgan' : 'Information current as of 2023'}
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Buttons -->
+  <!-- "View All Programs" Button -->
   <div class="text-center mt-12">
     <ButtonView
       href={`/${lang}/programs`} 
@@ -207,11 +461,26 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
 
 <!-- Client-side JavaScript -->
 <script is:inline>
-  // Import Lucide icons SVG paths for client-side rendering
+  // Define icon paths for client-side rendering
   const iconPaths = {
     clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
-    checkCircle: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>'
+    checkCircle: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+    graduationCap: '<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>',
+    award: '<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>',
+    bookOpen: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+    building: '<rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/>',
+    mapPin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+    users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
+    briefcase: '<rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>'
   };
+
+  // Icon component function for client-side rendering
+  function renderIcon(name, className) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${className || ''}">
+      ${iconPaths[name] || ''}
+    </svg>`;
+  }
 
   // Wait for DOM to be fully loaded
   document.addEventListener('DOMContentLoaded', () => {
@@ -234,6 +503,76 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
       console.error('Error parsing program data:', e);
       return;
     }
+
+    // Get current language 
+    const lang = document.documentElement.lang || 'uz';
+    const translations = {
+      uz: {
+        aboutProgram: "Dastur haqida",
+        location: "Joylashuv",
+        languageRequirements: "Til talablari",
+        accommodation: "Turar joy",
+        availableMajors: "Mutaxassisliklar",
+        careerOpportunities: "Karyera imkoniyatlari",
+        visaRequirements: "Viza talablari",
+        visaAssistance: "Biz viza olishda yordam beramiz",
+        partnerUniversities: "Hamkor universitetlar",
+        applicationProcess: "Ariza topshirish jarayoni",
+        steps: [
+          "Ro'yxatdan o'tish",
+          "Hujjatlar tayyorlash",
+          "Intervyu",
+          "Qabul xati",
+          "Viza olish"
+        ],
+        stepDesc: [
+          "Online ariza to'ldiring",
+          "Kerakli hujjatlarni taqdim eting",
+          "Qabul komissiyasi bilan suhbat",
+          "Universitetdan qabul xati",
+          "Viza olish jarayoni"
+        ],
+        china: "Xitoy",
+        premium: "★ Premium",
+        standard: "Standard",
+        discountUntil: "Chegirma muddati:",
+        currentInfo: "Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan"
+      },
+      en: {
+        aboutProgram: "About the Program",
+        location: "Location",
+        languageRequirements: "Language Requirements",
+        accommodation: "Accommodation",
+        availableMajors: "Available Majors",
+        careerOpportunities: "Career Opportunities",
+        visaRequirements: "Visa Requirements",
+        visaAssistance: "We assist with visa applications",
+        partnerUniversities: "Partner Universities",
+        applicationProcess: "Application Process",
+        steps: [
+          "Registration",
+          "Document Preparation",
+          "Interview",
+          "Acceptance Letter",
+          "Visa Application"
+        ],
+        stepDesc: [
+          "Fill out online application",
+          "Submit required documents",
+          "Interview with admissions committee",
+          "Receive university acceptance",
+          "Complete visa process"
+        ],
+        china: "China",
+        premium: "★ Premium",
+        standard: "Standard",
+        discountUntil: "Discount until:",
+        currentInfo: "Information current as of 2023"
+      }
+    };
+
+    // Get translation based on current language
+    const t = translations[lang] || translations.uz;
 
     // Main function to switch programs
     function switchProgram(programId) {
@@ -259,7 +598,7 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
       url.searchParams.set('program', programId);
       window.history.pushState({ programId }, '', url);
       
-      // Update tab styling - using getAttribute instead of dataset for TypeScript compatibility
+      // Update tab styling - using getAttribute instead of dataset for compatibility
       document.querySelectorAll('[data-program]').forEach(el => {
         const isActive = el.getAttribute('data-program') === programId;
         
@@ -272,95 +611,258 @@ const activeProgram = programs.find(p => p.id === activeCategory) || programs[0]
         }
       });
       
-      // Update mobile select - using standard JavaScript property access
+      // Update mobile select
       const mobileSelect = document.getElementById('program-select-mobile');
       if (mobileSelect) {
         mobileSelect.value = programId;
       }
       
-      // Generate new HTML
+      // Get program data
       const program = programsData.find(p => p.id === programId);
       
       // Create category badge text
-      let categoryBadge = "Top dastur";
-      if (programId === "master") categoryBadge = "Eng mashhur";
-      if (programId === "language") categoryBadge = "Tezkor";
+      const categoryBadge = program.featured ? t.premium : t.standard;
       
+      // Generate universities HTML
+      const universitiesHTML = program.universities.map(uni => `
+        <div class="border rounded-lg overflow-hidden shadow-sm">
+          <div class="h-32 overflow-hidden">
+            <img 
+              src="${uni.image}" 
+              alt="${uni.name}"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="p-4">
+            <h5 class="font-medium text-slate-900">${uni.name}</h5>
+            <div class="flex items-center justify-between mt-1">
+              <span class="text-sm text-slate-600 flex items-center">
+                ${renderIcon('mapPin', 'h-3 w-3 mr-1')}
+                ${uni.city}
+              </span>
+              <span class="text-xs bg-blue-100 text-blue-800 py-0.5 px-2 rounded-full">
+                ${uni.rank}
+              </span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Generate visa requirements HTML
+      const visaHTML = program.visa_requirements.map(req => `
+        <li class="flex items-start gap-2 text-sm text-slate-700">
+          <span class="text-amber-500 font-bold">•</span>
+          <span>${req}</span>
+        </li>
+      `).join('');
+
+      // Generate majors HTML
+      const majorsHTML = program.majors.map(major => `
+        <span class="bg-blue-50 text-blue-800 py-1 px-3 rounded-full text-sm">
+          ${major}
+        </span>
+      `).join('');
+
+      // Generate job opportunities HTML
+      const jobsHTML = program.job_opportunities.map(job => `
+        <span class="bg-green-50 text-green-800 py-1 px-3 rounded-full text-sm">
+          ${job}
+        </span>
+      `).join('');
+
+      // Generate benefits HTML
+      const benefitsHTML = program.benefits.map(benefit => `
+        <li class="flex items-start gap-3">
+          ${renderIcon('checkCircle', 'h-5 w-5 text-green-500 mt-0.5 flex-shrink-0')}
+          <span class="text-slate-600">${benefit}</span>
+        </li>
+      `).join('');
+
+      // Generate application steps HTML
+      const stepsHTML = t.steps.map((step, index) => `
+        <div class="flex items-start gap-3">
+          <div class="bg-blue-600 text-white rounded-full h-6 w-6 flex items-center justify-center flex-shrink-0 mt-0.5">${index + 1}</div>
+          <div>
+            <h5 class="font-medium text-sm text-blue-900">${step}</h5>
+            <p class="text-xs text-slate-600">${t.stepDesc[index]}</p>
+          </div>
+        </div>
+      `).join('');
+
+      // Build the complete content HTML
       const contentHTML = `
-        <div class="border-2 rounded-xl shadow-sm overflow-hidden">
-          <div class="bg-muted/10 border-b pb-3 p-6">
-            <div class="flex items-center justify-between">
-              <h3 class="font-medium text-xl">${program.title}</h3>
-              <div class="text-sm text-muted-foreground">Ta'lim dasturi</div>
-            </div>
-          </div>
-
-          <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="border rounded-xl shadow-sm overflow-hidden bg-white">
+          <!-- Header with Chinese title -->
+          <div class="bg-blue-50 border-b pb-3 p-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between">
               <div>
-                <p class="text-slate-600 mb-6">
-                  ${program.description}
-                </p>
+                <h3 class="font-medium text-xl text-blue-900">${program.title}</h3>
+                <p class="text-blue-700 text-sm mt-1">${program.chinese_title}</p>
+              </div>
+              <div class="mt-2 md:mt-0 flex items-center">
+                <div class="bg-blue-600 text-white py-1 px-3 rounded-full text-sm mr-2">
+                  ${categoryBadge}
+                </div>
+                <div class="text-sm text-muted-foreground">Ta'lim dasturi</div>
+              </div>
+            </div>
+          </div>
 
-                <div class="flex items-end gap-3 mb-6">
-                  <div class="text-3xl font-bold text-blue-600">${program.price.discounted}</div>
-                  <div class="text-lg text-slate-500 line-through">${program.price.original}</div>
-                  <div class="text-sm text-blue-600 font-medium">/yil</div>
+          <!-- Main content -->
+          <div class="p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+              <!-- Left column - Program details -->
+              <div class="lg:col-span-3">
+                <div class="mb-6">
+                  <h4 class="text-lg font-semibold mb-2 text-blue-900 flex items-center">
+                    ${renderIcon('bookOpen', 'h-5 w-5 mr-2 text-blue-600')}
+                    ${t.aboutProgram}
+                  </h4>
+                  <p class="text-slate-600">
+                    ${program.description}
+                  </p>
+                </div>
+                
+                <!-- Pricing -->
+                <div class="mb-6 bg-blue-50 p-4 rounded-lg">
+                  <h4 class="text-lg font-semibold mb-3 text-blue-900 flex items-center">
+                    ${renderIcon('award', 'h-5 w-5 mr-2 text-blue-600')}
+                    ${program.id === 'language' ? 'Course Fee' : 'Tuition Fee'}
+                  </h4>
+                  <div class="flex items-end gap-3">
+                    <div class="text-3xl font-bold text-blue-600">${program.price.discounted}</div>
+                    <div class="text-lg text-slate-500 line-through">${program.price.original}</div>
+                    <div class="text-sm text-blue-600 font-medium">/yil</div>
+                  </div>
+                  <div class="mt-2 flex items-center text-sm text-slate-600">
+                    <span class="bg-green-100 text-green-800 py-0.5 px-2 rounded-full text-xs font-medium mr-2">
+                      ${program.discount} ${program.id === 'language' ? 'Discount' : 'Discount'}
+                    </span>
+                    ${renderIcon('calendar', 'h-4 w-4 mr-1 text-slate-400')}
+                    <span>${t.discountUntil} ${program.deadline}</span>
+                  </div>
                 </div>
 
-                <div class="flex items-center mb-6 text-slate-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 mr-2 text-blue-600">
-                    ${iconPaths.clock}
-                  </svg>
-                  <span>Davomiyligi: ${program.duration}</span>
+                <!-- Program details -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                      ${renderIcon('clock', 'h-5 w-5 mr-2 text-blue-600')}
+                      Duration
+                    </h4>
+                    <p class="text-slate-600">${program.duration}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                      ${renderIcon('mapPin', 'h-5 w-5 mr-2 text-blue-600')}
+                      ${t.location}
+                    </h4>
+                    <p class="text-slate-600">${program.universities.map(u => u.city).join(', ')}, ${t.china}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                      ${renderIcon('users', 'h-5 w-5 mr-2 text-blue-600')}
+                      ${t.languageRequirements}
+                    </h4>
+                    <p class="text-slate-600">${program.language_requirements}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                      ${renderIcon('building', 'h-5 w-5 mr-2 text-blue-600')}
+                      ${t.accommodation}
+                    </h4>
+                    <p class="text-slate-600">${program.accommodation}</p>
+                  </div>
                 </div>
 
-                <h4 class="font-semibold text-slate-800 mb-3">Dastur imkoniyatlari:</h4>
-                <ul class="space-y-4 mb-6">
-                  ${program.benefits.map(benefit => `
-                    <li class="flex items-start gap-3">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0">
-                        ${iconPaths.checkCircle}
-                      </svg>
-                      <span class="text-slate-600">${benefit}</span>
-                    </li>
-                  `).join('')}
-                </ul>
+                <div class="mb-6">
+                  <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                    ${renderIcon('graduationCap', 'h-5 w-5 mr-2 text-blue-600')}
+                    ${t.availableMajors}
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    ${majorsHTML}
+                  </div>
+                </div>
 
-                <div class="flex flex-col sm:flex-row gap-3">
-                  <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 transition-colors">
-                    Ariza topshirish
+                <div class="mb-6">
+                  <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                    ${renderIcon('briefcase', 'h-5 w-5 mr-2 text-blue-600')}
+                    ${t.careerOpportunities}
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    ${jobsHTML}
+                  </div>
+                </div>
+
+                <!-- Benefits -->
+                <div class="mb-6">
+                  <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                    ${renderIcon('checkCircle', 'h-5 w-5 mr-2 text-blue-600')}
+                    Benefits
+                  </h4>
+                  <ul class="space-y-3">
+                    ${benefitsHTML}
+                  </ul>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 mt-8">
+                  <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6 py-3 transition-colors font-medium shadow-sm">
+                    Apply Now
                   </button>
-                  <button class="border border-blue-200 text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-2 transition-colors">
-                    Dastur haqida batafsil
+                  <button class="border border-blue-200 text-blue-600 hover:bg-blue-50 rounded-lg px-6 py-3 transition-colors font-medium">
+                    Learn More
                   </button>
                 </div>
               </div>
 
-              <div class="relative rounded-xl overflow-hidden h-[300px] md:h-auto">
-                <img
-                  src="https://insight.study.csu.edu.au/wp-content/uploads/2018/03/5-Reasons-to-go-to-uni-besides-boosting-your-career-prospects.jpg?height=500&width=500"
-                  alt="${program.title}"
-                  class="absolute inset-0 w-full h-full object-cover"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <div class="flex items-center space-x-2">
-                    <span class="bg-blue-600 text-white py-1 px-3 rounded-full text-sm">
-                      ${categoryBadge}
-                    </span>
-                    <span class="bg-green-600 text-white py-1 px-3 rounded-full text-sm">
-                      ${program.discount} chegirma
-                    </span>
+              <!-- Right column - China-specific information -->
+              <div class="lg:col-span-2">
+                <!-- Universities -->
+                <div class="mb-6">
+                  <h4 class="text-lg font-semibold mb-4 text-blue-900 flex items-center">
+                    ${renderIcon('building', 'h-5 w-5 mr-2 text-blue-600')}
+                    ${t.partnerUniversities}
+                  </h4>
+                  <div class="space-y-4">
+                    ${universitiesHTML}
                   </div>
-                  <p class="text-white text-sm mt-2">Ro'yxatdan o'tish oxirgi muddati: ${program.deadline}</p>
+                </div>
+
+                <!-- Visa Information -->
+                <div class="mb-6 border rounded-lg p-4 bg-amber-50">
+                  <h4 class="text-base font-semibold mb-3 text-amber-900 flex items-center">
+                    ${renderIcon('award', 'h-5 w-5 mr-2 text-amber-600')}
+                    ${t.visaRequirements}
+                  </h4>
+                  <ul class="space-y-2">
+                    ${visaHTML}
+                  </ul>
+                  <div class="mt-3 text-xs text-slate-500">
+                    ${t.visaAssistance}
+                  </div>
+                </div>
+
+                <!-- Application Timeline -->
+                <div class="border rounded-lg p-4 bg-blue-50">
+                  <h4 class="text-base font-semibold mb-3 text-blue-900 flex items-center">
+                    ${renderIcon('calendar', 'h-5 w-5 mr-2 text-blue-600')}
+                    ${t.applicationProcess}
+                  </h4>
+                  <div class="space-y-3">
+                    ${stepsHTML}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="bg-muted/10 border-t p-4 text-sm text-muted-foreground">
-            Ma'lumotlar 2023-yil holatiga ko'ra taqdim etilgan
+          <div class="bg-blue-50 border-t p-4 text-sm text-muted-foreground">
+            ${t.currentInfo}
           </div>
         </div>
       `;
