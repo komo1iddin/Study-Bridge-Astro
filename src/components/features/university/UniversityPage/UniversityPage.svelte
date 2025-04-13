@@ -22,7 +22,7 @@
   
   // Get translations
   $: t = getUniversityPageTranslations(lang);
-  $: translationsReady = Boolean(t && t.filters && t.list && t.card);
+  $: translationsReady = Boolean(t && t.filters && t.list && t.card && t.breadcrumb);
   
   let filters: Filters = DEFAULT_FILTERS;
   let mobileFiltersOpen = false;
@@ -52,55 +52,57 @@
   }
 </script>
 
-<!-- Main Layout -->
-<div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative overflow-hidden">
-  <BackgroundDecoration />
-  <div class="relative z-10">
-    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <!-- Breadcrumb -->
-      <div class="flex items-center gap-2 text-sm text-slate-500 mb-6">
-        <Home class="h-3.5 w-3.5" />
-        <span>/</span>
-        <span class="text-slate-900 font-medium">{t.breadcrumb.universities}</span>
-      </div>
-      
-      <!-- Mobile filters -->
-      <div class="lg:hidden mb-6">
-        <MobileFilters
-          filters={filters}
-          cities={cities}
-          isOpen={mobileFiltersOpen}
-          {t}
-          {lang}
-          on:change={handleFilterChange}
-          on:reset={resetFilters}
-          on:openStateChange={handleMobileFiltersOpenChange}
-        />
-      </div>
-      
-      <div class="flex flex-col lg:flex-row gap-8">
-        <!-- Sidebar -->
-        <aside class="hidden lg:block sticky top-8 h-fit md:w-64 lg:w-72 xl:w-80">
-          <Sidebar
+{#if translationsReady}
+  <!-- Main Layout -->
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative overflow-hidden">
+    <BackgroundDecoration />
+    <div class="relative z-10">
+      <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-sm text-slate-500 mb-6">
+          <Home class="h-3.5 w-3.5" />
+          <span>/</span>
+          <span class="text-slate-900 font-medium">{t.breadcrumb.universities}</span>
+        </div>
+        
+        <!-- Mobile filters -->
+        <div class="lg:hidden mb-6">
+          <MobileFilters
             filters={filters}
             cities={cities}
+            isOpen={mobileFiltersOpen}
             {t}
             {lang}
             on:change={handleFilterChange}
             on:reset={resetFilters}
+            on:openStateChange={handleMobileFiltersOpenChange}
           />
-        </aside>
+        </div>
         
-        <!-- Main content -->
-        <main class="flex-1 max-w-full lg:max-w-[calc(100%-20rem)] xl:max-w-[calc(100%-22rem)]">
-          <UniversityList
-            universities={universities}
-            filters={filters}
-            {t}
-            {lang}
-          />
-        </main>
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Sidebar -->
+          <aside class="hidden lg:block sticky top-8 h-fit md:w-64 lg:w-72 xl:w-80">
+            <Sidebar
+              filters={filters}
+              cities={cities}
+              {t}
+              {lang}
+              on:change={handleFilterChange}
+              on:reset={resetFilters}
+            />
+          </aside>
+          
+          <!-- Main content -->
+          <main class="flex-1 max-w-full lg:max-w-[calc(100%-20rem)] xl:max-w-[calc(100%-22rem)]">
+            <UniversityList
+              universities={universities}
+              filters={filters}
+              {t}
+              {lang}
+            />
+          </main>
+        </div>
       </div>
     </div>
   </div>
-</div> 
+{/if} 

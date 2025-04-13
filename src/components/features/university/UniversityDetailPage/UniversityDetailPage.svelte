@@ -28,6 +28,7 @@
 
   // Get translations
   $: t = getUniversityDetailTranslations(lang);
+  $: translationsReady = t && t.breadcrumb && Boolean(university);
 
   // State
   let activeTab = "overview";
@@ -68,60 +69,62 @@
   }
 </script>
 
-<div class="min-h-screen w-full bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative overflow-hidden">
-  <BackgroundDecoration />
+{#if translationsReady}
+  <div class="min-h-screen w-full bg-gradient-to-br from-blue-50 via-slate-50 to-indigo-50 relative overflow-hidden">
+    <BackgroundDecoration />
 
-  <div class="w-full max-w-7xl mx-auto py-4 sm:py-6 md:py-8 px-4 sm:px-6 md:px-8 relative z-10">
-    <!-- Breadcrumb -->
-    <div class="flex items-center gap-2 text-sm text-slate-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap pb-2">
-      <Home class="h-3.5 w-3.5 flex-shrink-0" />
-      <span>/</span>
-      <span>{t.breadcrumb.universities}</span>
-      <span>/</span>
-      <span class="text-slate-900 font-medium truncate">{university.name}</span>
+    <div class="w-full max-w-7xl mx-auto py-4 sm:py-6 md:py-8 px-4 sm:px-6 md:px-8 relative z-10">
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 text-sm text-slate-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap pb-2">
+        <Home class="h-3.5 w-3.5 flex-shrink-0" />
+        <span>/</span>
+        <span>{t.breadcrumb.universities}</span>
+        <span>/</span>
+        <span class="text-slate-900 font-medium truncate">{university.name}</span>
+      </div>
+
+      <main class="grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 md:grid-cols-3">
+        <!-- Main Content -->
+        <div class="md:col-span-2 space-y-4 sm:space-y-6 md:space-y-8">
+          <HeaderCard 
+            {university}
+            {t}
+            {activeTab}
+            {lang}
+            on:change={handleTabChange}
+          />
+
+          <!-- Render active section content -->
+          {#if activeTab === "overview"}
+            <OverviewSection {university} {lang} />
+          {:else if activeTab === "programs"}
+            <ProgramsSection {university} {lang} />
+          {:else if activeTab === "admission"}
+            <AdmissionSection {university} {lang} />
+          {:else if activeTab === "images"}
+            <ImagesSection {university} {lang} />
+          {:else if activeTab === "dorms"}
+            <DormsSection {university} {lang} />
+          {:else if activeTab === "faq"}
+            <FAQSection {university} {lang} />
+          {/if}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-4 sm:space-y-6">
+          <ApplicationCard {university} {t} {lang} />
+          <StatsCard {university} {t} {lang} />
+          <ContactCard {university} {t} {lang} />
+          
+          <!-- Add a button to view gallery -->
+          <button 
+            class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            on:click={showImages}
+          >
+            {t.viewGallery}
+          </button>
+        </div>
+      </main>
     </div>
-
-    <main class="grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 md:grid-cols-3">
-      <!-- Main Content -->
-      <div class="md:col-span-2 space-y-4 sm:space-y-6 md:space-y-8">
-        <HeaderCard 
-          {university}
-          {t}
-          {activeTab}
-          {lang}
-          on:change={handleTabChange}
-        />
-
-        <!-- Render active section content -->
-        {#if activeTab === "overview"}
-          <OverviewSection {university} {lang} />
-        {:else if activeTab === "programs"}
-          <ProgramsSection {university} {lang} />
-        {:else if activeTab === "admission"}
-          <AdmissionSection {university} {lang} />
-        {:else if activeTab === "images"}
-          <ImagesSection {university} {lang} />
-        {:else if activeTab === "dorms"}
-          <DormsSection {university} {lang} />
-        {:else if activeTab === "faq"}
-          <FAQSection {university} {lang} />
-        {/if}
-      </div>
-
-      <!-- Sidebar -->
-      <div class="space-y-4 sm:space-y-6">
-        <ApplicationCard {university} {t} {lang} />
-        <StatsCard {university} {t} {lang} />
-        <ContactCard {university} {t} {lang} />
-        
-        <!-- Add a button to view gallery -->
-        <button 
-          class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          on:click={showImages}
-        >
-          {t.viewGallery}
-        </button>
-      </div>
-    </main>
   </div>
-</div> 
+{/if} 
