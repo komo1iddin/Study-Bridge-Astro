@@ -9,10 +9,10 @@ import { ctaTranslations, getCTATranslations } from './home/cta';
 import { comparisonTranslations, getComparisonTranslations } from './home/comparison';
 import { universityDetailTranslations, getUniversityDetailTranslations } from './university/universityDetail';
 import { universityPageTranslations, getUniversityPageTranslations } from './university/universityPage';
-import { getContactTranslations } from './contact';
-import { getUITranslations } from './shared/ui';
+import { contactTranslations, getContactTranslations } from './contact';
 import { testimonialsTranslations, getTestimonialsTranslations } from './shared/testimonials';
 import { faqTranslations, getFAQTranslations } from './shared/faq';
+import { commonTranslations, getCommonTranslations } from './shared/common';
 import { featuredBlogTranslations, getFeaturedBlogTranslations } from './blog/featured';
 import { blogCommonTranslations, getBlogCommonTranslations } from './blog/common';
 import { getProgramsTranslations } from './programs';
@@ -21,6 +21,7 @@ import { sectionTranslations, getSectionTranslations } from './ui/section';
 import { breadcrumbsTranslations, getBreadcrumbsTranslations } from './ui/breadcrumbs';
 import { languageSelectorTranslations, getLanguageSelectorTranslations } from './ui/language';
 import { navigationTranslations, getNavigationTranslations } from './navigation';
+import { popupTranslations, getPopupTranslations } from './ui/popup';
 import type { PartnersTranslations } from './home/partners';
 import type { SuccessPathTranslations, Step, StepBenefit } from './home/successPath';
 import type { HeroTranslations } from './home/hero';
@@ -36,14 +37,15 @@ import type { FeaturedBlogTranslations } from './blog/featured';
 import type { UniversityDetailTranslations } from './university/universityDetail';
 import type { UniversityPageTranslations } from './university/universityPage';
 import type { ContactTranslations } from './contact';
-import type { UITranslations } from './shared/ui';
 import type { CTATranslations as UICtaTranslations } from './ui/cta';
 import type { SectionTranslations } from './ui/section';
 import type { BreadcrumbsTranslations } from './ui/breadcrumbs';
 import type { LanguageSelectorTranslations } from './ui/language';
 import type { NavigationTranslations } from './navigation';
+import type { PopupTranslations } from './ui/popup';
 import type { Lang } from '@/i18n/langUtils';
 import type { BlogCommonTranslations } from './blog/common';
+import type { CommonTranslations } from './shared/common';
 
 // Re-export types
 export type {
@@ -65,12 +67,13 @@ export type {
   UniversityDetailTranslations,
   UniversityPageTranslations,
   ContactTranslations,
-  UITranslations,
   UICtaTranslations,
   SectionTranslations,
   BreadcrumbsTranslations,
   LanguageSelectorTranslations,
-  NavigationTranslations
+  PopupTranslations,
+  NavigationTranslations,
+  CommonTranslations
 };
 
 // Export translations by feature
@@ -86,14 +89,17 @@ export const featureTranslations = {
   comparison: comparisonTranslations,
   universityDetail: universityDetailTranslations,
   universityPage: universityPageTranslations,
+  contact: contactTranslations,
   testimonials: testimonialsTranslations,
   faq: faqTranslations,
+  common: commonTranslations,
   featuredBlog: featuredBlogTranslations,
   blogCommon: blogCommonTranslations,
   uiCta: uiCtaTranslations,
   section: sectionTranslations,
   breadcrumbs: breadcrumbsTranslations,
   language: languageSelectorTranslations,
+  popup: popupTranslations,
   navigation: navigationTranslations
 };
 
@@ -111,9 +117,9 @@ export const getTranslations = {
   universityDetail: getUniversityDetailTranslations,
   universityPage: getUniversityPageTranslations,
   contact: getContactTranslations,
-  ui: getUITranslations,
   testimonials: getTestimonialsTranslations,
   faq: getFAQTranslations,
+  common: getCommonTranslations,
   featuredBlog: getFeaturedBlogTranslations,
   blogCommon: getBlogCommonTranslations,
   programs: getProgramsTranslations,
@@ -121,6 +127,7 @@ export const getTranslations = {
   section: getSectionTranslations,
   breadcrumbs: getBreadcrumbsTranslations,
   language: getLanguageSelectorTranslations,
+  popup: getPopupTranslations,
   navigation: getNavigationTranslations
 };
 

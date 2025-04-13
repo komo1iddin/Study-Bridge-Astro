@@ -1,5 +1,6 @@
 // src/data/constants/navigation.ts
-import { translations } from '@/i18n/translations/new-index';
+import { getNavigationTranslations } from '@/i18n/features/navigation';
+import { Lang, languages as langCodes } from '@/i18n/langUtils';
 
 export type NavigationItem = {
   name: string;
@@ -12,32 +13,32 @@ export type Language = {
   name: string;
 };
 
-// Создадим функцию для генерации навигации с учетом языка и переводов
+// Generate navigation with language and translations
 export const getNavigation = (lang: string): NavigationItem[] => {
-  const t = translations[lang as keyof typeof translations] || translations.uz;
+  const t = getNavigationTranslations(lang as Lang);
 
   return [
-    { name: t.nav.home, href: `/${lang}` },
+    { name: t.home, href: `/${lang}` },
     {
-      name: t.nav.about._value, // Use _value for the parent menu item
+      name: t.about._value, // Use _value for the parent menu item
       items: [
-        { name: t.nav.about.us, href: `/${lang}/about` },
-        { name: t.nav.about.reviews, href: `/${lang}/testimonials` },
-        { name: t.nav.about.studentPath, href: `/${lang}/student-path` },
-        { name: t.nav.about.contacts, href: `/${lang}/contacts` },
-        { name: t.nav.about.faq, href: `/${lang}/faq` },
+        { name: t.about.us, href: `/${lang}/about` },
+        { name: t.about.reviews, href: `/${lang}/testimonials` },
+        { name: t.about.studentPath, href: `/${lang}/student-path` },
+        { name: t.about.contacts, href: `/${lang}/contacts` },
+        { name: t.about.faq, href: `/${lang}/faq` },
       ],
     },
     {
-      name: t.nav.programs,
+      name: t.programs,
       href: `/${lang}/programs`,
     },
     {
-      name: t.nav.universities,
+      name: t.universities,
       href: `/${lang}/universities`,
     },
-    { name: t.nav.grants, href: `/${lang}/grants` },
-    { name: t.nav.blog, href: `/${lang}/blog` },
+    { name: t.grants, href: `/${lang}/grants` },
+    { name: t.blog, href: `/${lang}/blog` },
   ];
 };
 
@@ -47,9 +48,9 @@ export const languages: Language[] = [
   { code: 'en', name: 'English' },
 ];
 
-// Функция для получения локализованных названий языков
+// Function to get localized language names
 export const getLocalizedLanguages = (lang: string): Language[] => {
-  const t = translations[lang as keyof typeof translations] || translations.uz;
+  const t = getNavigationTranslations(lang as Lang);
 
   return [
     { code: 'ru', name: t.languages.ru || 'Русский' },

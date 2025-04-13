@@ -32,8 +32,8 @@ const programs = (await getCollection('programs'))
   }));
 
 const breadcrumbItems = [
-  { label: t('common.home'), href: `/${lang}` },
-  { label: t('common.programs'), href: `/${lang}/programs` },
+  { label: t('common:home'), href: `/${lang}` },
+  { label: t('common:programs'), href: `/${lang}/programs` },
   { label: programsT.categories.master.title, href: `/${lang}/programs/master` }
 ];
 
@@ -70,7 +70,7 @@ export const prerender = false;
               onclick="window.uiStore.toggleContactModal(true)"
               class="inline-flex items-center px-6 py-3 bg-white text-primary-700 font-medium rounded-lg hover:bg-primary-50 transition-all duration-300"
             >
-              {t('common.freeConsultation')}
+              {t('common:freeConsultation')}
               <ArrowRight class="ml-2 h-5 w-5" />
             </button>
           </div>

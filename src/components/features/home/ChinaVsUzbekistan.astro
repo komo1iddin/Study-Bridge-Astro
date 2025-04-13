@@ -244,23 +244,17 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
       
       // Get current container dimensions to prevent layout shift
       const contentElement = document.getElementById('comparison-content');
-      let containerStyle = {};
+      if (!contentElement) {
+        console.error('Comparison content element not found');
+        return;
+      }
       
-      if (contentElement && contentElement.firstElementChild) {
-        const container = contentElement.firstElementChild;
-        const rect = container.getBoundingClientRect();
-        
-        // Save all relevant dimensions and position
-        containerStyle = {
-          width: `${rect.width}px`,
-          height: `${rect.height}px`,
-          position: window.getComputedStyle(container).position,
-          margin: window.getComputedStyle(container).margin
-        };
-        
-        // Apply fixed dimensions
-        contentElement.style.width = containerStyle.width;
-        contentElement.style.height = containerStyle.height;
+      let containerHeight = 0;
+      
+      if (contentElement.firstElementChild) {
+        containerHeight = contentElement.firstElementChild.offsetHeight;
+        contentElement.style.width = contentElement.firstElementChild.offsetWidth + 'px';
+        contentElement.style.height = containerHeight + 'px';
         contentElement.style.overflow = 'hidden';
       }
       
@@ -269,27 +263,26 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
       url.searchParams.set('category', categoryId);
       window.history.pushState({ categoryId }, '', url);
       
-      // Update tab styling first (before content change)
+      // Update tab styling
       document.querySelectorAll('[data-category]').forEach(el => {
-        const button = el;
-        const isActive = button.dataset.category === categoryId;
+        const isActive = el.getAttribute('data-category') === categoryId;
         
         if (isActive) {
-          button.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-          button.classList.remove('hover:bg-gray-100', 'text-gray-600');
+          el.classList.add('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+          el.classList.remove('hover:bg-gray-100', 'text-gray-600');
         } else {
-          button.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
-          button.classList.add('hover:bg-gray-100', 'text-gray-600');
+          el.classList.remove('bg-white', 'shadow-sm', 'border', 'text-primary', 'font-medium');
+          el.classList.add('hover:bg-gray-100', 'text-gray-600');
         }
       });
       
-      // Update mobile select
+      // Update mobile select - using standard JavaScript property access
       const mobileSelect = document.getElementById('category-select-mobile');
       if (mobileSelect) {
         mobileSelect.value = categoryId;
       }
       
-      // Prepare content
+      // Generate new HTML
       const contentHTML = `
         <div class="border-2 rounded-xl shadow-sm overflow-hidden">
           <div class="bg-muted/10 border-b pb-3 p-6">
@@ -349,32 +342,25 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
         </div>
       `;
       
-      // Update content with a slight delay to ensure the container dimensions are applied
-      if (contentElement) {
-        // Use requestAnimationFrame for smoother updates
-        requestAnimationFrame(() => {
-          contentElement.innerHTML = contentHTML;
-          
-          // Reset dimensions in the next frame after content is rendered
-          requestAnimationFrame(() => {
-            // Allow a small delay for the browser to calculate the new layout
-            setTimeout(() => {
-              if (contentElement) {
-                contentElement.style.width = '';
-                contentElement.style.height = '';
-                contentElement.style.overflow = '';
-              }
-            }, 50);
-          });
-        });
-      }
+      // Update content
+      contentElement.innerHTML = contentHTML;
+      
+      // Reset dimensions after a short delay to allow new content to render
+      setTimeout(() => {
+        if (contentElement) {
+          contentElement.style.width = '';
+          contentElement.style.height = '';
+          contentElement.style.overflow = '';
+        }
+      }, 50);
     }
 
     // Set up event listeners for desktop tabs
-    document.querySelectorAll('[data-category]').forEach(button => {
+    const tabButtons = document.querySelectorAll('[data-category]');
+    tabButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
-        const categoryId = button.dataset.category;
+        const categoryId = button.getAttribute('data-category');
         if (categoryId) {
           switchCategory(categoryId);
         }
@@ -382,9 +368,9 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
     });
 
     // Set up event listener for mobile select
-    const categorySelect = document.getElementById('category-select-mobile');
-    if (categorySelect) {
-      categorySelect.addEventListener('change', (e) => {
+    const mobileSelect = document.getElementById('category-select-mobile');
+    if (mobileSelect) {
+      mobileSelect.addEventListener('change', (e) => {
         const categoryId = e.target.value;
         switchCategory(categoryId);
       });
@@ -405,6 +391,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
     // Initial load - get category from URL or use default
     const url = new URL(window.location.href);
     const initialCategory = url.searchParams.get('category') || 'education';
+    console.log('Initial category:', initialCategory);
     switchCategory(initialCategory);
   }
 </script>

@@ -4,12 +4,12 @@
 export interface NavigationTranslations {
   home: string;
   about: {
-    _value: string; // Top-level "About" menu item
-    us: string; // "About Us" sub-menu
-    reviews: string; // "Reviews" sub-menu
-    studentPath: string; // "Student Path" sub-menu
-    contacts: string; // "Contacts" sub-menu
-    faq: string; // "FAQ" sub-menu
+    _value: string; 
+    us: string; 
+    reviews: string; 
+    studentPath: string;
+    contacts: string; 
+    faq: string; 
   };
   programs: string;
   universities: string;

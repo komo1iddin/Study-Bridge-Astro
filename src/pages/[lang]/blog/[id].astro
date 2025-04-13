@@ -111,7 +111,7 @@ const fallbackSections = getLocalizedFallbackSections(lang as string);
 const articleSections = postSections.length > 0 ? postSections : fallbackSections;
 
 const breadcrumbItems = [
-  { label: t('common.home'), href: `/${lang}` },
+  { label: t('common:home'), href: `/${lang}` },
   { label: blogT.breadcrumb.blog, href: `/${lang}/blog` },
   { label: post.title, href: `/${lang}/blog/${post.id}`, active: true }
 ];

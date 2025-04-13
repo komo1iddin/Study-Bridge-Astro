@@ -56,40 +56,6 @@ const programs = [
 
 const activeCategory = Astro.url.searchParams.get('program') || 'bachelor';
 const activeProgram = programs.find(p => p.id === activeCategory) || programs[0];
-
-// Function to render Lucide icons as SVG strings for client-side use
-function renderIconSvg(icon) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${icon.class || ''}">
-    ${icon.path}
-  </svg>`;
-}
-
-// Define icons with their path data
-const clientIcons = {
-  clock: {
-    path: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
-    class: 'h-5 w-5 mr-2 text-blue-600'
-  },
-  checkCircle: {
-    path: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
-    class: 'h-5 w-5 text-green-500 mt-0.5 flex-shrink-0'
-  },
-  calendar: {
-    path: '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>',
-    class: 'h-4 w-4 mr-1'
-  },
-  tag: {
-    path: '<path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/>',
-    class: 'h-4 w-4 mr-1'
-  },
-  arrowRight: {
-    path: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
-    class: 'h-4 w-4 ml-1'
-  }
-};
-
-// Stringified client icons data for the client-side script
-const clientIconsData = JSON.stringify(clientIcons);
 ---
 
 <section class="container mx-auto py-12 md:py-16 lg:py-20 px-4 md:px-6">
@@ -244,9 +210,6 @@ const clientIconsData = JSON.stringify(clientIcons);
 <!-- Embed program data for client-side use -->
 <script id="program-data" type="application/json" set:html={JSON.stringify(programs)}></script>
 
-<!-- Embed icon data for client-side use -->
-<script id="icon-data" type="application/json" set:html={clientIconsData}></script>
-
 <!-- Client-side JavaScript -->
 <script is:inline>
   // Wait for DOM to be fully loaded
@@ -269,31 +232,6 @@ const clientIconsData = JSON.stringify(clientIcons);
     } catch (e) {
       console.error('Error parsing program data:', e);
       return;
-    }
-
-    // Get icon data
-    let iconData;
-    try {
-      const iconDataScript = document.getElementById('icon-data');
-      if (iconDataScript && iconDataScript.textContent) {
-        iconData = JSON.parse(iconDataScript.textContent);
-      } else {
-        console.error('Icon data element not found or empty');
-        return;
-      }
-    } catch (e) {
-      console.error('Error parsing icon data:', e);
-      return;
-    }
-
-    // Function to render an icon
-    function renderIcon(iconName) {
-      const icon = iconData[iconName];
-      if (!icon) return '';
-      
-      return `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="${icon.class || ''}">
-        ${icon.path}
-      </svg>`;
     }
 
     // Main function to switch programs
@@ -370,7 +308,9 @@ const clientIconsData = JSON.stringify(clientIcons);
                 </div>
 
                 <div class="flex items-center mb-6 text-slate-600">
-                  ${renderIcon('clock')}
+                  <svg class="h-5 w-5 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
                   <span>Davomiyligi: ${program.duration}</span>
                 </div>
 
@@ -378,7 +318,9 @@ const clientIconsData = JSON.stringify(clientIcons);
                 <ul class="space-y-4 mb-6">
                   ${program.benefits.map(benefit => `
                     <li class="flex items-start gap-3">
-                      ${renderIcon('checkCircle')}
+                      <svg class="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+                      </svg>
                       <span class="text-slate-600">${benefit}</span>
                     </li>
                   `).join('')}
@@ -387,7 +329,9 @@ const clientIconsData = JSON.stringify(clientIcons);
                 <div class="flex flex-col sm:flex-row gap-3">
                   <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 transition-colors flex items-center">
                     Ariza topshirish
-                    ${renderIcon('arrowRight')}
+                    <svg class="h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                    </svg>
                   </button>
                   <button class="border border-blue-200 text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-2 transition-colors">
                     Dastur haqida batafsil
@@ -405,7 +349,9 @@ const clientIconsData = JSON.stringify(clientIcons);
                 <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <div class="flex items-center space-x-2">
                     <span class="bg-blue-600 text-white py-1 px-3 rounded-full text-sm flex items-center">
-                      ${renderIcon('tag')}
+                      <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/>
+                      </svg>
                       ${categoryBadge}
                     </span>
                     <span class="bg-green-600 text-white py-1 px-3 rounded-full text-sm flex items-center">
@@ -413,7 +359,9 @@ const clientIconsData = JSON.stringify(clientIcons);
                     </span>
                   </div>
                   <p class="text-white text-sm mt-2 flex items-center">
-                    ${renderIcon('calendar')}
+                    <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>
+                    </svg>
                     Ro'yxatdan o'tish oxirgi muddati: ${program.deadline}
                   </p>
                 </div>
