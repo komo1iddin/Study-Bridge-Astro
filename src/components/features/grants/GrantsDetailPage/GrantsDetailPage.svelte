@@ -33,6 +33,10 @@
   onMount(() => {
     console.log("GrantsDetailPage mounted");
     mounted = true;
+    
+    // Dispatch event that component is mounted to hide the skeleton
+    window.dispatchEvent(new CustomEvent('grants-detail-mounted'));
+    
     return () => {
       console.log("GrantsDetailPage unmounted");
     };
@@ -46,69 +50,8 @@
   }
 </script>
 
-{#if !mounted}
-  <!-- Updated Skeleton UI for Grants Detail Page -->
-  <div class="min-h-screen bg-gradient-to-br from-red-50 via-slate-50 to-blue-50 relative animate-pulse">
-    <div class="container mx-auto py-8 px-4 md:px-6 relative z-10">
-      <!-- Breadcrumb Skeleton -->
-      <div class="flex items-center gap-2 h-4 mb-6">
-        <div class="h-3.5 w-3.5 bg-gray-200 rounded"></div>
-        <div class="h-2 w-1 bg-gray-200 rounded"></div>
-        <div class="h-3 w-16 bg-gray-200 rounded"></div>
-        <div class="h-2 w-1 bg-gray-200 rounded"></div>
-        <div class="h-3 w-24 bg-gray-300 rounded"></div>
-      </div>
-
-      <div class="grid gap-8 md:grid-cols-3">
-        <!-- Main Content Skeleton -->
-        <div class="md:col-span-2 space-y-8">
-          <!-- Header Card Skeleton -->
-          <div class="bg-white rounded-lg shadow p-6">
-            <div class="flex flex-col sm:flex-row gap-4 mb-4">
-               <div class="h-16 w-16 bg-gray-200 rounded-lg flex-shrink-0"></div>
-               <div class="flex-1 space-y-3">
-                 <div class="h-6 w-3/4 bg-gray-300 rounded"></div>
-                 <div class="h-4 w-1/2 bg-gray-200 rounded"></div>
-               </div>
-            </div>
-             <div class="h-10 bg-gray-100 rounded-md flex items-center px-2 space-x-4">
-              <div class="h-6 w-16 bg-gray-200 rounded"></div>
-              <div class="h-6 w-16 bg-gray-200 rounded"></div>
-              <div class="h-6 w-16 bg-gray-200 rounded"></div>
-            </div>
-          </div>
-          <!-- Content Area Skeleton -->
-          <div class="bg-white rounded-lg shadow p-6 space-y-4">
-            <div class="h-5 w-1/3 bg-gray-300 rounded"></div>
-            <div class="h-4 w-full bg-gray-200 rounded"></div>
-            <div class="h-4 w-full bg-gray-200 rounded"></div>
-            <div class="h-4 w-3/4 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-
-        <!-- Sidebar Skeleton -->
-        <div class="space-y-6">
-          <div class="bg-white rounded-lg shadow p-6 space-y-3">
-             <div class="h-5 w-1/2 bg-gray-300 rounded"></div>
-             <div class="h-8 w-full bg-gray-200 rounded-lg"></div>
-          </div>
-          <div class="bg-white rounded-lg shadow p-6 space-y-3">
-             <div class="h-5 w-1/2 bg-gray-300 rounded"></div>
-             <div class="h-4 w-3/4 bg-gray-200 rounded"></div>
-             <div class="h-4 w-1/2 bg-gray-200 rounded"></div>
-             <div class="h-4 w-3/4 bg-gray-200 rounded mt-2"></div>
-          </div>
-           <div class="bg-white rounded-lg shadow p-6 space-y-3">
-             <div class="h-5 w-1/2 bg-gray-300 rounded"></div>
-             <div class="h-4 w-full bg-gray-200 rounded"></div>
-             <div class="h-4 w-3/4 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-{:else}
-  <!-- Actual Content -->
+<!-- Don't render anything as the skeleton is handled by the parent Astro component -->
+{#if mounted}
   <div class="min-h-screen bg-gradient-to-br from-red-50 via-slate-50 to-blue-50 relative">
     <BackgroundDecoration />
 
