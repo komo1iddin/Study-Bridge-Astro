@@ -186,7 +186,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
 <script id="comparison-translations" type="application/json" set:html={JSON.stringify(t)}></script>
 
 <!-- Client-side JavaScript -->
-<script is:inline>
+<script>
   // Wait for DOM to be fully loaded
   document.addEventListener('DOMContentLoaded', () => {
     initTabs();
@@ -276,7 +276,7 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
         }
       });
       
-      // Update mobile select - using standard JavaScript property access
+      // Update mobile select
       const mobileSelect = document.getElementById('category-select-mobile');
       if (mobileSelect) {
         mobileSelect.value = categoryId;
@@ -391,7 +391,6 @@ const activeItem = categories.find((c) => c.id === activeCategory) || categories
     // Initial load - get category from URL or use default
     const url = new URL(window.location.href);
     const initialCategory = url.searchParams.get('category') || 'education';
-    console.log('Initial category:', initialCategory);
     switchCategory(initialCategory);
   }
 </script>
