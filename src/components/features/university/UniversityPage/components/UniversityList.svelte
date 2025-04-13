@@ -7,6 +7,8 @@
   import { ITEMS_PER_PAGE } from "../lib/constants";
   import type { UniversityPageTranslations } from "../../../../../i18n/features/university/universityPage";
   import type { Lang } from "../../../../../i18n/langUtils";
+  import { useLazyLoad } from '@/utils/componentLazyLoader';
+  import { onMount } from 'svelte';
   
   export let universities: University[] = [];
   export let filters: Filters;
@@ -14,6 +16,17 @@
   export let lang: Lang = 'uz';
   
   let currentPage = 1;
+  let visibleCardIndices = new Set();
+  
+  // Create lazy load function for individual cards
+  const cardLazyLoad = useLazyLoad('university-card', {
+    rootMargin: '200px',
+    threshold: 0.1
+  });
+  
+  onMount(() => {
+    console.log("UniversityList component mounted");
+  });
   
   // Reactive computed properties
   $: filteredUniversities = universities.filter((university) => {
@@ -79,12 +92,21 @@
   $: {
     if (filters) {
       currentPage = 1;
+      visibleCardIndices = new Set();
     }
   }
   
   function handlePageChange(page: number) {
     currentPage = page;
+    visibleCardIndices = new Set();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  // Track which card is visible
+  function handleIntersection(index, isIntersecting) {
+    if (isIntersecting) {
+      visibleCardIndices.add(index);
+    }
   }
 </script>
 
@@ -148,12 +170,60 @@
         </h2>
       {/if}
       <div class="flex flex-col gap-4 sm:gap-6">
-        {#each paginatedUniversities as university (university.id)}
-          <div class="w-full">
-            <UniversityCard {university} {t} {lang} />
+        {#each paginatedUniversities as university, index (university.id)}
+          <div 
+            class="w-full lazy-card-wrapper transition-opacity duration-300" 
+            use:cardLazyLoad
+            on:enterViewport={() => handleIntersection(index, true)}
+            on:exitViewport={() => handleIntersection(index, false)}
+          >
+            {#if visibleCardIndices.has(index) || index < 3}
+              <UniversityCard {university} {t} {lang} />
+            {:else}
+              <!-- Card skeleton placeholder -->
+              <div class="w-full border rounded-lg shadow-sm overflow-hidden bg-white">
+                <div class="flex flex-col md:flex-row md:min-h-[260px]">
+                  <!-- Logo skeleton -->
+                  <div class="relative md:w-1/3 h-40 md:h-auto bg-slate-200 animate-pulse"></div>
+                  
+                  <!-- Content skeleton -->
+                  <div class="p-3 md:p-4 md:w-2/3">
+                    <div class="h-6 bg-slate-200 rounded w-3/4 mb-3 animate-pulse"></div>
+                    <div class="h-4 bg-slate-200 rounded w-1/3 mb-3 animate-pulse"></div>
+                    <div class="h-4 bg-slate-200 rounded w-full mb-2 animate-pulse"></div>
+                    <div class="h-4 bg-slate-200 rounded w-full mb-2 animate-pulse"></div>
+                    <div class="h-4 bg-slate-200 rounded w-2/3 mb-4 animate-pulse"></div>
+                    
+                    <div class="flex gap-2 mb-4">
+                      <div class="h-6 bg-slate-200 rounded-full w-20 animate-pulse"></div>
+                      <div class="h-6 bg-slate-200 rounded-full w-20 animate-pulse"></div>
+                    </div>
+                    
+                    <div class="border-t pt-4 mt-4 flex justify-between">
+                      <div class="flex gap-2">
+                        <div class="h-10 bg-slate-200 rounded w-16 animate-pulse"></div>
+                        <div class="h-10 bg-slate-200 rounded w-16 animate-pulse"></div>
+                      </div>
+                      <div class="h-10 bg-slate-200 rounded w-28 animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {/if}
           </div>
         {/each}
       </div>
     </div>
   {/if}
 </div>
+
+<style>
+  .lazy-card-wrapper {
+    min-height: 260px;
+    opacity: 0;
+  }
+  
+  .lazy-card-wrapper.lazy-loaded {
+    opacity: 1;
+  }
+</style>

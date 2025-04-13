@@ -7,6 +7,7 @@
   import type { UniversityPageTranslations } from '../../../../i18n/features/university/universityPage';
   import { DEFAULT_FILTERS } from './lib/constants';
   import type { Filters } from './lib/data';
+  import { useLazyLoad } from '@/utils/componentLazyLoader';
   
   import BackgroundDecoration from './components/BackgroundDecoration.svelte';
   import UniversityList from './components/UniversityList.svelte';
@@ -26,21 +27,42 @@
   
   let filters: Filters = DEFAULT_FILTERS;
   let mobileFiltersOpen = false;
+  let isLoading = true;
+  
+  // Create lazy load action for main content
+  const lazyUniversities = useLazyLoad('university-list', {
+    rootMargin: '200px',
+    threshold: 0.1
+  });
   
   onMount(() => {
     console.log("UniversityPage component mounted");
+    // Simulate loading time or wait for data to be ready
+    setTimeout(() => {
+      isLoading = false;
+    }, 800);
   });
   
   function handleFilterChange(event: CustomEvent<{key: keyof Filters, value: string}>) {
     const { key, value } = event.detail;
-    filters = {
-      ...filters,
-      [key]: value
-    };
+    isLoading = true;
+    
+    // Simulate filter processing time
+    setTimeout(() => {
+      filters = {
+        ...filters,
+        [key]: value
+      };
+      isLoading = false;
+    }, 500);
   }
   
   function resetFilters() {
-    filters = DEFAULT_FILTERS;
+    isLoading = true;
+    setTimeout(() => {
+      filters = DEFAULT_FILTERS;
+      isLoading = false;
+    }, 500);
   }
   
   function handleMobileFiltersOpenChange(event: CustomEvent<boolean>) {
@@ -93,13 +115,62 @@
           </aside>
           
           <!-- Main content -->
-          <main class="flex-1 max-w-full lg:max-w-[calc(100%-20rem)] xl:max-w-[calc(100%-22rem)]">
-            <UniversityList
-              universities={universities}
-              filters={filters}
-              {t}
-              {lang}
-            />
+          <main 
+            class="flex-1 max-w-full lg:max-w-[calc(100%-20rem)] xl:max-w-[calc(100%-22rem)]"
+            use:lazyUniversities
+          >
+            {#if isLoading}
+              <div class="space-y-6 animate-pulse">
+                <!-- Skeleton loading for list header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div class="h-8 bg-slate-200 rounded w-48 hidden sm:block"></div>
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div class="h-4 bg-slate-200 rounded w-40"></div>
+                  </div>
+                </div>
+                
+                <!-- Skeleton loading for university cards -->
+                <div class="flex flex-col gap-4 sm:gap-6">
+                  {#each Array(5) as _, i}
+                    <div class="w-full border rounded-lg shadow-sm overflow-hidden bg-white">
+                      <div class="flex flex-col md:flex-row md:min-h-[260px]">
+                        <!-- Logo skeleton -->
+                        <div class="relative md:w-1/3 h-40 md:h-auto bg-slate-200"></div>
+                        
+                        <!-- Content skeleton -->
+                        <div class="p-3 md:p-4 md:w-2/3">
+                          <div class="h-6 bg-slate-200 rounded w-3/4 mb-3"></div>
+                          <div class="h-4 bg-slate-200 rounded w-1/3 mb-3"></div>
+                          <div class="h-4 bg-slate-200 rounded w-full mb-2"></div>
+                          <div class="h-4 bg-slate-200 rounded w-full mb-2"></div>
+                          <div class="h-4 bg-slate-200 rounded w-2/3 mb-4"></div>
+                          
+                          <div class="flex gap-2 mb-4">
+                            <div class="h-6 bg-slate-200 rounded-full w-20"></div>
+                            <div class="h-6 bg-slate-200 rounded-full w-20"></div>
+                          </div>
+                          
+                          <div class="border-t pt-4 mt-4 flex justify-between">
+                            <div class="flex gap-2">
+                              <div class="h-10 bg-slate-200 rounded w-16"></div>
+                              <div class="h-10 bg-slate-200 rounded w-16"></div>
+                            </div>
+                            <div class="h-10 bg-slate-200 rounded w-28"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {/each}
+                </div>
+              </div>
+            {:else}
+              <UniversityList
+                universities={universities}
+                filters={filters}
+                {t}
+                {lang}
+              />
+            {/if}
           </main>
         </div>
       </div>
